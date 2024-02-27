@@ -3,7 +3,3 @@ interface Person {
   age: number;
   job: string;
 }
-
-function greeter(person: Person): string {
-  return "hello," + person.name;
-}

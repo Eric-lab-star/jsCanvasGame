@@ -1,18 +1,3 @@
-// This example demonstrates how to serve static files from your filesystem.
-//
-// Boot the server:
-//
-//	$ go run main.go
-//
-// Client requests:
-//
-//	$ curl http://localhost:3333/files/
-//	<pre>
-//	<a href="notes.txt">notes.txt</a>
-//	</pre>
-//
-//	$ curl http://localhost:3333/files/notes.txt
-//	Notessszzz
 package main
 
 import (
@@ -49,9 +34,9 @@ func main() {
 	filesDir := http.Dir(filepath.Join(workDir, "src"))
 	FileServer(r, "/src", filesDir)
 
-	http.ListenAndServe(":3333", r)
 	fmt.Println("http://localhost:3333")
 
+	http.ListenAndServe(":3333", r)
 }
 
 // FileServer conveniently sets up a http.FileServer handler to serve

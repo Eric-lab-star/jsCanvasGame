@@ -1,12 +1,12 @@
-import { Circle, circleArgs } from "./Circle.js";
+import { Circle, circleProps } from "./Circle.js";
 
-interface playerArgs extends circleArgs {
+interface playerProps extends circleProps {
   id?: number;
 }
 class Player extends Circle {
-  constructor(playerArgs: playerArgs) {
-    super(playerArgs);
+  constructor(playerProps: playerProps) {
+    super(playerProps);
   }
 }
 
-export default Player;
+export { playerProps, Player };

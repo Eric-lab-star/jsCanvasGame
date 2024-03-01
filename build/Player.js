@@ -1,8 +1,8 @@
 import { Circle } from "./Circle.js";
 class Player extends Circle {
-    constructor(playerArgs) {
-        super(playerArgs);
+    constructor(playerProps) {
+        super(playerProps);
     }
 }
-export default Player;
+export { Player };
 //# sourceMappingURL=Player.js.map

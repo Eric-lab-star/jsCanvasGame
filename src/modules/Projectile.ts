@@ -3,10 +3,11 @@ import { circleProps, Circle } from "./Circle.js";
 interface projectileProps extends circleProps {
   id?: number;
 }
+
 class Projectile extends Circle {
-  constructor(projectileProps: projectileProps) {
-    super(projectileProps);
+  constructor(props: projectileProps, ctx: CanvasRenderingContext2D) {
+    super(ctx, props);
   }
 }
 
-export { Projectile, projectileProps };
+export { Projectile };

@@ -1,12 +1,20 @@
 import { Circle, circleProps } from "./Circle.js";
 
-interface playerProps extends circleProps {
+interface Iplayer extends circleProps {
   id?: number;
 }
+
+const defaultProps: Iplayer = {
+  x: 0,
+  y: 0,
+  radius: 30,
+  color: "red",
+};
+
 class Player extends Circle {
-  constructor(playerProps: playerProps) {
-    super(playerProps);
+  constructor(ctx: CanvasRenderingContext2D, props: Iplayer = defaultProps) {
+    super(ctx, props);
   }
 }
 
-export { playerProps, Player };
+export { Player };

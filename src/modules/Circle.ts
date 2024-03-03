@@ -1,5 +1,4 @@
 interface circleProps {
-  ctx: CanvasRenderingContext2D;
   x: number;
   y: number;
   radius: number;
@@ -13,7 +12,10 @@ class Circle {
   private radius: number;
   private color: string;
 
-  constructor({ ctx, x, y, radius, color }: circleProps) {
+  constructor(
+    ctx: CanvasRenderingContext2D,
+    { x, y, radius, color }: circleProps,
+  ) {
     this.ctx = ctx;
     this.x = x;
     this.y = y;

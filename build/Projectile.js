@@ -1,7 +1,7 @@
 import { Circle } from "./Circle.js";
 class Projectile extends Circle {
-    constructor(projectileProps) {
-        super(projectileProps);
+    constructor(props, ctx) {
+        super(ctx, props);
     }
 }
 export { Projectile };

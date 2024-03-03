@@ -4,7 +4,7 @@ class Circle {
     y;
     radius;
     color;
-    constructor({ ctx, x, y, radius, color }) {
+    constructor(ctx, { x, y, radius, color }) {
         this.ctx = ctx;
         this.x = x;
         this.y = y;

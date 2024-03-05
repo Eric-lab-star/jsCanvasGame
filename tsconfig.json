@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
+		"lib": [
+			"webworker",
+      "es6",
+      "scripthost",
+			"dom",
+    ],
     "module": "NodeNext",
-    "noImplicitAny": true,
+		"noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,

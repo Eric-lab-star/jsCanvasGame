@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 
 function main() {
   if (Worker) {
-    const worker = new Worker(path);
+    const worker = new Worker("worker.js");
     worker.postMessage({ name: "kim" });
     worker.onmessage = function (e: any) {
       console.log(e.data);

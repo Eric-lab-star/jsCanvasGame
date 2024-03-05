@@ -6,6 +6,13 @@
     "preserveConstEnums": true,
     "sourceMap": true,
 		"outDir": "build",
+		"allowUnusedLabels": false,
+		"allowUnreachableCode": false,
+		"alwaysStrict": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+
   },
   "include": ["src/**/*"],
   "exclude": ["**/*.spec.ts",],

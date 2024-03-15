@@ -1,19 +1,25 @@
 import { Player } from "../modules/Player.js";
 
-onmessage = ({ data }: MessageEvent) => {
-  const ctx = initCanvas(data);
+let player: Player;
+let ctx: CanvasRenderingContext2D;
+let canvas: HTMLCanvasElement;
 
-  if (data.type === "start") {
-    const player = new Player(ctx);
-    player.draw();
-    console.log(player);
-  }
-};
+onmessage = ({ data }: MessageEvent) => {};
 
-function initCanvas(data: MessageEvent["data"]): CanvasRenderingContext2D {
-  const canvas = data.canvas;
+function init(data: MessageEvent["data"]) {
+  canvas = data.canvas;
   canvas.width = data.size.width;
   canvas.height = data.size.height;
-  const ctx = canvas.getContext("2d");
-  return ctx;
+  ctx = canvas.getContext("2d");
+  player = new Player(ctx);
+}
+
+function PlayerMove() {
+  player.draw();
+}
+
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  PlayerMove();
+  requestAnimationFrame(gameLoop);
 }

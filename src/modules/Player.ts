@@ -1,19 +1,14 @@
-import { Circle, circleProps } from "./Circle.js";
-
-interface Iplayer extends circleProps {
-  id?: number;
-}
-
-const defaultProps: Iplayer = {
-  x: 0,
-  y: 0,
-  radius: 30,
-  color: "red",
-};
+import { Circle } from "./Circle.js";
 
 class Player extends Circle {
-  constructor(ctx: CanvasRenderingContext2D, props: Iplayer = defaultProps) {
-    super(ctx, props);
+  constructor(
+    ctx: CanvasRenderingContext2D,
+    x: number = 0,
+    y: number = 0,
+    radius: number = 20,
+    color: string = "black",
+  ) {
+    super(ctx, x, y, radius, color);
   }
 }
 

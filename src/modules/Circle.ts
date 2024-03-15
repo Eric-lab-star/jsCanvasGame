@@ -1,20 +1,18 @@
-interface circleProps {
-  x: number;
-  y: number;
-  radius: number;
-  color: string;
-}
+import { Storage } from "./Utilz.js";
 
 class Circle {
-  private ctx: CanvasRenderingContext2D;
-  private x: number;
-  private y: number;
-  private radius: number;
-  private color: string;
+  protected ctx: CanvasRenderingContext2D;
+  protected x: number;
+  protected y: number;
+  protected radius: number;
+  protected color: string;
 
   constructor(
     ctx: CanvasRenderingContext2D,
-    { x, y, radius, color }: circleProps,
+    x: number,
+    y: number,
+    radius: number,
+    color: string,
   ) {
     this.ctx = ctx;
     this.x = x;
@@ -29,6 +27,31 @@ class Circle {
     this.ctx.fillStyle = this.color;
     this.ctx.fill();
   }
+
+  public update() {
+    console.log(Storage.storage["canvasWidth"]);
+    console.log(innerWidth);
+
+    this.ctx.clearRect(
+      0,
+      0,
+      Storage.get("canvasWidth"),
+      Storage.get("canvasHeight"),
+    );
+    this.draw();
+  }
+
+  public setX(delta: number) {
+    this.x += delta;
+  }
+
+  public moveRight() {
+    this.x += 100 / 1000;
+  }
+
+  public setY(delta: number) {
+    this.y += delta;
+  }
 }
 
-export { Circle, circleProps };
+export { Circle };

@@ -1,12 +1,14 @@
-import { circleProps, Circle } from "./Circle.js";
-
-interface projectileProps extends circleProps {
-  id?: number;
-}
+import { Circle } from "./Circle.js";
 
 class Projectile extends Circle {
-  constructor(props: projectileProps, ctx: CanvasRenderingContext2D) {
-    super(ctx, props);
+  constructor(
+    ctx: CanvasRenderingContext2D,
+    x: number = 0,
+    y: number = 0,
+    radius: number = 20,
+    color: string = "black",
+  ) {
+    super(ctx, x, y, radius, color);
   }
 }
 

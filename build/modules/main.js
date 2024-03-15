@@ -1,22 +1,24 @@
-import { Player } from "./Player.js";
-const canvas = document.querySelector("canvas");
-const ctx = canvas.getContext("2d");
+"use strict";
+var offScreenCanvas = document
+    .querySelector("canvas")
+    .transferControlToOffscreen();
 function main() {
+    var width = innerWidth;
+    var height = innerHeight;
     if (Worker) {
-        const worker = new Worker("./workers/worker.js");
-        worker.postMessage({ name: "kim" });
-        worker.onmessage = function (e) {
-            console.log(e.data);
-        };
+        var worker = new Worker("./workers/worker.js", {
+            name: "gameWorker",
+            type: "module",
+        });
+        worker.postMessage({
+            type: "start",
+            canvas: offScreenCanvas,
+            size: { width: width, height: height },
+        }, [offScreenCanvas]);
     }
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-    const player = new Player(ctx);
-    function gameLoop() {
-        requestAnimationFrame(gameLoop);
-        player.draw();
+    else {
+        console.log("this browser dose not support worker");
     }
-    gameLoop();
 }
 main();
 //# sourceMappingURL=main.js.map

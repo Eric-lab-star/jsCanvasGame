@@ -1,5 +1,5 @@
-const canvas = document.querySelector("canvas");
-const game = {
+var canvas = document.querySelector("canvas");
+var game = {
     canvas: {
         x: window.innerWidth,
         y: window.innerHeight,

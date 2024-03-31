@@ -2,53 +2,35 @@ import { Player } from "../modules/Player.js";
 
 class Input {
   protected component: Player;
-  protected dy: number;
-  protected dx: number;
+  private xSpeed: number = 10;
+  private ySpeed: number = 10;
   constructor(component: Player) {
     this.component = component;
-    this.dx = 1;
-    this.dy = 1;
   }
 
   Keyboard(): void {
     addEventListener("keydown", this.keyDownHandler.bind(this));
-    addEventListener("keyup", this.keyUpHandler.bind(this));
     return;
   }
 
   keyDownHandler(event: KeyboardEvent) {
     switch (event.key) {
       case "w":
-        break;
-      case "a":
-        this.component.setX(-this.dx);
-        console.log("move left");
-        break;
-      case "s":
-        console.log("down");
-        break;
-      case "d":
-        this.component.setX(this.dx);
+        this.component.setY(-this.ySpeed);
         this.component.update();
-        console.log("pressed d");
-        break;
-    }
-  }
-
-  keyUpHandler(event: KeyboardEvent) {
-    switch (event.key) {
-      case "w":
         break;
       case "a":
-        this.component.setX(-this.dx);
-        console.log("move left");
+        this.component.setX(-this.xSpeed);
+        this.component.update();
         break;
       case "s":
+        this.component.setY(+this.ySpeed);
+        this.component.update();
         console.log("down");
         break;
       case "d":
-        this.component.setX(this.dx);
-        console.log("up d");
+        this.component.setX(+this.xSpeed);
+        this.component.update();
         break;
     }
   }

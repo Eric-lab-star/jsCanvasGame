@@ -5,4 +5,3 @@ class Projectile extends Circle {
     }
 }
 export { Projectile };
-//# sourceMappingURL=Projectile.js.map

@@ -29,9 +29,6 @@ class Circle {
   }
 
   public update() {
-    console.log(Storage.storage["canvasWidth"]);
-    console.log(innerWidth);
-
     this.ctx.clearRect(
       0,
       0,
@@ -43,10 +40,6 @@ class Circle {
 
   public setX(delta: number) {
     this.x += delta;
-  }
-
-  public moveRight() {
-    this.x += 100 / 1000;
   }
 
   public setY(delta: number) {

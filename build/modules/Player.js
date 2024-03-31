@@ -5,4 +5,3 @@ class Player extends Circle {
     }
 }
 export { Player };
-//# sourceMappingURL=Player.js.map

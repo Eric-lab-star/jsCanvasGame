@@ -12,4 +12,3 @@ class Storage {
 }
 Storage.storage = {};
 export { Storage };
-//# sourceMappingURL=Utilz.js.map

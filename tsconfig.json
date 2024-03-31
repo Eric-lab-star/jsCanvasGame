@@ -2,18 +2,20 @@
   "compilerOptions": {
     "target": "ES6",
     "lib": ["ES6", "dom"],
-    "module": "ESNext",
+    "module": "nodenext",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "outDir": "build",
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
     "alwaysStrict": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "moduleResolution": "nodenext",
+    "moduleSuffixes": [""]
   },
   "include": ["src/**/*"],
   "exclude": ["**/*.spec.ts"],

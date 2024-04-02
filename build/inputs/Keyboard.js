@@ -26,6 +26,7 @@ class Input {
             case "d":
                 this.component.setX(+this.xSpeed);
                 this.component.update();
+                console.log("pressed d");
                 break;
         }
     }

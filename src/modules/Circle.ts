@@ -1,14 +1,14 @@
 import { Storage } from "./Utilz.js";
 
 class Circle {
-  protected ctx: CanvasRenderingContext2D;
+  protected ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
   protected x: number;
   protected y: number;
   protected radius: number;
   protected color: string;
 
   constructor(
-    ctx: CanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
     x: number,
     y: number,
     radius: number,

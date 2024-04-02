@@ -13,7 +13,7 @@ class Input {
     return;
   }
 
-  keyDownHandler(event: KeyboardEvent) {
+  private keyDownHandler(event: KeyboardEvent) {
     switch (event.key) {
       case "w":
         this.component.setY(-this.ySpeed);
@@ -31,6 +31,8 @@ class Input {
       case "d":
         this.component.setX(+this.xSpeed);
         this.component.update();
+        console.log("pressed d");
+
         break;
     }
   }

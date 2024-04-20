@@ -1,4 +1,3 @@
-import { Storage } from "./Utilz.js";
 class Circle {
     constructor(ctx, x, y, radius, color) {
         this.ctx = ctx;
@@ -13,8 +12,9 @@ class Circle {
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
     }
-    update() {
-        this.ctx.clearRect(0, 0, Storage.get("canvasWidth"), Storage.get("canvasHeight"));
+    update(x, y) {
+        this.setX(x);
+        this.setY(y);
         this.draw();
     }
     setX(delta) {
@@ -24,4 +24,4 @@ class Circle {
         this.y += delta;
     }
 }
-export { Circle };
+export default Circle;

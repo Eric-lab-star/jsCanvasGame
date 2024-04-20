@@ -1,30 +1,10 @@
-const offScreenCanvas = document
-    .querySelector("canvas")
-    .transferControlToOffscreen();
+import Game from "./game.js";
 function main() {
-    if (Worker) {
-        initWorer();
-    }
-    else {
-        console.log("this browser dose not support worker");
-    }
+    const canvas = document.querySelector("canvas");
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+    const ctx = canvas.getContext("2d");
+    const game = new Game(ctx);
+    game.start();
 }
 main();
-function initWorer() {
-    const worker = new Worker("./workers/worker.js", {
-        name: "gameWorker",
-        type: "module",
-    });
-    worker.postMessage({
-        canvas: offScreenCanvas,
-        size: { innerWidth, innerHeight },
-    }, [offScreenCanvas]);
-    window.addEventListener("click", () => {
-        worker.postMessage({
-            event: "click",
-            size: { innerWidth, innerHeight },
-            canvas: offScreenCanvas,
-        }, [offScreenCanvas]);
-    });
-}
-export {};

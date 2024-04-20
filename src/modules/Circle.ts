@@ -1,14 +1,12 @@
-import { Storage } from "./Utilz.js";
-
 class Circle {
-  protected ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+  protected ctx: CanvasRenderingContext2D;
   protected x: number;
   protected y: number;
   protected radius: number;
   protected color: string;
 
   constructor(
-    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D,
     x: number,
     y: number,
     radius: number,
@@ -28,13 +26,9 @@ class Circle {
     this.ctx.fill();
   }
 
-  public update() {
-    this.ctx.clearRect(
-      0,
-      0,
-      Storage.get("canvasWidth"),
-      Storage.get("canvasHeight"),
-    );
+  public update(x: number, y: number) {
+    this.setX(x);
+    this.setY(y);
     this.draw();
   }
 
@@ -47,4 +41,4 @@ class Circle {
   }
 }
 
-export { Circle };
+export default Circle;

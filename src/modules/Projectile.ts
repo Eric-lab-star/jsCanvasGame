@@ -1,4 +1,4 @@
-import { Circle } from "./Circle.js";
+import Circle from "./Circle.js";
 
 class Projectile extends Circle {
   constructor(

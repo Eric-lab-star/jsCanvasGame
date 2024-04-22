@@ -1,43 +1,42 @@
+import KeyBoardInput from "../inputs/Keyboard.js";
+import Vector2d from "./Vector2d.js";
+
 class Circle {
   protected ctx: CanvasRenderingContext2D;
-  protected x: number;
-  protected y: number;
+  protected vector2d: Vector2d;
   protected radius: number;
   protected color: string;
 
   constructor(
     ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
+    vector2d: Vector2d,
     radius: number,
     color: string,
   ) {
     this.ctx = ctx;
-    this.x = x;
-    this.y = y;
+    this.vector2d = vector2d;
     this.radius = radius;
     this.color = color;
+    new KeyBoardInput(this);
   }
 
   public draw() {
     this.ctx.beginPath();
-    this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+    this.ctx.arc(
+      this.vector2d.x,
+      this.vector2d.y,
+      this.radius,
+      0,
+      Math.PI * 2,
+      true,
+    );
     this.ctx.fillStyle = this.color;
     this.ctx.fill();
   }
 
   public update(x: number, y: number) {
-    this.setX(x);
-    this.setY(y);
+    this.vector2d.update(x, y);
     this.draw();
-  }
-
-  public setX(delta: number) {
-    this.x += delta;
-  }
-
-  public setY(delta: number) {
-    this.y += delta;
   }
 }
 

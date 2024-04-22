@@ -1,14 +1,24 @@
-import { Player } from "../modules/Player.js";
+import Circle from "../modules/Circle.js";
 
-class Input {
-  protected component: Player;
-  constructor(component: Player) {
+class KeyBoardInput {
+  protected component: Circle;
+  constructor(component: Circle) {
     this.component = component;
+    addEventListener("keydown", (event) => this.move(event));
   }
 
-  Keyboard(): void {
-    return;
+  move(event: KeyboardEvent) {
+    switch (event.key) {
+      case "d" || "D":
+        this.component.update(1, 0);
+        break;
+      case "a" || "A":
+        this.component.update(-1, 0);
+        break;
+      default:
+        break;
+    }
   }
 }
 
-export { Input };
+export default KeyBoardInput;

@@ -1,21 +1,28 @@
 import Circle from "./Circle.js";
+import Vector2d from "./Vector2d.js";
 
 class Game {
-  public ctx: CanvasRenderingContext2D;
+  private ctx: CanvasRenderingContext2D;
+  private player: Circle;
 
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
+    this.initCharacters();
   }
 
   public start() {
     this.loop();
   }
 
-  public loop() {
-    const circle = new Circle(this.ctx, 100, 100, 100, "red");
+  public initCharacters() {
+    const playerPos = new Vector2d(100, 100);
+    this.player = new Circle(this.ctx, playerPos, 100, "red");
+  }
+
+  private loop() {
     const runner = () => {
       this.ctx.clearRect(0, 0, innerWidth, innerHeight);
-      circle.update(1, 1);
+      this.player.draw();
       requestAnimationFrame(() => runner());
     };
     runner();

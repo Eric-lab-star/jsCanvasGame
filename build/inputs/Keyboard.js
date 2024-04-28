@@ -6,10 +6,10 @@ class KeyBoardInput {
     move(event) {
         switch (event.key) {
             case "d" || "D":
-                this.component.update(1, 0);
+                this.component.update(this.component.speed, 0);
                 break;
             case "a" || "A":
-                this.component.update(-1, 0);
+                this.component.update(-this.component.speed, 0);
                 break;
             default:
                 break;

@@ -17,15 +17,18 @@ class Game {
   public initCharacters() {
     const playerPos = new Vector2d(innerWidth / 2, innerHeight / 2);
     this.player = new Circle(this.ctx, playerPos, 50, "red");
-    this.player.getImage();
   }
 
   private loop() {
+    let animationTick = 0;
     const runner = () => {
+      animationTick += 1 / 5;
+
       this.ctx.clearRect(0, 0, innerWidth, innerHeight);
-      // this.player.drawSprite();
-      this.player.drawImage();
-      //requestAnimationFrame(() => runner());
+      this.player.handleAnimation(Math.floor(animationTick));
+
+      //this.player.handleImage();
+      requestAnimationFrame(() => runner());
     };
     runner();
   }

@@ -43,12 +43,14 @@ class ImageLoader {
         img.src = imagefile;
         img.addEventListener("load", () => __awaiter(this, void 0, void 0, function* () {
             const sprites = yield Promise.all([
-                createImageBitmap(img),
-                createImageBitmap(img, imgWidth, 0, imgWidth, imgHeight, opt),
+                createImageBitmap(img, imgWidth * 0, 0, imgWidth, imgHeight, opt),
+                createImageBitmap(img, imgWidth * 1, 0, imgWidth, imgHeight, opt),
                 createImageBitmap(img, imgWidth * 2, 0, imgWidth, imgHeight, opt),
                 createImageBitmap(img, imgWidth * 3, 0, imgWidth, imgHeight, opt),
+                createImageBitmap(img, imgWidth * 4, 0, imgWidth, imgHeight, opt),
+                createImageBitmap(img, imgWidth * 5, 0, imgWidth, imgHeight, opt),
             ]);
-            this.eventSender.postMessage(sprites);
+            this.eventSender.postMessage({ type: "sprites", load: sprites });
         }));
     }
 }

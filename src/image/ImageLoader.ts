@@ -1,6 +1,7 @@
 class ImageLoader {
   public msgPort: MessagePort;
   private eventSender: MessagePort;
+
   constructor() {
     const msg = new MessageChannel();
     this.msgPort = msg.port2;
@@ -27,6 +28,7 @@ class ImageLoader {
       this.eventSender.postMessage(bitImg);
     });
   }
+
   public loadSprites(imagefile: string) {
     const imgHeight = 40;
     const imgWidth = 64;
@@ -40,12 +42,15 @@ class ImageLoader {
     img.src = imagefile;
     img.addEventListener("load", async () => {
       const sprites = await Promise.all([
-        createImageBitmap(img),
-        createImageBitmap(img, imgWidth, 0, imgWidth, imgHeight, opt),
+        createImageBitmap(img, imgWidth * 0, 0, imgWidth, imgHeight, opt),
+        createImageBitmap(img, imgWidth * 1, 0, imgWidth, imgHeight, opt),
         createImageBitmap(img, imgWidth * 2, 0, imgWidth, imgHeight, opt),
         createImageBitmap(img, imgWidth * 3, 0, imgWidth, imgHeight, opt),
+        createImageBitmap(img, imgWidth * 4, 0, imgWidth, imgHeight, opt),
+        createImageBitmap(img, imgWidth * 5, 0, imgWidth, imgHeight, opt),
       ]);
-      this.eventSender.postMessage(sprites);
+
+      this.eventSender.postMessage({ type: "sprites", load: sprites });
     });
   }
 }

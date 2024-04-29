@@ -2,8 +2,6 @@ import Game from "./game.js";
 
 // main();
 function main() {
-  console.log("hello");
-
   const canvas = document.querySelector("canvas");
 
   canvas.width = innerWidth;

@@ -9,34 +9,54 @@ class Circle {
         this.speed = 30;
         new KeyBoardInput(this);
     }
-    drawSprite() {
-        if (this.img != undefined) {
-            this.ctx.drawImage(this.img, this.pos.x, this.pos.y);
+    handleAnimation(i) {
+        if (this.sprites != undefined) {
+            this.drawAnimation(i);
         }
         else {
-            const loader = new ImageLoader();
-            loader.loadSprites(ImageLoader.Sprites);
-            loader.msgPort.onmessage = (e) => {
-                console.log(e.data);
-                this.img = e.data[0];
-            };
+            this.getSprite();
+        }
+    }
+    getSprite() {
+        const loader = new ImageLoader();
+        loader.loadSprites(ImageLoader.Sprites);
+        loader.msgPort.onmessage = (e) => {
+            if (e.data.type == "sprites") {
+                this.sprites = e.data.load;
+            }
+        };
+    }
+    drawAnimation(i) {
+        const intValue = Math.floor(i / this.sprites.length);
+        const index = i - this.sprites.length * intValue;
+        this.ctx.drawImage(this.sprites[index], this.pos.x, this.pos.y);
+    }
+    handleSprite() {
+        if (this.img != undefined) {
+            this.drawImage();
+        }
+        else {
+            this.getSprite();
+        }
+    }
+    handleImage() {
+        if (this.img != undefined) {
+            this.drawImage();
+        }
+        else {
+            this.getImage();
         }
     }
     getImage() {
         const loader = new ImageLoader();
         loader.load(ImageLoader.Runsword01);
         loader.msgPort.onmessage = (e) => {
-            console.log(e.data);
             this.img = e.data;
+            this.drawImage();
         };
     }
     drawImage() {
-        if (this.img != undefined) {
-            this.ctx.drawImage(this.img, this.pos.x, this.pos.y);
-        }
-        else {
-            console.log(this.img);
-        }
+        this.ctx.drawImage(this.img, this.pos.x, this.pos.y);
     }
     draw() {
         this.ctx.beginPath();

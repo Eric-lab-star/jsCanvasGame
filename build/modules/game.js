@@ -11,12 +11,14 @@ class Game {
     initCharacters() {
         const playerPos = new Vector2d(innerWidth / 2, innerHeight / 2);
         this.player = new Circle(this.ctx, playerPos, 50, "red");
-        this.player.getImage();
     }
     loop() {
+        let animationTick = 0;
         const runner = () => {
+            animationTick += 1 / 5;
             this.ctx.clearRect(0, 0, innerWidth, innerHeight);
-            this.player.drawImage();
+            this.player.handleAnimation(Math.floor(animationTick));
+            requestAnimationFrame(() => runner());
         };
         runner();
     }

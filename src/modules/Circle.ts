@@ -9,6 +9,7 @@ class Circle {
   protected color: string;
   public speed: number;
   protected img: ImageBitmap;
+  protected sprites: ImageBitmap[];
 
   constructor(
     ctx: CanvasRenderingContext2D,
@@ -24,17 +25,44 @@ class Circle {
     new KeyBoardInput(this);
   }
 
-  public drawSprite() {
-    if (this.img != undefined) {
-      this.ctx.drawImage(this.img, this.pos.x, this.pos.y);
+  public handleAnimation(i: number) {
+    if (this.sprites != undefined) {
+      this.drawAnimation(i);
     } else {
-      const loader = new ImageLoader();
-      loader.loadSprites(ImageLoader.Sprites);
+      this.getSprite();
+    }
+  }
 
-      loader.msgPort.onmessage = (e: MessageEvent) => {
-        console.log(e.data);
-        this.img = e.data[0];
-      };
+  public getSprite() {
+    const loader = new ImageLoader();
+    loader.loadSprites(ImageLoader.Sprites);
+    loader.msgPort.onmessage = (e: MessageEvent) => {
+      if (e.data.type == "sprites") {
+        this.sprites = e.data.load;
+      }
+    };
+  }
+
+  public drawAnimation(i: number) {
+    const intValue = Math.floor(i / this.sprites.length);
+    const index = i - this.sprites.length * intValue;
+
+    this.ctx.drawImage(this.sprites[index], this.pos.x, this.pos.y);
+  }
+
+  public handleSprite() {
+    if (this.img != undefined) {
+      this.drawImage();
+    } else {
+      this.getSprite();
+    }
+  }
+
+  public handleImage() {
+    if (this.img != undefined) {
+      this.drawImage();
+    } else {
+      this.getImage();
     }
   }
 
@@ -42,17 +70,13 @@ class Circle {
     const loader = new ImageLoader();
     loader.load(ImageLoader.Runsword01);
     loader.msgPort.onmessage = (e: MessageEvent) => {
-      console.log(e.data);
       this.img = e.data;
+      this.drawImage();
     };
   }
 
   public drawImage() {
-    if (this.img != undefined) {
-      this.ctx.drawImage(this.img, this.pos.x, this.pos.y);
-    } else {
-      console.log(this.img);
-    }
+    this.ctx.drawImage(this.img, this.pos.x, this.pos.y);
   }
 
   public draw() {

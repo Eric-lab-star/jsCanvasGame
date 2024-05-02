@@ -46,7 +46,6 @@ class Circle {
   public drawAnimation(i: number) {
     const intValue = Math.floor(i / this.sprites.length);
     const index = i - this.sprites.length * intValue;
-
     this.ctx.drawImage(this.sprites[index], this.pos.x, this.pos.y);
   }
 

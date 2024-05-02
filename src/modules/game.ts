@@ -22,11 +22,9 @@ class Game {
   private loop() {
     let animationTick = 0;
     const runner = () => {
-      animationTick += 1 / 5;
-
+      animationTick += 1 / 10;
       this.ctx.clearRect(0, 0, innerWidth, innerHeight);
       this.player.handleAnimation(Math.floor(animationTick));
-
       //this.player.handleImage();
       requestAnimationFrame(() => runner());
     };

@@ -48,7 +48,6 @@ class ImageLoader {
                 createImageBitmap(img, imgWidth * 2, 0, imgWidth, imgHeight, opt),
                 createImageBitmap(img, imgWidth * 3, 0, imgWidth, imgHeight, opt),
                 createImageBitmap(img, imgWidth * 4, 0, imgWidth, imgHeight, opt),
-                createImageBitmap(img, imgWidth * 5, 0, imgWidth, imgHeight, opt),
             ]);
             this.eventSender.postMessage({ type: "sprites", load: sprites });
         }));

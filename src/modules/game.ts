@@ -21,8 +21,9 @@ class Game {
 
   private loop() {
     let animationTick = 0;
+    const animationSpeed = 8;
     const runner = () => {
-      animationTick += 1 / 10;
+      animationTick += 1 / animationSpeed;
       this.ctx.clearRect(0, 0, innerWidth, innerHeight);
       this.player.handleAnimation(Math.floor(animationTick));
       //this.player.handleImage();

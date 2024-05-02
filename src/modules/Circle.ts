@@ -25,12 +25,23 @@ class Circle {
     new KeyBoardInput(this);
   }
 
+  // handleAnimation function either getSprite image
+  // or drawAnimation. Received Parameter is passed to
+  // drawAnimation
   public handleAnimation(i: number) {
     if (this.sprites != undefined) {
       this.drawAnimation(i);
     } else {
       this.getSprite();
     }
+  }
+
+  //5 % 2 = 1
+  //1 = 5 - 2*(5/2)
+  public drawAnimation(i: number) {
+    const intValue = Math.floor(i / this.sprites.length);
+    const modulo = i - this.sprites.length * intValue; // 0 <= sprites.length < i
+    this.ctx.drawImage(this.sprites[modulo], this.pos.x, this.pos.y);
   }
 
   public getSprite() {
@@ -41,20 +52,6 @@ class Circle {
         this.sprites = e.data.load;
       }
     };
-  }
-
-  public drawAnimation(i: number) {
-    const intValue = Math.floor(i / this.sprites.length);
-    const index = i - this.sprites.length * intValue;
-    this.ctx.drawImage(this.sprites[index], this.pos.x, this.pos.y);
-  }
-
-  public handleSprite() {
-    if (this.img != undefined) {
-      this.drawImage();
-    } else {
-      this.getSprite();
-    }
   }
 
   public handleImage() {
@@ -70,7 +67,6 @@ class Circle {
     loader.load(ImageLoader.Runsword01);
     loader.msgPort.onmessage = (e: MessageEvent) => {
       this.img = e.data;
-      this.drawImage();
     };
   }
 
@@ -78,7 +74,7 @@ class Circle {
     this.ctx.drawImage(this.img, this.pos.x, this.pos.y);
   }
 
-  public draw() {
+  public drawCircle() {
     this.ctx.beginPath();
     this.ctx.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2, true);
     this.ctx.fillStyle = this.color;

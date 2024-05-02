@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import PlayerAtlas from "../animation/playerAtlas.js";
 class ImageLoader {
     constructor() {
         const msg = new MessageChannel();
@@ -31,25 +32,13 @@ class ImageLoader {
         }));
     }
     loadSprites(imagefile) {
-        const imgHeight = 40;
-        const imgWidth = 64;
-        const scale = 2;
-        const opt = {
-            resizeWidth: imgWidth * scale,
-            resizeHeight: imgHeight * scale,
-            resizeQuality: "pixelated",
-        };
         const img = new Image();
         img.src = imagefile;
         img.addEventListener("load", () => __awaiter(this, void 0, void 0, function* () {
-            const sprites = yield Promise.all([
-                createImageBitmap(img, imgWidth * 0, 0, imgWidth, imgHeight, opt),
-                createImageBitmap(img, imgWidth * 1, 0, imgWidth, imgHeight, opt),
-                createImageBitmap(img, imgWidth * 2, 0, imgWidth, imgHeight, opt),
-                createImageBitmap(img, imgWidth * 3, 0, imgWidth, imgHeight, opt),
-                createImageBitmap(img, imgWidth * 4, 0, imgWidth, imgHeight, opt),
-            ]);
-            this.eventSender.postMessage({ type: "sprites", load: sprites });
+            const player = new PlayerAtlas();
+            for (let i = 0; i < PlayerAtlas.totalStates; i++) { }
+            const idle = yield Promise.all(PlayerAtlas.parser(PlayerAtlas.idle, img));
+            this.eventSender.postMessage({ type: "sprites", load: idle });
         }));
     }
 }

@@ -17,6 +17,11 @@ class Circle {
             this.getSprite();
         }
     }
+    drawAnimation(i) {
+        const intValue = Math.floor(i / this.sprites.length);
+        const modulo = i - this.sprites.length * intValue;
+        this.ctx.drawImage(this.sprites[modulo], this.pos.x, this.pos.y);
+    }
     getSprite() {
         const loader = new ImageLoader();
         loader.loadSprites(ImageLoader.Sprites);
@@ -25,19 +30,6 @@ class Circle {
                 this.sprites = e.data.load;
             }
         };
-    }
-    drawAnimation(i) {
-        const intValue = Math.floor(i / this.sprites.length);
-        const index = i - this.sprites.length * intValue;
-        this.ctx.drawImage(this.sprites[index], this.pos.x, this.pos.y);
-    }
-    handleSprite() {
-        if (this.img != undefined) {
-            this.drawImage();
-        }
-        else {
-            this.getSprite();
-        }
     }
     handleImage() {
         if (this.img != undefined) {
@@ -52,13 +44,12 @@ class Circle {
         loader.load(ImageLoader.Runsword01);
         loader.msgPort.onmessage = (e) => {
             this.img = e.data;
-            this.drawImage();
         };
     }
     drawImage() {
         this.ctx.drawImage(this.img, this.pos.x, this.pos.y);
     }
-    draw() {
+    drawCircle() {
         this.ctx.beginPath();
         this.ctx.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2, true);
         this.ctx.fillStyle = this.color;

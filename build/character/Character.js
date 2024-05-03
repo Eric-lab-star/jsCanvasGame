@@ -1,10 +1,11 @@
+import Animation from "../animation/animation.js";
+import { playerStates } from "../animationManager/playerManager.js";
 import ImageLoader from "../image/ImageLoader.js";
 import KeyBoardInput from "../inputs/Keyboard.js";
 class Character {
-    constructor(ctx, position, size) {
+    constructor(ctx, position) {
         this.ctx = ctx;
         this.pos = position;
-        this.size = size;
         this.speed = 5;
         this.spriteImage = ImageLoader.playerSprites;
         new KeyBoardInput(this);
@@ -24,7 +25,8 @@ class Character {
     }
     getSprite() {
         const loader = new ImageLoader();
-        loader.loadSprites(this.spriteImage);
+        const animation = new Animation(playerStates, 40, 64);
+        loader.loadSprites(this.spriteImage, animation);
         loader.msgPort.onmessage = (e) => {
             if (e.data.type == "sprites") {
                 this.sprites = e.data.load;

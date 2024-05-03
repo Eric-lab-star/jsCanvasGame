@@ -7,14 +7,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import PlayerAnimation from "../animation/playerAnimation.js";
 class ImageLoader {
     constructor() {
         const msg = new MessageChannel();
         this.msgPort = msg.port2;
         this.eventSender = msg.port1;
     }
-    load(imagefile) {
+    loadImage(imagefile) {
         const imgHeight = 40;
         const imgWidth = 64;
         const scale = 2;
@@ -31,11 +30,11 @@ class ImageLoader {
             this.eventSender.postMessage(bitImg);
         }));
     }
-    loadSprites(imagefile) {
+    loadSprites(imagefile, Character) {
         const img = new Image();
         img.src = imagefile;
         img.addEventListener("load", () => __awaiter(this, void 0, void 0, function* () {
-            const animationSets = PlayerAnimation.loadAnimationSets(img);
+            const animationSets = Character.loadAnimationSets(img);
             const promisedAnimationSets = yield Promise.all(animationSets);
             this.eventSender.postMessage({
                 type: "sprites",
@@ -46,4 +45,5 @@ class ImageLoader {
 }
 ImageLoader.Runsword01 = "../../res/10-Run Sword/RunSword01.png";
 ImageLoader.playerSprites = "../../res/player_sprites.png";
+ImageLoader.fierceTooth = "../../res/fierce_tooth.png";
 export default ImageLoader;

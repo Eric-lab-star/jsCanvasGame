@@ -1,3 +1,5 @@
+import Animation from "../animation/animation.js";
+import { playerStates } from "../animationManager/playerManager.js";
 import ImageLoader from "../image/ImageLoader.js";
 import KeyBoardInput from "../inputs/Keyboard.js";
 import Vector2d from "../modules/Vector2d.js";
@@ -5,15 +7,13 @@ import Vector2d from "../modules/Vector2d.js";
 class Character {
   protected ctx: CanvasRenderingContext2D;
   protected pos: Vector2d;
-  protected size: number;
   public speed: number;
   protected sprites: ImageBitmap[][];
   protected spriteImage: string;
 
-  constructor(ctx: CanvasRenderingContext2D, position: Vector2d, size: number) {
+  constructor(ctx: CanvasRenderingContext2D, position: Vector2d) {
     this.ctx = ctx;
     this.pos = position;
-    this.size = size;
     this.speed = 5;
     this.spriteImage = ImageLoader.playerSprites;
     new KeyBoardInput(this);
@@ -40,7 +40,8 @@ class Character {
 
   public getSprite() {
     const loader = new ImageLoader();
-    loader.loadSprites(this.spriteImage);
+    const animation = new Animation(playerStates, 40, 64);
+    loader.loadSprites(this.spriteImage, animation);
     loader.msgPort.onmessage = (e: MessageEvent) => {
       if (e.data.type == "sprites") {
         this.sprites = e.data.load;

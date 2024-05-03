@@ -1,4 +1,4 @@
-import PlayerAnimation from "../animation/playerAnimation.js";
+import Animation from "../animation/animation.js";
 
 class ImageLoader {
   public msgPort: MessagePort;
@@ -12,8 +12,9 @@ class ImageLoader {
 
   public static readonly Runsword01 = "../../res/10-Run Sword/RunSword01.png";
   public static readonly playerSprites = "../../res/player_sprites.png";
+  public static readonly fierceTooth = "../../res/fierce_tooth.png";
 
-  public load(imagefile: string) {
+  public loadImage(imagefile: string) {
     const imgHeight = 40;
     const imgWidth = 64;
     const scale = 2;
@@ -31,12 +32,12 @@ class ImageLoader {
     });
   }
 
-  public loadSprites(imagefile: string) {
+  public loadSprites(imagefile: string, Character: Animation) {
     const img = new Image();
     img.src = imagefile;
 
     img.addEventListener("load", async () => {
-      const animationSets = PlayerAnimation.loadAnimationSets(img);
+      const animationSets = Character.loadAnimationSets(img);
       const promisedAnimationSets = await Promise.all(animationSets);
 
       this.eventSender.postMessage({

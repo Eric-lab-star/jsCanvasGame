@@ -1,4 +1,4 @@
-import PlayerAnimation from "../animation/playerAnimation.js";
+import { playerAnimationManager } from "../animationManager/playerManager.js";
 import Captain from "../character/Capatain.js";
 import Character from "../character/Character.js";
 import ImageLoader from "../image/ImageLoader.js";
@@ -19,24 +19,17 @@ class Game {
 
   public initCharacters() {
     const playerPos = new Vector2d(innerWidth / 2, innerHeight / 2);
-    this.player = new Captain(
-      this.ctx,
-      playerPos,
-      50,
-      ImageLoader.playerSprites,
-    );
+    this.player = new Captain(this.ctx, playerPos, ImageLoader.playerSprites);
   }
 
   private loop() {
     let animationTick = 0;
     const animationSpeed = 10;
+    const { idle } = playerAnimationManager.ordinal;
     const runner = () => {
       animationTick += 1 / animationSpeed;
       this.ctx.clearRect(0, 0, innerWidth, innerHeight);
-      this.player.handleAnimation(
-        Math.floor(animationTick),
-        PlayerAnimation.run,
-      );
+      this.player.handleAnimation(Math.floor(animationTick), idle);
       requestAnimationFrame(() => runner());
     };
     runner();

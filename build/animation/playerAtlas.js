@@ -1,29 +1,29 @@
-class PlayerAtlas {
+class PlayerAnimation {
     constructor() { }
-    static parser(state, img) {
+    static parser(x, y, img) {
         const imgs = [];
-        for (let i = 0; i < state; i++) {
-            imgs.push(createImageBitmap(img, PlayerAtlas.imgWidth * i, 0, PlayerAtlas.imgWidth, PlayerAtlas.imgHeight, PlayerAtlas.opt));
+        for (let i = 0; i < x; i++) {
+            imgs.push(createImageBitmap(img, PlayerAnimation.imgWidth * i, PlayerAnimation.imgHeight * y, PlayerAnimation.imgWidth, PlayerAnimation.imgHeight, PlayerAnimation.opt));
         }
         return imgs;
     }
 }
-PlayerAtlas.idle = 5;
-PlayerAtlas.jump1 = 6;
-PlayerAtlas.jump2 = 3;
-PlayerAtlas.fall = 1;
-PlayerAtlas.hit1 = 2;
-PlayerAtlas.hit2 = 3;
-PlayerAtlas.attack1 = 3;
-PlayerAtlas.attack2 = 3;
-PlayerAtlas.attack3 = 3;
-PlayerAtlas.totalStates = 9;
-PlayerAtlas.imgHeight = 40;
-PlayerAtlas.imgWidth = 64;
-PlayerAtlas.scale = 2;
-PlayerAtlas.opt = {
-    resizeWidth: PlayerAtlas.imgWidth * PlayerAtlas.scale,
-    resizeHeight: PlayerAtlas.imgHeight * PlayerAtlas.scale,
+PlayerAnimation.idle = 0;
+PlayerAnimation.jump1 = 1;
+PlayerAnimation.jump2 = 2;
+PlayerAnimation.fall = 3;
+PlayerAnimation.hit1 = 4;
+PlayerAnimation.hit2 = 5;
+PlayerAnimation.attack1 = 6;
+PlayerAnimation.attack2 = 7;
+PlayerAnimation.attack3 = 8;
+PlayerAnimation.states = [5, 6, 3, 1, 2, 3, 3, 3, 3];
+PlayerAnimation.imgHeight = 40;
+PlayerAnimation.imgWidth = 64;
+PlayerAnimation.scale = 2;
+PlayerAnimation.opt = {
+    resizeWidth: PlayerAnimation.imgWidth * PlayerAnimation.scale,
+    resizeHeight: PlayerAnimation.imgHeight * PlayerAnimation.scale,
     resizeQuality: "pixelated",
 };
-export default PlayerAtlas;
+export default PlayerAnimation;

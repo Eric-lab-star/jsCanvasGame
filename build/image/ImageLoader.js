@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import PlayerAtlas from "../animation/playerAtlas.js";
+import PlayerAnimation from "../animation/playerAnimation.js";
 class ImageLoader {
     constructor() {
         const msg = new MessageChannel();
@@ -35,13 +35,15 @@ class ImageLoader {
         const img = new Image();
         img.src = imagefile;
         img.addEventListener("load", () => __awaiter(this, void 0, void 0, function* () {
-            const player = new PlayerAtlas();
-            for (let i = 0; i < PlayerAtlas.totalStates; i++) { }
-            const idle = yield Promise.all(PlayerAtlas.parser(PlayerAtlas.idle, img));
-            this.eventSender.postMessage({ type: "sprites", load: idle });
+            const animationSets = PlayerAnimation.loadAnimationSets(img);
+            const promisedAnimationSets = yield Promise.all(animationSets);
+            this.eventSender.postMessage({
+                type: "sprites",
+                load: promisedAnimationSets,
+            });
         }));
     }
 }
 ImageLoader.Runsword01 = "../../res/10-Run Sword/RunSword01.png";
-ImageLoader.Sprites = "../../res/player_sprites.png";
+ImageLoader.playerSprites = "../../res/player_sprites.png";
 export default ImageLoader;

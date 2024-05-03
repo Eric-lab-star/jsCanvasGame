@@ -1,11 +1,12 @@
 import ImageLoader from "../image/ImageLoader.js";
 import KeyBoardInput from "../inputs/Keyboard.js";
-class Circle {
+class Character {
     constructor(ctx, position, size) {
         this.ctx = ctx;
         this.pos = position;
         this.size = size;
         this.speed = 5;
+        this.spriteImage = ImageLoader.playerSprites;
         new KeyBoardInput(this);
     }
     handleAnimation(animationTick, animation) {
@@ -23,7 +24,7 @@ class Circle {
     }
     getSprite() {
         const loader = new ImageLoader();
-        loader.loadSprites(ImageLoader.playerSprites);
+        loader.loadSprites(this.spriteImage);
         loader.msgPort.onmessage = (e) => {
             if (e.data.type == "sprites") {
                 this.sprites = e.data.load;
@@ -37,4 +38,4 @@ class Circle {
         this.speed = s;
     }
 }
-export default Circle;
+export default Character;

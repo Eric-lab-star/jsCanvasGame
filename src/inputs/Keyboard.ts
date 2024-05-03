@@ -1,8 +1,8 @@
-import Circle from "../modules/Circle.js";
+import Character from "../character/Character.js";
 
 class KeyBoardInput {
-  protected component: Circle;
-  constructor(component: Circle) {
+  protected component: Character;
+  constructor(component: Character) {
     this.component = component;
     addEventListener("keydown", (event) => this.move(event));
   }

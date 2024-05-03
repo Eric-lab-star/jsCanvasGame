@@ -1,9 +1,12 @@
-import Circle from "./Circle.js";
+import PlayerAnimation from "../animation/playerAnimation.js";
+import Captain from "../character/Capatain.js";
+import Character from "../character/Character.js";
+import ImageLoader from "../image/ImageLoader.js";
 import Vector2d from "./Vector2d.js";
 
 class Game {
   private ctx: CanvasRenderingContext2D;
-  private player: Circle;
+  private player: Character;
 
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
@@ -16,17 +19,24 @@ class Game {
 
   public initCharacters() {
     const playerPos = new Vector2d(innerWidth / 2, innerHeight / 2);
-    this.player = new Circle(this.ctx, playerPos, 50, "red");
+    this.player = new Captain(
+      this.ctx,
+      playerPos,
+      50,
+      ImageLoader.playerSprites,
+    );
   }
 
   private loop() {
     let animationTick = 0;
-    const animationSpeed = 8;
+    const animationSpeed = 10;
     const runner = () => {
       animationTick += 1 / animationSpeed;
       this.ctx.clearRect(0, 0, innerWidth, innerHeight);
-      this.player.handleAnimation(Math.floor(animationTick));
-      //this.player.handleImage();
+      this.player.handleAnimation(
+        Math.floor(animationTick),
+        PlayerAnimation.run,
+      );
       requestAnimationFrame(() => runner());
     };
     runner();

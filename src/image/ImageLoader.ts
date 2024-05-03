@@ -1,4 +1,4 @@
-import PlayerAtlas from "../animation/playerAtlas.js";
+import PlayerAnimation from "../animation/playerAnimation.js";
 
 class ImageLoader {
   public msgPort: MessagePort;
@@ -10,8 +10,8 @@ class ImageLoader {
     this.eventSender = msg.port1;
   }
 
-  public static Runsword01 = "../../res/10-Run Sword/RunSword01.png";
-  public static Sprites = "../../res/player_sprites.png";
+  public static readonly Runsword01 = "../../res/10-Run Sword/RunSword01.png";
+  public static readonly playerSprites = "../../res/player_sprites.png";
 
   public load(imagefile: string) {
     const imgHeight = 40;
@@ -36,14 +36,13 @@ class ImageLoader {
     img.src = imagefile;
 
     img.addEventListener("load", async () => {
-      const player = new PlayerAtlas();
-      // TODO: make animation atalas
+      const animationSets = PlayerAnimation.loadAnimationSets(img);
+      const promisedAnimationSets = await Promise.all(animationSets);
 
-      for (let i = 0; i < PlayerAtlas.totalStates; i++) {}
-
-      const idle = await Promise.all(PlayerAtlas.parser(PlayerAtlas.idle, img));
-
-      this.eventSender.postMessage({ type: "sprites", load: idle });
+      this.eventSender.postMessage({
+        type: "sprites",
+        load: promisedAnimationSets,
+      });
     });
   }
 }

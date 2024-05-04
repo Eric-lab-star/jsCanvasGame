@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import AnimationManager from "../animationManager/AnimationManager.js";
 class Animation {
-    constructor(frameInfoObj, imgHeight, imgWidth) {
-        this.manager = new AnimationManager(frameInfoObj);
+    constructor(stateObj, imgWidth, imgHeight) {
+        this.manager = new AnimationManager(stateObj);
         this.imgHeight = imgHeight;
         this.imgWidth = imgWidth;
         this.opt = {
@@ -19,14 +19,14 @@ class Animation {
             resizeQuality: "pixelated",
         };
     }
-    loadAnimationSets(img) {
+    loadAnimationStates(img) {
         const animationSets = this.manager.values.map((x, y) => __awaiter(this, void 0, void 0, function* () {
-            const animation = this.loader(x, y, img);
+            const animation = this.loadAnimation(x, y, img);
             return Promise.all(animation);
         }));
         return animationSets;
     }
-    loader(x, y, img) {
+    loadAnimation(x, y, img) {
         const imgs = [];
         for (let i = 0; i < x; i++) {
             imgs.push(this.createImageBitmap(img, i, y));

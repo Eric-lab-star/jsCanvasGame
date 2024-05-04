@@ -1,13 +1,14 @@
 import Animation from "../animation/animation.js";
-import { playerStates } from "../animationManager/playerManager.js";
 import ImageLoader from "../image/ImageLoader.js";
 import KeyBoardInput from "../inputs/Keyboard.js";
 class Character {
-    constructor(ctx, position) {
+    constructor(ctx, position, imgWidth, imgHeight) {
         this.ctx = ctx;
         this.pos = position;
         this.speed = 5;
         this.spriteImage = ImageLoader.playerSprites;
+        this.imgWidth = imgWidth;
+        this.imgHeight = imgHeight;
         new KeyBoardInput(this);
     }
     handleAnimation(animationTick, animation) {
@@ -15,7 +16,7 @@ class Character {
             this.drawAnimation(animationTick, animation);
         }
         else {
-            this.getSprite();
+            this.setSprites();
         }
     }
     drawAnimation(animationTick, animation) {
@@ -23,9 +24,9 @@ class Character {
         const modulo = animationTick - this.sprites[animation].length * intValue;
         this.ctx.drawImage(this.sprites[animation][modulo], this.pos.x, this.pos.y);
     }
-    getSprite() {
+    setSprites() {
         const loader = new ImageLoader();
-        const animation = new Animation(playerStates, 40, 64);
+        const animation = new Animation(this.animationStates, this.imgWidth, this.imgHeight);
         loader.loadSprites(this.spriteImage, animation);
         loader.msgPort.onmessage = (e) => {
             if (e.data.type == "sprites") {

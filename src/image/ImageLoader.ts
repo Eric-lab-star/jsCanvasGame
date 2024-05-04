@@ -32,12 +32,12 @@ class ImageLoader {
     });
   }
 
-  public loadSprites(imagefile: string, Character: Animation) {
+  public loadSprites(imagefile: string, animation: Animation) {
     const img = new Image();
     img.src = imagefile;
 
     img.addEventListener("load", async () => {
-      const animationSets = Character.loadAnimationSets(img);
+      const animationSets = animation.loadAnimationStates(img);
       const promisedAnimationSets = await Promise.all(animationSets);
 
       this.eventSender.postMessage({

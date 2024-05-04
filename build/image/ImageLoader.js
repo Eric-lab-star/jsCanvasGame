@@ -30,11 +30,11 @@ class ImageLoader {
             this.eventSender.postMessage(bitImg);
         }));
     }
-    loadSprites(imagefile, Character) {
+    loadSprites(imagefile, animation) {
         const img = new Image();
         img.src = imagefile;
         img.addEventListener("load", () => __awaiter(this, void 0, void 0, function* () {
-            const animationSets = Character.loadAnimationSets(img);
+            const animationSets = animation.loadAnimationStates(img);
             const promisedAnimationSets = yield Promise.all(animationSets);
             this.eventSender.postMessage({
                 type: "sprites",

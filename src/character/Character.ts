@@ -1,15 +1,18 @@
 import Animation from "../animation/animation.js";
-import ImageLoader from "../image/ImageLoader.js";
 import KeyBoardInput from "../inputs/Keyboard.js";
 import Vector2d from "../modules/Vector2d.js";
 
-class Character {
+type stateInfo = {
+  [key: string]: number;
+};
+
+export default class Character {
   protected ctx: CanvasRenderingContext2D;
   protected pos: Vector2d;
   public speed: number;
-  protected sprites: ImageBitmap[][];
+  protected animation: ImageBitmap[][];
   protected spriteImage: string;
-  protected animationStates: { [key: string]: number };
+  protected animationStates: stateInfo;
   protected imgWidth: number;
   protected imgHeight: number;
 
@@ -18,13 +21,16 @@ class Character {
     position: Vector2d,
     imgWidth: number,
     imgHeight: number,
+    animationStates: stateInfo,
+    imgsrc: string,
   ) {
     this.ctx = ctx;
     this.pos = position;
     this.speed = 5;
-    this.spriteImage = ImageLoader.playerSprites;
     this.imgWidth = imgWidth;
     this.imgHeight = imgHeight;
+    this.animationStates = animationStates;
+    this.spriteImage = imgsrc;
 
     new KeyBoardInput(this);
   }
@@ -33,35 +39,47 @@ class Character {
    *or drawAnimation. Received Parameters are passed to
    * drawAnimation function
    */
-  public handleAnimation(animationTick: number, animation: number) {
-    if (this.sprites != undefined) {
-      this.drawAnimation(animationTick, animation);
+  public handleAnimation(animationTick: number, animationState: number) {
+    if (this.animation != undefined) {
+      this.drawAnimation(animationTick, animationState);
     } else {
-      this.setSprites();
+      this.setAnimation();
     }
   }
 
   //5 % 2 = 1
   //1 = 5 - 2*(5/2)
+  /**
+   *
+   * */
   public drawAnimation(animationTick: number, animation: number) {
-    const intValue = Math.floor(animationTick / this.sprites[animation].length);
-    const modulo = animationTick - this.sprites[animation].length * intValue; // 0 <= sprites[animation].length < i
-    this.ctx.drawImage(this.sprites[animation][modulo], this.pos.x, this.pos.y);
+    const intValue = Math.floor(
+      animationTick / this.animation[animation].length,
+    );
+    const modulo = animationTick - this.animation[animation].length * intValue; // 0 <= sprites[animation].length < i
+    this.ctx.drawImage(
+      this.animation[animation][modulo],
+      this.pos.x,
+      this.pos.y,
+    );
   }
-
-  public setSprites() {
-    const loader = new ImageLoader();
+  /**
+   * create Character image and set animation
+   * */
+  public setAnimation() {
+    const img = new Image();
     const animation = new Animation(
+      img,
+      this.spriteImage,
       this.animationStates,
       this.imgWidth,
       this.imgHeight,
     );
-    loader.loadSprites(this.spriteImage, animation);
-    loader.msgPort.onmessage = (e: MessageEvent) => {
-      if (e.data.type == "sprites") {
-        this.sprites = e.data.load;
-      }
-    };
+
+    img.addEventListener("load", async () => {
+      const animationSets = animation.loadAnimationSets();
+      this.animation = await Promise.all(animationSets);
+    });
   }
 
   public update(x: number, y: number) {
@@ -72,5 +90,3 @@ class Character {
     this.speed = s;
   }
 }
-
-export default Character;

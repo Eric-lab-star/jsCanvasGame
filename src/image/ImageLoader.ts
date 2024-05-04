@@ -1,6 +1,10 @@
 import Animation from "../animation/animation.js";
 
-class ImageLoader {
+type stateInfo = {
+  [key: string]: number;
+};
+
+export default class ImageLoader {
   public msgPort: MessagePort;
   private eventSender: MessagePort;
 
@@ -10,10 +14,7 @@ class ImageLoader {
     this.eventSender = msg.port1;
   }
 
-  public static readonly Runsword01 = "../../res/10-Run Sword/RunSword01.png";
-  public static readonly playerSprites = "../../res/player_sprites.png";
-  public static readonly fierceTooth = "../../res/fierce_tooth.png";
-
+  /** load single image from file*/
   public loadImage(imagefile: string) {
     const imgHeight = 40;
     const imgWidth = 64;
@@ -32,14 +33,27 @@ class ImageLoader {
     });
   }
 
-  public loadSprites(imagefile: string, animation: Animation) {
+  /**loads sprites to create animation
+   * images are passed by MessageChannel
+   * */
+  public loadSprites(
+    imagefile: string,
+    animationStates: stateInfo,
+    imgwidth: number,
+    imgHeight: number,
+  ) {
     const img = new Image();
+    const animation = new Animation(
+      img,
+      "../../res/player_sprites.png",
+      animationStates,
+      imgwidth,
+      imgHeight,
+    );
     img.src = imagefile;
-
     img.addEventListener("load", async () => {
-      const animationSets = animation.loadAnimationStates(img);
+      const animationSets = animation.loadAnimationSets();
       const promisedAnimationSets = await Promise.all(animationSets);
-
       this.eventSender.postMessage({
         type: "sprites",
         load: promisedAnimationSets,
@@ -47,5 +61,3 @@ class ImageLoader {
     });
   }
 }
-
-export default ImageLoader;

@@ -1,16 +1,9 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import AnimationManager from "../animationManager/AnimationManager.js";
 class Animation {
-    constructor(stateObj, imgWidth, imgHeight) {
-        this.manager = new AnimationManager(stateObj);
+    constructor(image, spriteImage, stateInfo, imgWidth, imgHeight) {
+        this.image = image;
+        this.spriteImage = spriteImage;
+        this.frames = new AnimationManager(stateInfo).frames();
         this.imgHeight = imgHeight;
         this.imgWidth = imgWidth;
         this.opt = {
@@ -18,23 +11,25 @@ class Animation {
             resizeHeight: this.imgHeight * Animation.scale,
             resizeQuality: "pixelated",
         };
+        this.image.src = this.spriteImage;
     }
-    loadAnimationStates(img) {
-        const animationSets = this.manager.values.map((x, y) => __awaiter(this, void 0, void 0, function* () {
-            const animation = this.loadAnimation(x, y, img);
-            return Promise.all(animation);
-        }));
+    loadAnimationSets() {
+        const animationSets = this.frames.map((x, y) => this.mapHandler(x, y));
         return animationSets;
     }
-    loadAnimation(x, y, img) {
+    mapHandler(x, y) {
+        const animation = this.loadAnimation(x, y);
+        return Promise.all(animation);
+    }
+    loadAnimation(x, y) {
         const imgs = [];
         for (let i = 0; i < x; i++) {
-            imgs.push(this.createImageBitmap(img, i, y));
+            imgs.push(this.createImageBitmap(i, y));
         }
         return imgs;
     }
-    createImageBitmap(img, x, y) {
-        return createImageBitmap(img, this.imgWidth * x, this.imgHeight * y, this.imgWidth, this.imgHeight, this.opt);
+    createImageBitmap(x, y) {
+        return createImageBitmap(this.image, this.imgWidth * x, this.imgHeight * y, this.imgWidth, this.imgHeight, this.opt);
     }
 }
 Animation.scale = 2;

@@ -1,21 +1,31 @@
 import AnimationManager from "../animationManager/AnimationManager.js";
 
+type stateObj = {
+  [key: string]: number;
+};
 /**
- * Animation Class
- *
  * creates animation from sprite image
  * */
 export default class Animation {
-  protected manager: AnimationManager;
+  protected image: HTMLImageElement;
+  protected spriteImage: string;
   protected opt: ImageBitmapOptions;
   protected imgHeight: number;
   protected imgWidth: number;
+  protected frames: number[];
+
+  protected static scale = 2;
+
   constructor(
-    stateObj: { [key: string]: number },
+    image: HTMLImageElement,
+    spriteImage: string,
+    stateInfo: stateObj,
     imgWidth: number,
     imgHeight: number,
   ) {
-    this.manager = new AnimationManager(stateObj);
+    this.image = image;
+    this.spriteImage = spriteImage;
+    this.frames = new AnimationManager(stateInfo).frames();
     this.imgHeight = imgHeight;
     this.imgWidth = imgWidth;
     this.opt = {
@@ -23,28 +33,30 @@ export default class Animation {
       resizeHeight: this.imgHeight * Animation.scale,
       resizeQuality: "pixelated",
     };
+    this.image.src = this.spriteImage;
   }
-
-  protected static scale = 2;
 
   /**
    * loadAnimationStates is used to load group of multiple animations
+   *
    */
-  public loadAnimationStates(img: HTMLImageElement) {
-    const animationSets = this.manager.values.map(async (x, y) => {
-      const animation = this.loadAnimation(x, y, img);
-      return Promise.all(animation);
-    });
+  public loadAnimationSets() {
+    const animationSets = this.frames.map((x, y) => this.mapHandler(x, y));
     return animationSets;
+  }
+
+  protected mapHandler(x: number, y: number) {
+    const animation = this.loadAnimation(x, y);
+    return Promise.all(animation);
   }
 
   /**
    * loadAnimation function is used to load animation from sprite image
    * */
-  protected loadAnimation(x: number, y: number, img: HTMLImageElement) {
+  protected loadAnimation(x: number, y: number) {
     const imgs: Promise<ImageBitmap>[] = [];
     for (let i = 0; i < x; i++) {
-      imgs.push(this.createImageBitmap(img, i, y));
+      imgs.push(this.createImageBitmap(i, y));
     }
     return imgs;
   }
@@ -52,9 +64,9 @@ export default class Animation {
   /**
    * createImageBitmap function is a wrapper function of createImageBitmap webapi
    * */
-  protected createImageBitmap(img: HTMLImageElement, x: number, y: number) {
+  protected createImageBitmap(x: number, y: number) {
     return createImageBitmap(
-      img,
+      this.image,
       this.imgWidth * x,
       this.imgHeight * y,
       this.imgWidth,

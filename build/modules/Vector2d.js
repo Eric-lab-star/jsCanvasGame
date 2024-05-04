@@ -3,12 +3,6 @@ class Vector2d {
         this.x = x;
         this.y = y;
     }
-    getXY() {
-        return {
-            x: this.x,
-            y: this.y,
-        };
-    }
     update(dx, dy) {
         this.x += dx;
         this.y += dy;

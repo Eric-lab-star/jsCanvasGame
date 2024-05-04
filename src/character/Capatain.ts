@@ -1,18 +1,45 @@
-import { playerStates } from "../animationManager/CharactersManager.js";
 import Vector2d from "../modules/Vector2d.js";
 import Character from "./Character.js";
 
 export default class Captain extends Character {
-  constructor(
-    ctx: CanvasRenderingContext2D,
-    position: Vector2d,
-    spriteImage: string,
-    imgWidth: number,
-    imgHeight: number,
-  ) {
-    super(ctx, position, imgWidth, imgHeight);
-    this.speed = 5;
-    this.spriteImage = spriteImage;
-    this.animationStates = playerStates;
+  constructor(ctx: CanvasRenderingContext2D, position: Vector2d) {
+    super(
+      ctx,
+      position,
+      captainImgSize.width,
+      captainImgSize.height,
+      playerStates,
+      captainImg,
+    );
   }
 }
+
+const captainImgSize = {
+  width: 64,
+  height: 40,
+};
+
+/**
+ *idle: 5,
+ *run: 6,
+ *jump: 3,
+ *fall: 1,
+ *hit1: 2,
+ *hit2: 3,
+ *attack1: 3,
+ *attack2: 3,
+ *attack3: 3,
+ * */
+const captainImg = "../../res/player_sprites.png";
+
+export const playerStates = {
+  idle: 5,
+  run: 6,
+  jump: 3,
+  fall: 1,
+  hit1: 2,
+  hit2: 3,
+  attack1: 3,
+  attack2: 3,
+  attack3: 3,
+};

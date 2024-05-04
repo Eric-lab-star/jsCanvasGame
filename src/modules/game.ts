@@ -36,7 +36,7 @@ class Game {
       this.ctx,
       enemyPos,
       ImageLoader.fierceTooth,
-      34,
+      68,
       34,
     );
   }

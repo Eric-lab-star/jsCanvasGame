@@ -15,7 +15,7 @@ class Game {
         const playerPos = new Vector2d(innerWidth / 2, innerHeight / 2);
         const enemyPos = new Vector2d(innerWidth / 2, innerHeight / 4);
         this.player = new Captain(this.ctx, playerPos, ImageLoader.playerSprites, 64, 40);
-        this.enemy = new FierceTooth(this.ctx, enemyPos, ImageLoader.fierceTooth, 34, 34);
+        this.enemy = new FierceTooth(this.ctx, enemyPos, ImageLoader.fierceTooth, 68, 34);
     }
     loop() {
         let animationTick = 0;

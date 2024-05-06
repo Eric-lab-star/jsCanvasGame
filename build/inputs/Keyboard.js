@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 class KeyBoardInput {
     constructor(component) {
         this.component = component;
@@ -16,4 +18,4 @@ class KeyBoardInput {
         }
     }
 }
-export default KeyBoardInput;
+exports.default = KeyBoardInput;

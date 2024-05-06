@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import Animation from "../animation/animation.js";
-export default class ImageLoader {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const animation_js_1 = __importDefault(require("../animation/animation.js"));
+class ImageLoader {
     constructor() {
         const msg = new MessageChannel();
         this.msgPort = msg.port2;
@@ -33,7 +38,7 @@ export default class ImageLoader {
     }
     loadSprites(imagefile, animationStates, imgwidth, imgHeight) {
         const img = new Image();
-        const animation = new Animation(img, "../../res/player_sprites.png", animationStates, imgwidth, imgHeight);
+        const animation = new animation_js_1.default(img, "../../res/player_sprites.png", animationStates, imgwidth, imgHeight);
         img.src = imagefile;
         img.addEventListener("load", () => __awaiter(this, void 0, void 0, function* () {
             const animationSets = animation.loadAnimationSets();
@@ -45,3 +50,4 @@ export default class ImageLoader {
         }));
     }
 }
+exports.default = ImageLoader;

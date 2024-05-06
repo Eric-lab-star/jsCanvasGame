@@ -1,9 +1,14 @@
-import AnimationManager from "../animationManager/AnimationManager.js";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const AnimationManager_js_1 = __importDefault(require("../animationManager/AnimationManager.js"));
 class Animation {
     constructor(image, spriteImage, stateInfo, imgWidth, imgHeight) {
         this.image = image;
         this.spriteImage = spriteImage;
-        this.frames = new AnimationManager(stateInfo).frames();
+        this.frames = new AnimationManager_js_1.default(stateInfo).frames();
         this.imgHeight = imgHeight;
         this.imgWidth = imgWidth;
         this.opt = {
@@ -33,4 +38,4 @@ class Animation {
     }
 }
 Animation.scale = 2;
-export default Animation;
+exports.default = Animation;

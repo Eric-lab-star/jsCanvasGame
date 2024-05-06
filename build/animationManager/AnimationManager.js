@@ -1,4 +1,6 @@
-export default class AnimationManager {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class AnimationManager {
     constructor(state) {
         this.state = state;
     }
@@ -16,3 +18,4 @@ export default class AnimationManager {
         return Object.keys(this.state);
     }
 }
+exports.default = AnimationManager;

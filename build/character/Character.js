@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import Animation from "../animation/animation.js";
-import KeyBoardInput from "../inputs/Keyboard.js";
-export default class Character {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const animation_js_1 = __importDefault(require("../animation/animation.js"));
+const Keyboard_js_1 = __importDefault(require("../inputs/Keyboard.js"));
+class Character {
     constructor(ctx, position, imgWidth, imgHeight, animationStates, imgsrc) {
         this.ctx = ctx;
         this.pos = position;
@@ -18,7 +23,7 @@ export default class Character {
         this.imgHeight = imgHeight;
         this.animationStates = animationStates;
         this.spriteImage = imgsrc;
-        new KeyBoardInput(this);
+        new Keyboard_js_1.default(this);
     }
     handleAnimation(animationTick, animationState) {
         if (this.animation != undefined) {
@@ -35,7 +40,7 @@ export default class Character {
     }
     setAnimation() {
         const img = new Image();
-        const animation = new Animation(img, this.spriteImage, this.animationStates, this.imgWidth, this.imgHeight);
+        const animation = new animation_js_1.default(img, this.spriteImage, this.animationStates, this.imgWidth, this.imgHeight);
         img.addEventListener("load", () => __awaiter(this, void 0, void 0, function* () {
             const animationSets = animation.loadAnimationSets();
             this.animation = yield Promise.all(animationSets);
@@ -48,3 +53,4 @@ export default class Character {
         this.speed = s;
     }
 }
+exports.default = Character;

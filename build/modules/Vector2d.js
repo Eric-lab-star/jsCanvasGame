@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 class Vector2d {
     constructor(x, y) {
         this.x = x;
@@ -8,4 +10,4 @@ class Vector2d {
         this.y += dy;
     }
 }
-export default Vector2d;
+exports.default = Vector2d;

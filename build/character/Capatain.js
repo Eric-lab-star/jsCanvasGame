@@ -1,15 +1,22 @@
-import Character from "./Character.js";
-export default class Captain extends Character {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.playerStates = void 0;
+const Character_js_1 = __importDefault(require("./Character.js"));
+class Captain extends Character_js_1.default {
     constructor(ctx, position) {
-        super(ctx, position, captainImgSize.width, captainImgSize.height, playerStates, captainImg);
+        super(ctx, position, captainImgSize.width, captainImgSize.height, exports.playerStates, captainImg);
     }
 }
+exports.default = Captain;
 const captainImgSize = {
     width: 64,
     height: 40,
 };
 const captainImg = "../../res/player_sprites.png";
-export const playerStates = {
+exports.playerStates = {
     idle: 5,
     run: 6,
     jump: 3,

@@ -1,4 +1,4 @@
-import Character from "../character/Character.js";
+import Character from "../character/Character";
 
 class KeyBoardInput {
   protected component: Character;

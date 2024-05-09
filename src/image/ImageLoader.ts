@@ -1,4 +1,4 @@
-import Animation from "../animation/animation.js";
+import Animation from "../animation/animation";
 
 type stateInfo = {
   [key: string]: number;

@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "target": "ES6",
     "lib": ["ES2019", "dom"],
     "module": "nodenext",
@@ -16,8 +18,9 @@
     "noImplicitReturns": true,
     "moduleResolution": "nodenext",
     "moduleSuffixes": [""],
-		"esModuleInterop":true ,
+    "esModuleInterop": true
   },
+
   "include": ["src/**/*"],
   "exclude": ["**/*.spec.ts"],
   //"exclude": ["**/*.spec.ts","**/workers/**/*"],

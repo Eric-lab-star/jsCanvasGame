@@ -1,5 +1,5 @@
-import Vector2d from "../modules/Vector2d.js";
-import Character from "./Character.js";
+import Vector2d from "../modules/Vector2d";
+import Character from "./Character";
 
 export default class Captain extends Character {
   constructor(ctx: CanvasRenderingContext2D, position: Vector2d) {

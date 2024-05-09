@@ -1,11 +1,11 @@
 import {
   fierceToothAnimationManager,
   playerAnimationManager,
-} from "../animationManager/CharactersManager.js";
-import Captain from "../character/Capatain.js";
-import Character from "../character/Character.js";
-import FierceTooth from "../character/FierceTooth.js";
-import Vector2d from "./Vector2d.js";
+} from "../animationManager/CharactersManager";
+import Captain from "../character/Capatain";
+import Character from "../character/Character";
+import FierceTooth from "../character/FierceTooth";
+import Vector2d from "./Vector2d";
 
 class Game {
   private ctx: CanvasRenderingContext2D;

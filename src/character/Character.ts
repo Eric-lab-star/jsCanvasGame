@@ -1,6 +1,6 @@
-import Animation from "../animation/animation.js";
-import KeyBoardInput from "../inputs/Keyboard.js";
-import Vector2d from "../modules/Vector2d.js";
+import Animation from "../animation/animation";
+import KeyBoardInput from "../inputs/Keyboard";
+import Vector2d from "../modules/Vector2d";
 
 type stateInfo = {
   [key: string]: number;

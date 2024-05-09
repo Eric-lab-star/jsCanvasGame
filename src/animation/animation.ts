@@ -1,4 +1,4 @@
-import AnimationManager from "../animationManager/AnimationManager.js";
+import AnimationManager from "../animationManager/AnimationManager";
 
 type stateObj = {
   [key: string]: number;
@@ -45,6 +45,9 @@ export default class Animation {
     return animationSets;
   }
 
+  /**
+   * mapHanlder is called on each frames to load animation
+   * */
   protected mapHandler(x: number, y: number) {
     const animation = this.loadAnimation(x, y);
     return Promise.all(animation);

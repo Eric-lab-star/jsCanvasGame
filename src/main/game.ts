@@ -5,7 +5,7 @@ import {
 import Captain from "../character/Capatain";
 import Character from "../character/Character";
 import FierceTooth from "../character/FierceTooth";
-import Vector2d from "./Vector2d";
+import Vector2d from "../utilz/Vector2d";
 
 class Game {
   private ctx: CanvasRenderingContext2D;

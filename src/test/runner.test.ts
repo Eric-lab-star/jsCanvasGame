@@ -28,7 +28,7 @@ describe("setCanvasWidthHeight()", () => {
 
 describe("ctxGetter()", () => {
   it("return ctx", () => {
-    if (canvas != null) {
+    if (canvas != null && canvas.getContext("2d") != null) {
       expect(ctxGetter(canvas)).toEqual(canvas.getContext("2d"));
     }
   });

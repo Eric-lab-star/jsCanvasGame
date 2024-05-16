@@ -26,7 +26,6 @@ export function runner(canvas: HTMLCanvasElement | null) {
     console.log("START GAME");
   } catch (err) {
     if (err instanceof Error) {
-      alert(err.message);
       console.log(err.message);
     }
   }

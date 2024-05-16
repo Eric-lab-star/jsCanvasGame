@@ -1,4 +1,4 @@
-import Vector2d from "../modules/Vector2d";
+import Vector2d from "../utilz/Vector2d";
 import Character from "./Character";
 
 export default class Captain extends Character {

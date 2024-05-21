@@ -13,6 +13,7 @@ export default class AnimationManager {
   constructor(state: stateObj) {
     this.state = state;
   }
+
   /**creates object in order like enum
    * in other languages*/
   public enum() {

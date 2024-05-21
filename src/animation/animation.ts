@@ -63,7 +63,8 @@ export default class Animation {
       img
         .then((img) => imgs.push(img))
         .catch((err) => {
-          console.log(err);
+          console.error(err);
+          throw err;
         });
     }
     return imgs;

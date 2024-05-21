@@ -66,5 +66,9 @@ describe("Character class", () => {
       expect.any(Function),
       { once: true, passive: false },
     );
+
+    const handler = mockImage.addEventListener.mock.calls[0][1];
+    handler();
+    expect(Animation.prototype.loadAnimationSets).toHaveBeenCalled();
   });
 });

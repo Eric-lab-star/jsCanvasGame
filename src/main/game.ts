@@ -9,20 +9,22 @@ import Vector2d from "../utilz/Vector2d";
 
 class Game {
   private ctx: CanvasRenderingContext2D;
-  //
-  private player: Character;
-  private enemy: FierceTooth;
+  private player!: Character;
+  private enemy!: FierceTooth;
   private animationSpeed: number;
   private animationTick: number;
 
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
+    this.animationSpeed = 10;
+    this.animationTick = 0;
+    this.initCharacters();
+  }
+  private initCharacters() {
     const playerPos = new Vector2d(innerWidth / 2, innerHeight / 2);
     const enemyPos = new Vector2d(innerWidth / 2, innerHeight / 4);
     this.player = new Captain(this.ctx, playerPos);
     this.enemy = new FierceTooth(this.ctx, enemyPos);
-    this.animationSpeed = 10;
-    this.animationTick = 0;
   }
 
   public start() {

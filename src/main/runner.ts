@@ -13,11 +13,7 @@ export function ctxGetter(canvas: HTMLCanvasElement) {
   return ctx;
 }
 
-export function runner(canvas: HTMLCanvasElement | null) {
-  if (canvas == null) {
-    throw new Error("canvas is null");
-  }
-
+export function runner(canvas: HTMLCanvasElement) {
   setCanvasWidthHeight(canvas);
   try {
     const ctx = ctxGetter(canvas);

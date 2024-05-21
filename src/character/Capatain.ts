@@ -1,3 +1,4 @@
+import AnimationManager from "../animationManager/AnimationManager";
 import KeyBoardInput from "../inputs/Keyboard";
 import Vector2d from "../utilz/Vector2d";
 import Character from "./Character";
@@ -7,15 +8,35 @@ export default class Captain extends Character {
   private right: boolean = false;
   private up: boolean = false;
   private down: boolean = false;
+  private static captainImgSize = {
+    width: 64,
+    height: 40,
+  };
+
+  private static captainImg = "../../res/player_sprites.png";
+
+  private static states = {
+    idle: 5,
+    run: 6,
+    jump: 3,
+    fall: 1,
+    hit1: 2,
+    hit2: 3,
+    attack1: 3,
+    attack2: 3,
+    attack3: 3,
+  };
+
+  private static aniStates = new AnimationManager(Captain.states);
 
   constructor(ctx: CanvasRenderingContext2D, position: Vector2d) {
     super(
       ctx,
       position,
-      captainImgSize.width,
-      captainImgSize.height,
-      playerStates,
-      captainImg,
+      Captain.captainImgSize.width,
+      Captain.captainImgSize.height,
+      Captain.aniStates.frames(),
+      Captain.captainImg,
     );
     this.addKeyListener(new KeyBoardInput(this));
   }
@@ -24,11 +45,13 @@ export default class Captain extends Character {
     addEventListener("keydown", (event: KeyboardEvent) => {
       input.keyPressed(event.key);
       this.moveCaptain();
+      this.animationState = Captain.aniStates.enum("run");
     });
 
     addEventListener("keyup", (event: KeyboardEvent) => {
       input.keyReleased(event.key);
       this.moveCaptain();
+      this.animationState = Captain.aniStates.enum("idle");
     });
   }
 
@@ -79,33 +102,3 @@ export default class Captain extends Character {
     return this.down;
   }
 }
-
-const captainImgSize = {
-  width: 64,
-  height: 40,
-};
-
-/**
- *idle: 5,
- *run: 6,
- *jump: 3,
- *fall: 1,
- *hit1: 2,
- *hit2: 3,
- *attack1: 3,
- *attack2: 3,
- *attack3: 3,
- * */
-const captainImg = "../../res/player_sprites.png";
-
-export const playerStates = {
-  idle: 5,
-  run: 6,
-  jump: 3,
-  fall: 1,
-  hit1: 2,
-  hit2: 3,
-  attack1: 3,
-  attack2: 3,
-  attack3: 3,
-};

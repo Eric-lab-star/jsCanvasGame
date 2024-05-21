@@ -1,7 +1,3 @@
-import {
-  fierceToothAnimationManager,
-  playerAnimationManager,
-} from "../animationManager/CharactersManager";
 import Captain from "../character/Capatain";
 import Character from "../character/Character";
 import FierceTooth from "../character/FierceTooth";
@@ -28,13 +24,11 @@ class Game {
   }
 
   public start() {
-    const { idle: playerIdle } = playerAnimationManager.enum();
-    const { run: enemyRun } = fierceToothAnimationManager.enum();
     try {
       this.animationTick += 1 / this.animationSpeed;
       this.ctx.clearRect(0, 0, innerWidth, innerHeight);
-      this.player.handleAnimation(Math.floor(this.animationTick), playerIdle);
-      this.enemy.handleAnimation(Math.floor(this.animationTick), enemyRun);
+      this.player.handleAnimation(Math.floor(this.animationTick));
+      this.enemy.handleAnimation(Math.floor(this.animationTick));
       requestAnimationFrame(() => this.start());
     } catch (error) {
       throw error;

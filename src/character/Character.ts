@@ -1,26 +1,23 @@
 import Animation from "../animation/animation";
 import Vector2d from "../utilz/Vector2d";
 
-type stateInfo = {
-  [key: string]: number;
-};
-
 export default class Character {
   protected ctx: CanvasRenderingContext2D;
   protected pos: Vector2d;
   public speed: number;
   protected animation: ImageBitmap[][] | null;
   protected spriteImage: string;
-  protected animationStates: stateInfo;
+  protected animationFrames: number[];
   protected imgWidth: number;
   protected imgHeight: number;
+  protected animationState: number;
 
   constructor(
     ctx: CanvasRenderingContext2D,
     position: Vector2d,
     imgWidth: number,
     imgHeight: number,
-    animationStates: stateInfo,
+    animationFrames: number[],
     imgsrc: string,
   ) {
     this.ctx = ctx;
@@ -28,18 +25,19 @@ export default class Character {
     this.speed = 5;
     this.imgWidth = imgWidth;
     this.imgHeight = imgHeight;
-    this.animationStates = animationStates;
+    this.animationFrames = animationFrames;
     this.spriteImage = imgsrc;
     this.animation = null;
+    this.animationState = 0;
   }
 
   /** handleAnimation function either getSprite image
    *or drawAnimation. Received Parameters are passed to
    * drawAnimation function
    */
-  public handleAnimation(animationTick: number, animationState: number) {
+  public handleAnimation(animationTick: number) {
     try {
-      this.drawAnimation(animationTick, animationState);
+      this.drawAnimation(animationTick);
     } catch (err) {
       this.setAnimation();
     }
@@ -47,20 +45,21 @@ export default class Character {
 
   //5 % 2 = 1
   //1 = 5 - 2*(5/2)
-  public drawAnimation(animationTick: number, animation: number) {
+  public drawAnimation(animationTick: number) {
     if (this.animation == null) {
       throw new Error("need to set animation first");
     }
 
     const intValue = Math.floor(
-      animationTick / this.animation[animation].length,
+      animationTick / this.animation[this.animationState].length,
     );
 
     // 0 <= sprites[animation].length < i
-    const modulo = animationTick - this.animation[animation].length * intValue;
+    const modulo =
+      animationTick - this.animation[this.animationState].length * intValue;
 
     this.ctx.drawImage(
-      this.animation[animation][modulo],
+      this.animation[this.animationState][modulo],
       this.pos.x,
       this.pos.y,
     );
@@ -74,7 +73,7 @@ export default class Character {
     const animation = new Animation(
       img,
       this.spriteImage,
-      this.animationStates,
+      this.animationFrames,
       this.imgWidth,
       this.imgHeight,
     );

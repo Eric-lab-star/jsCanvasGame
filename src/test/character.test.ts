@@ -15,7 +15,7 @@ describe("Character class", () => {
   let mockImage: any;
   beforeEach(() => {
     if (ctx != null) {
-      ch = new Character(ctx, new Vector2d(1, 2), 120, 120, {}, "");
+      ch = new Character(ctx, new Vector2d(1, 2), 120, 120, [4], "");
     }
 
     mockImage = {
@@ -44,7 +44,7 @@ describe("Character class", () => {
   it("should thorw error on drawAnimation method", () => {
     expect(ch).toHaveProperty("drawAnimation");
     const spy = vi.spyOn(ch, "drawAnimation");
-    expect(() => ch.drawAnimation(1, 1)).toThrowError(
+    expect(() => ch.drawAnimation(1)).toThrowError(
       "need to set animation first",
     );
     expect(spy).toHaveBeenCalled();

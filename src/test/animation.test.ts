@@ -1,13 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import Animation from "../animation/animation";
-import AnimationManager from "../animationManager/AnimationManager";
-vi.mock("../animationManager/AnimationManager", () => {
-  const AnimationManager = vi.fn();
-  AnimationManager.prototype.frames = vi.fn(() => [5, 6, 4, 3, 1, 2, 3, 3, 3]);
-  return {
-    default: AnimationManager,
-  };
-});
 
 describe("define animation class methods", () => {
   let animation: Animation;
@@ -19,7 +11,7 @@ describe("define animation class methods", () => {
     animation = new Animation(
       mockImage as HTMLImageElement,
       "../../res/player_sprites.png",
-      { idle: 0 },
+      [4],
       100,
       100,
     );
@@ -48,10 +40,6 @@ describe("define animation class methods", () => {
 
   it("should call AnimationManager", () => {
     animation.loadAnimationSets();
-    expect(AnimationManager).toHaveBeenCalled();
     expect(createImageBitmap).toHaveBeenCalled();
-    expect(AnimationManager.prototype.frames).toHaveBeenCalled();
-
-    //
   });
 });

@@ -16,12 +16,13 @@ export default class AnimationManager {
 
   /**creates object in order like enum
    * in other languages*/
-  public enum() {
+  public enum(name: string) {
     const names = this.names();
     const entries = names.map((v, i) => {
       return [v, i];
     });
-    return Object.fromEntries(entries);
+    const enumObj = Object.fromEntries(entries);
+    return enumObj[name];
   }
 
   public frames() {

@@ -1,8 +1,4 @@
-import AnimationManager from "../animationManager/AnimationManager";
 
-type stateObj = {
-  [key: string]: number;
-};
 /**
  * creates animation from sprite image
  * */
@@ -19,13 +15,13 @@ export default class Animation {
   constructor(
     image: HTMLImageElement,
     spriteImage: string,
-    stateInfo: stateObj,
+    frames: number[],
     imgWidth: number,
     imgHeight: number,
   ) {
     this.image = image;
     this.spriteImage = spriteImage;
-    this.frames = new AnimationManager(stateInfo).frames();
+    this.frames = frames;
     this.imgHeight = imgHeight;
     this.imgWidth = imgWidth;
     this.opt = {

@@ -33,7 +33,7 @@ class Game {
       this.ctx.clearRect(0, 0, innerWidth, innerHeight);
       this.player.handleAnimation(Math.floor(this.animationTick), playerIdle);
       this.enemy.handleAnimation(Math.floor(this.animationTick), enemyRun);
-      // requestAnimationFrame(() => this.start());
+      requestAnimationFrame(() => this.start());
     } catch (error) {
       throw error;
     }

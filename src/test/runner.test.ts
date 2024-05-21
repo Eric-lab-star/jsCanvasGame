@@ -1,43 +1,25 @@
-import { expect, describe, it } from "vitest";
-import { ctxGetter, runner, setCanvasWidthHeight } from "../main/runner";
-import jsdom from "jsdom";
-
-const { JSDOM } = jsdom;
-const { window } = new JSDOM(
-  `
-<!doctype html>
-<html lang="en">
-    <canvas></canvas>
-  </body>
-</html> `,
-);
-
-const canvas = window.document.querySelector("canvas");
+import { expect, describe, it, vi } from "vitest";
+import { ctxGetter, setCanvasWidthHeight } from "../main/runner";
+import { canvas } from "../mockingDOM/mockinDOM";
 
 describe("setCanvasWidthHeight()", () => {
-  it("test canvas width and height", () => {
-    if (canvas != null) {
-      setCanvasWidthHeight(canvas);
-      expect(canvas).toMatchObject({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
+  it("should set canvas width and height to match innerwidth and innerHeight", () => {
+    setCanvasWidthHeight(canvas!);
+    expect(canvas).toMatchObject({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
   });
 });
 
-describe("ctxGetter()", () => {
-  it("return ctx", () => {
-    if (canvas != null && canvas.getContext("2d") != null) {
-      expect(ctxGetter(canvas)).toEqual(canvas.getContext("2d"));
-    }
-  });
-});
-
-describe("runner()", () => {
-  it("starts game", () => {
-    if (canvas == null) {
-      expect(runner(canvas)).toThrowError();
-    }
+describe("ctxGetter", () => {
+  it("should throw an error if canvas API is not supported", () => {
+    // Mock getContext to simulate a browser that doesn't support the canvas API
+    const nullFn = vi.fn(() => null);
+    canvas!.getContext = nullFn;
+    expect(() => ctxGetter(canvas!)).toThrowError(
+      "canvas api is not supported",
+    );
+    expect(nullFn).toHaveBeenCalled();
   });
 });

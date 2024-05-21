@@ -1,5 +1,4 @@
 import Animation from "../animation/animation";
-import KeyBoardInput from "../inputs/Keyboard";
 import Vector2d from "../utilz/Vector2d";
 
 type stateInfo = {
@@ -32,8 +31,6 @@ export default class Character {
     this.animationStates = animationStates;
     this.spriteImage = imgsrc;
     this.animation = null;
-
-    new KeyBoardInput(this);
   }
 
   /** handleAnimation function either getSprite image
@@ -42,14 +39,9 @@ export default class Character {
    */
   public handleAnimation(animationTick: number, animationState: number) {
     try {
-      if (this.animation != undefined) {
-        this.drawAnimation(animationTick, animationState);
-      } else {
-        this.setAnimation();
-      }
+      this.drawAnimation(animationTick, animationState);
     } catch (err) {
-      console.log("error was dected");
-      console.log(err);
+      this.setAnimation();
     }
   }
 
@@ -57,7 +49,7 @@ export default class Character {
   //1 = 5 - 2*(5/2)
   public drawAnimation(animationTick: number, animation: number) {
     if (this.animation == null) {
-      throw new Error("animation is null");
+      throw new Error("need to set animation first");
     }
 
     const intValue = Math.floor(
@@ -87,21 +79,11 @@ export default class Character {
       this.imgHeight,
     );
 
-    const timeId = setTimeout(() => {
-      throw new Error("too long");
-    }, 200);
-
     img.addEventListener(
       "load",
-      async () => {
-        try {
-          const animationSets = animation.loadAnimationSets();
-          this.animation = await Promise.all(animationSets);
-        } catch (err) {
-          clearTimeout(timeId);
-          throw err;
-        }
-        clearTimeout(timeId);
+      () => {
+        const animationSets = animation.loadAnimationSets();
+        this.animation = animationSets;
       },
       { once: true, passive: false },
     );

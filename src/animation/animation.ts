@@ -50,16 +50,21 @@ export default class Animation {
    * */
   protected mapHandler(x: number, y: number) {
     const animation = this.loadAnimation(x, y);
-    return Promise.all(animation);
+    return animation;
   }
 
   /**
    * loadAnimation function is used to load animation from sprite image
    * */
   protected loadAnimation(x: number, y: number) {
-    const imgs: Promise<ImageBitmap>[] = [];
+    const imgs: ImageBitmap[] = [];
     for (let i = 0; i < x; i++) {
-      imgs.push(this.createImageBitmap(i, y));
+      const img = this.createImageBitmap(i, y);
+      img
+        .then((img) => imgs.push(img))
+        .catch((err) => {
+          console.log(err);
+        });
     }
     return imgs;
   }

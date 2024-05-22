@@ -27,7 +27,7 @@ export default class Captain extends Character {
     attack3: 3,
   };
 
-  private static aniStates = new AnimationManager(Captain.states);
+  public static aniStates = new AnimationManager(Captain.states);
 
   constructor(ctx: CanvasRenderingContext2D, position: Vector2d) {
     super(
@@ -44,18 +44,24 @@ export default class Captain extends Character {
   private addKeyListener(input: KeyBoardInput) {
     addEventListener("keydown", (event: KeyboardEvent) => {
       input.keyPressed(event.key);
-      this.moveCaptain();
-      this.animationState = Captain.aniStates.enum("run");
     });
 
     addEventListener("keyup", (event: KeyboardEvent) => {
       input.keyReleased(event.key);
-      this.moveCaptain();
-      this.animationState = Captain.aniStates.enum("idle");
+    });
+
+    addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        this.animationState = Captain.aniStates.enum("idle");
+      }
     });
   }
 
-  private moveCaptain() {
+  public setAnimationState(state: number) {
+    this.animationState = state;
+  }
+
+  public moveCaptain() {
     const normal = Vector2d.normalize(new Vector2d(this.speed, this.speed));
     const xDirection = this.isRight() ? 1 : this.isLeft() ? -1 : 0;
     const yDirection = this.isDown() ? 1 : this.isUp() ? -1 : 0;

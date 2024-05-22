@@ -1,4 +1,3 @@
-
 /**
  * creates animation from sprite image
  * */

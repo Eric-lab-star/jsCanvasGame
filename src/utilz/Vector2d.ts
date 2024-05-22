@@ -13,6 +13,11 @@ class Vector2d {
     this.x += dx;
     this.y += dy;
   }
+  public static normalize(vector: Vector2d) {
+    const scalar = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+    const normal = new Vector2d(vector.x / scalar, vector.y / scalar);
+    return normal;
+  }
 }
 
 export default Vector2d;

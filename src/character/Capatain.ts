@@ -56,17 +56,17 @@ export default class Captain extends Character {
   }
 
   private moveCaptain() {
-    if (this.isRight()) {
-      this.pos.update(this.speed, 0);
-    }
-    if (this.isLeft()) {
-      this.pos.update(-this.speed, 0);
-    }
-    if (this.isUp()) {
-      this.pos.update(0, -this.speed);
-    }
-    if (this.isDown()) {
-      this.pos.update(0, this.speed);
+    const normal = Vector2d.normalize(new Vector2d(this.speed, this.speed));
+    const xDirection = this.isRight() ? 1 : this.isLeft() ? -1 : 0;
+    const yDirection = this.isDown() ? 1 : this.isUp() ? -1 : 0;
+
+    if (xDirection !== 0 && yDirection !== 0) {
+      this.pos.update(
+        normal.x * this.speed * xDirection,
+        normal.y * this.speed * yDirection,
+      );
+    } else {
+      this.pos.update(this.speed * xDirection, this.speed * yDirection);
     }
   }
 

@@ -9,14 +9,13 @@ export default class Animation {
   protected imgWidth: number;
   protected frames: number[];
 
-  protected static scale = 2;
-
   constructor(
     image: HTMLImageElement,
     spriteImage: string,
     frames: number[],
     imgWidth: number,
     imgHeight: number,
+    scale: number,
   ) {
     this.image = image;
     this.spriteImage = spriteImage;
@@ -24,8 +23,8 @@ export default class Animation {
     this.imgHeight = imgHeight;
     this.imgWidth = imgWidth;
     this.opt = {
-      resizeWidth: this.imgWidth * Animation.scale,
-      resizeHeight: this.imgHeight * Animation.scale,
+      resizeWidth: this.imgWidth * scale,
+      resizeHeight: this.imgHeight * scale,
       resizeQuality: "pixelated",
     };
     this.image.src = this.spriteImage;
@@ -36,15 +35,18 @@ export default class Animation {
    *
    */
   public loadAnimationSets() {
-    const animationSets = this.frames.map((x, y) => this.mapHandler(x, y));
+    const animationSets = this.frames.map(
+      async (x, y) => await this.mapHandler(x, y),
+    );
     return animationSets;
   }
 
   /**
    * mapHanlder is called on each frames to load animation
    * */
-  protected mapHandler(x: number, y: number) {
-    const animation = this.loadAnimation(x, y);
+  protected async mapHandler(x: number, y: number) {
+    const load = this.loadAnimation(x, y);
+    const animation = await Promise.all(load);
     return animation;
   }
 
@@ -52,15 +54,10 @@ export default class Animation {
    * loadAnimation function is used to load animation from sprite image
    * */
   protected loadAnimation(x: number, y: number) {
-    const imgs: ImageBitmap[] = [];
+    const imgs: Promise<ImageBitmap>[] = [];
     for (let i = 0; i < x; i++) {
       const img = this.createImageBitmap(i, y);
-      img
-        .then((img) => imgs.push(img))
-        .catch((err) => {
-          console.error(err);
-          throw err;
-        });
+      imgs.push(img);
     }
     return imgs;
   }

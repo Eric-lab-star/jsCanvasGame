@@ -1,10 +1,9 @@
+import GameEnv from "../env/GameEnv.ts";
 import Game from "./game.ts";
-export const GAME_WIDTH = 1280;
-export const GAME_HEIGHT = 800;
 
 export function setCanvasWidthHeight(canvas: HTMLCanvasElement) {
-  canvas.width = GAME_WIDTH;
-  canvas.height = GAME_HEIGHT;
+  canvas.width = GameEnv.GAME_WIDTH;
+  canvas.height = GameEnv.GAME_HEIGHT;
 }
 
 export function ctxGetter(canvas: HTMLCanvasElement) {

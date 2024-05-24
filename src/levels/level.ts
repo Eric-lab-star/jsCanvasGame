@@ -1,49 +1,75 @@
+import GameEnv from "../env/GameEnv";
+
 export default class Level {
   private ctx: CanvasRenderingContext2D;
   public resolvedImages: ImageBitmap[] = [];
+
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
   }
 
-  public initImage() {
-    const image = new Image();
-    image.src = "../../res/terrain.png";
-    image.addEventListener("load", async () => {
-      const images = await this.createBitImageSet(image);
-      this.resolvedImages = await Promise.all(images);
-    });
-  }
-
-  public render() {
-    for (let y = 0; y < 25; y++) {
-      for (let x = 0; x < 40; x++) {
-        this.ctx.drawImage(this.resolvedImages[y * 40 + x], x * 32, y * 32);
-      }
+  public handleMap() {
+    if (this.resolvedImages.length === 0) {
+      this.initImage();
+    } else {
+      this.render();
     }
   }
 
-  public createImageBitMap(image: HTMLImageElement, ty: number, tx: number) {
-    return createImageBitmap(image, 32 * tx, 32 * ty, 32, 32);
+  public initImage() {
+    const image = new Image();
+    image.src = GameEnv.TERRAIN_TILE;
+    image.addEventListener("load", async () => {
+      const images = await this.createBitImageSet(image);
+      this.resolvedImages = await Promise.all(images);
+      this.render();
+    });
   }
 
   public async createBitImageSet(image: HTMLImageElement) {
     const images: Promise<ImageBitmap>[] = [];
     const data = await this.getData();
-    for (let y = 0; y < 25; y++) {
-      for (let x = 0; x < 40; x++) {
-        const id = data[y * 40 + x] - 1;
-        const ty = Math.floor(id / 17);
-        const tx = id - ty * 17;
-        const bitImg = this.createImageBitMap(image, ty, tx);
-        images.push(bitImg);
-      }
-    }
+    this.tileLoop((x: number, y: number) => {
+      const id = data[y * GameEnv.MAP_COLUMNS + x] - 1;
+      const ty = Math.floor(id / GameEnv.TILES_MAP_COLUMNS);
+      const tx = id - ty * GameEnv.TILES_MAP_COLUMNS;
+      const bitImg = this.createImageBitMap(image, ty, tx);
+      images.push(bitImg);
+    });
     return images;
   }
   public async getData() {
-    const res = await fetch("../../res/basic.json");
+    const res = await fetch(GameEnv.BASIC_LEVEL_JSON);
     const json: JsonTypes = await res.json();
     return json.layers[0].data;
+  }
+
+  public createImageBitMap(image: HTMLImageElement, ty: number, tx: number) {
+    return createImageBitmap(
+      image,
+      GameEnv.TILE_SIZE * tx,
+      GameEnv.TILE_SIZE * ty,
+      GameEnv.TILE_SIZE,
+      GameEnv.TILE_SIZE,
+    );
+  }
+
+  public render() {
+    this.tileLoop((x, y) => {
+      this.ctx.drawImage(
+        this.resolvedImages[y * GameEnv.MAP_COLUMNS + x],
+        x * GameEnv.TILE_SIZE,
+        y * GameEnv.TILE_SIZE,
+      );
+    });
+  }
+
+  public tileLoop(callback: (x: number, y: number) => void) {
+    for (let y = 0; y < GameEnv.MAP_ROWS; y++) {
+      for (let x = 0; x < GameEnv.MAP_COLUMNS; x++) {
+        callback(x, y);
+      }
+    }
   }
 }
 

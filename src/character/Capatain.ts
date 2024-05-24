@@ -29,7 +29,11 @@ export default class Captain extends Character {
 
   public static aniStates = new AnimationManager(Captain.states);
 
-  constructor(ctx: CanvasRenderingContext2D, position: Vector2d) {
+  constructor(
+    ctx: CanvasRenderingContext2D,
+    position: Vector2d,
+    scale: number,
+  ) {
     super(
       ctx,
       position,
@@ -37,6 +41,7 @@ export default class Captain extends Character {
       Captain.captainImgSize.height,
       Captain.aniStates.frames(),
       Captain.captainImg,
+      scale,
     );
     this.addKeyListener(new KeyBoardInput(this));
   }

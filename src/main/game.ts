@@ -26,16 +26,19 @@ class Game {
     this.player = new Captain(this.ctx, playerPos);
     this.enemy = new FierceTooth(this.ctx, enemyPos);
     this.level1 = new Level(this.ctx);
+    this.level1.initImage();
   }
 
   public start() {
-    this.level1.render();
     try {
-      // this.animationTick += 1 / this.animationSpeed;
-      // this.ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-      // this.player.handleAnimation(Math.floor(this.animationTick));
-      // this.enemy.handleAnimation(Math.floor(this.animationTick));
-      // requestAnimationFrame(() => this.start());
+      this.animationTick += 1 / this.animationSpeed;
+      this.ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+      if (this.level1.resolvedImages.length != 0) {
+        this.level1.render();
+      }
+      this.player.handleAnimation(Math.floor(this.animationTick));
+      this.enemy.handleAnimation(Math.floor(this.animationTick));
+      requestAnimationFrame(() => this.start());
     } catch (error) {
       throw error;
     }

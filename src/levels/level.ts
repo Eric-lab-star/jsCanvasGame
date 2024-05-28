@@ -1,11 +1,10 @@
 import GameEnv from "../env/GameEnv";
 
-export default class Level {
-  private ctx: CanvasRenderingContext2D;
+export default class Level extends GameEnv {
   public resolvedImages: ImageBitmap[] = [];
 
-  constructor(ctx: CanvasRenderingContext2D) {
-    this.ctx = ctx;
+  constructor() {
+    super();
   }
 
   public handleMap() {
@@ -18,11 +17,12 @@ export default class Level {
 
   public initImage() {
     const image = new Image();
-    image.src = GameEnv.TERRAIN_TILE;
+    image.src = this.getTerrainTile();
     image.addEventListener("load", async () => {
       const images = await this.createBitImageSet(image);
       this.resolvedImages = await Promise.all(images);
       this.render();
+      console.log("Image loaded");
     });
   }
 
@@ -30,43 +30,46 @@ export default class Level {
     const images: Promise<ImageBitmap>[] = [];
     const data = await this.getData();
     this.tileLoop((x: number, y: number) => {
-      const id = data[y * GameEnv.MAP_COLUMNS + x] - 1;
-      const ty = Math.floor(id / GameEnv.TILES_MAP_COLUMNS);
-      const tx = id - ty * GameEnv.TILES_MAP_COLUMNS;
+      const id = data[y * this.getMapColumns() + x] - 1;
+      const ty = Math.floor(id / this.getTilesMapColumns());
+      const tx = id - ty * this.getTilesMapColumns();
       const bitImg = this.createImageBitMap(image, ty, tx);
       images.push(bitImg);
     });
     return images;
   }
   public async getData() {
-    const res = await fetch(GameEnv.BASIC_LEVEL_JSON);
+    const res = await fetch(this.getBasicLevelJson());
     const json: JsonTypes = await res.json();
     return json.layers[0].data;
   }
 
   public createImageBitMap(image: HTMLImageElement, ty: number, tx: number) {
+    const tilesize = this.getTileSize();
     return createImageBitmap(
       image,
-      GameEnv.TILE_SIZE * tx,
-      GameEnv.TILE_SIZE * ty,
-      GameEnv.TILE_SIZE,
-      GameEnv.TILE_SIZE,
+      tilesize * tx,
+      tilesize * ty,
+      tilesize,
+      tilesize,
     );
   }
 
   public render() {
+    const tilesize = this.getTileSize();
+    const mapColumns = this.getMapColumns();
     this.tileLoop((x, y) => {
       this.ctx.drawImage(
-        this.resolvedImages[y * GameEnv.MAP_COLUMNS + x],
-        x * GameEnv.TILE_SIZE,
-        y * GameEnv.TILE_SIZE,
+        this.resolvedImages[y * mapColumns + x],
+        x * tilesize,
+        y * tilesize,
       );
     });
   }
 
   public tileLoop(callback: (x: number, y: number) => void) {
-    for (let y = 0; y < GameEnv.MAP_ROWS; y++) {
-      for (let x = 0; x < GameEnv.MAP_COLUMNS; x++) {
+    for (let y = 0; y < this.getMapRows(); y++) {
+      for (let x = 0; x < this.getMapColumns(); x++) {
         callback(x, y);
       }
     }

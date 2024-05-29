@@ -16,13 +16,16 @@ export default class Game extends GameEnv {
 
   public ani() {
     requestAnimationFrame(() => this.ani());
-    console.log("running");
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.tester();
   }
 
+  public preload() {
+    this.map.resolveImages();
+  }
+
   public start() {
-    this.map.handleMap();
-    this.ani();
+    this.map.render();
+    // this.ani();
   }
 }

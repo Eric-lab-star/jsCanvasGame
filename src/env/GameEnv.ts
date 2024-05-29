@@ -1,3 +1,6 @@
+import tileAtlas from "../res/terrain.png";
+import { getURL } from "../utilz/getUrl";
+
 export default class GameEnv {
   private static TILE_SIZE: number = 32;
   private static MAP_COLUMNS: number = 40;
@@ -5,15 +8,16 @@ export default class GameEnv {
   private static TILES_MAP_COLUMNS: number = 17;
   private static GAME_WIDTH: number = this.TILE_SIZE * this.MAP_COLUMNS;
   private static GAME_HEIGHT: number = this.TILE_SIZE * this.MAP_ROWS;
-  private static TERRAIN_TILE: string = "./res/terrain.png";
+  private static TERRAIN_TILE: string = tileAtlas;
 
-  private static BASIC_LEVEL_JSON: string = "./res/basic.json";
+  private static BASIC_LEVEL_JSON: string = getURL("../res/basic.json");
   public getBasicLevelJson() {
     return GameEnv.BASIC_LEVEL_JSON;
   }
 
   private static ZINDEX: number = 0;
   private static animationSpeed: number = 10;
+
   public getAnimationSpeed() {
     return GameEnv.animationSpeed;
   }
@@ -23,9 +27,11 @@ export default class GameEnv {
     return Math.floor(GameEnv.animationTick);
   }
   private static animationTick: number = 0;
+
   public getAnimationTick() {
     return GameEnv.animationTick;
   }
+
   public canvas: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;
 

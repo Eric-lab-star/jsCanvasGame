@@ -1,6 +1,7 @@
 import AnimationManager from "../animationManager/AnimationManager";
 import KeyBoardInput from "../inputs/Keyboard";
 import Vector2d from "../utilz/Vector2d";
+import { getURL } from "../utilz/getUrl";
 import Character from "./Character";
 
 export default class Captain extends Character {
@@ -13,7 +14,7 @@ export default class Captain extends Character {
     height: 40,
   };
 
-  private static captainImg = "../../res/player_sprites.png";
+  private static captainImg = getURL("../res/player_sprites.png");
 
   private static states = {
     idle: 5,
@@ -29,19 +30,19 @@ export default class Captain extends Character {
 
   public static aniStates = new AnimationManager(Captain.states);
 
-  constructor(
-    ctx: CanvasRenderingContext2D,
-    position: Vector2d,
-    scale: number,
-  ) {
+  constructor() {
     super(
-      ctx,
-      position,
       Captain.captainImgSize.width,
       Captain.captainImgSize.height,
       Captain.aniStates.frames(),
       Captain.captainImg,
-      scale,
+      2,
+    );
+    this.pos = new Vector2d(
+      100,
+      this.getGameHeight() -
+        this.getTileSize() * 4 -
+        (Captain.captainImgSize.height * 2 - 15),
     );
     this.addKeyListener(new KeyBoardInput(this));
   }

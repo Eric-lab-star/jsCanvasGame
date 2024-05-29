@@ -1,11 +1,10 @@
-import { getURL } from "../utilz/getUrl";
-
 export default class GameEnv {
   constructor() {
     this.canvas = document.createElement("canvas");
     this.initCanvas();
     this.ctx = this.ctxGetter(this.canvas);
   }
+
   private static TILE_SIZE: number = 32;
   public getTileSize() {
     return GameEnv.TILE_SIZE;
@@ -38,19 +37,21 @@ export default class GameEnv {
 
   private static ZINDEX: number = 0;
   private static animationSpeed: number = 10;
-
   public getAnimationSpeed() {
     return GameEnv.animationSpeed;
+  }
+
+  private static animationTick: number = 0;
+  public getAnimationTick() {
+    return GameEnv.animationTick;
+  }
+  public setAnimationTick(increment: number) {
+    GameEnv.animationTick += 1 / GameEnv.animationSpeed;
   }
 
   public runAnimationTick() {
     GameEnv.animationTick += 1 / GameEnv.animationSpeed;
     return Math.floor(GameEnv.animationTick);
-  }
-  private static animationTick: number = 0;
-
-  public getAnimationTick() {
-    return GameEnv.animationTick;
   }
 
   public canvas: HTMLCanvasElement;

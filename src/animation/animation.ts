@@ -3,7 +3,6 @@
  * */
 export default class Animation {
   protected image: HTMLImageElement;
-  protected spriteImage: string;
   protected opt: ImageBitmapOptions;
   protected imgHeight: number;
   protected imgWidth: number;
@@ -11,14 +10,12 @@ export default class Animation {
 
   constructor(
     image: HTMLImageElement,
-    spriteImage: string,
     frames: number[],
     imgWidth: number,
     imgHeight: number,
     scale: number,
   ) {
     this.image = image;
-    this.spriteImage = spriteImage;
     this.frames = frames;
     this.imgHeight = imgHeight;
     this.imgWidth = imgWidth;
@@ -27,7 +24,6 @@ export default class Animation {
       resizeHeight: this.imgHeight * scale,
       resizeQuality: "pixelated",
     };
-    this.image.src = this.spriteImage;
   }
 
   /**

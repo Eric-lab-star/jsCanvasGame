@@ -1,8 +1,9 @@
 import Animation from "../animation/animation";
+import GameEnv from "../env/GameEnv";
 import Vector2d from "../utilz/Vector2d";
+import { getModulofromAnimation } from "../utilz/getUrl";
 
-export default class Character {
-  protected ctx: CanvasRenderingContext2D;
+export default class Character extends GameEnv {
   protected pos: Vector2d;
   public speed: number;
   protected animation: ImageBitmap[][] | null;
@@ -11,21 +12,17 @@ export default class Character {
   protected imgWidth: number;
   protected imgHeight: number;
   protected animationState: number;
-  private animationTick: number = 0;
-  private animationSpeed: number = 10;
   protected scale: number;
 
   constructor(
-    ctx: CanvasRenderingContext2D,
-    position: Vector2d,
     imgWidth: number,
     imgHeight: number,
     animationFrames: number[],
     imgsrc: string,
     scale: number,
   ) {
-    this.ctx = ctx;
-    this.pos = position;
+    super();
+    this.pos = new Vector2d(0, 0);
     this.speed = 5;
     this.animationFrames = animationFrames;
     this.spriteImage = imgsrc;
@@ -36,22 +33,25 @@ export default class Character {
     this.imgHeight = imgHeight;
   }
 
+  public render() {
+    this.canvas.addEventListener("setAnimationEvent", () =>
+      this.drawAnimation(),
+    );
+  }
+
   //5 % 2 = 1
   //1 = 5 - 2*(5/2)
   public drawAnimation() {
-    this.animationTick += 1 / this.animationSpeed;
-    let animationTick = Math.floor(this.animationTick);
+    let animationTick = this.runAnimationTick();
     if (this.animation == null) {
       throw new Error("need to set animation first");
     }
 
-    const intValue = Math.floor(
-      animationTick / this.animation[this.animationState].length,
+    const modulo = getModulofromAnimation(
+      animationTick,
+      this.animation,
+      this.animationState,
     );
-
-    // 0 <= sprites[animation].length < i
-    const modulo =
-      animationTick - this.animation[this.animationState].length * intValue;
 
     this.ctx.clearRect(
       this.pos.x + this.imgHeight - 20,
@@ -67,7 +67,6 @@ export default class Character {
       this.pos.x,
       this.pos.y,
     );
-
     requestAnimationFrame(() => this.drawAnimation());
   }
 
@@ -86,24 +85,24 @@ export default class Character {
    * */
   public setAnimation() {
     const img = new Image();
+    img.src = this.spriteImage;
+
     const animation = new Animation(
       img,
-      this.spriteImage,
       this.animationFrames,
       this.imgWidth,
       this.imgHeight,
       this.scale,
     );
 
-    img.addEventListener(
-      "load",
-      async () => {
-        const animationSets = await Promise.all(animation.loadAnimationSets());
-        this.animation = animationSets;
-        this.drawAnimation();
-      },
-      { once: true, passive: false },
-    );
+    img.addEventListener("load", async () => {
+      const animationSets = await Promise.all(animation.loadAnimationSets());
+      this.animation = animationSets;
+      const setAnimationEvent = new Event("setAnimationEvent", {
+        bubbles: true,
+      });
+      this.canvas.dispatchEvent(setAnimationEvent);
+    });
   }
 
   public update(x: number, y: number) {

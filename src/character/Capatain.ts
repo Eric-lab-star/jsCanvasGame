@@ -67,6 +67,7 @@ export default class Captain extends Character {
     this.animationState = state;
   }
 
+  /// controls
   public moveCaptain() {
     const normal = Vector2d.normalize(new Vector2d(this.speed, this.speed));
     const xDirection = this.isRight() ? 1 : this.isLeft() ? -1 : 0;

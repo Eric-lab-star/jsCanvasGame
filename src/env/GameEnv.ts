@@ -46,7 +46,7 @@ export default class GameEnv {
     return GameEnv.animationTick;
   }
   public setAnimationTick(increment: number) {
-    GameEnv.animationTick += 1 / GameEnv.animationSpeed;
+    GameEnv.animationTick += increment;
   }
 
   public runAnimationTick() {

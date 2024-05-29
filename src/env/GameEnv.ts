@@ -1,18 +1,39 @@
-import tileAtlas from "../res/terrain.png";
 import { getURL } from "../utilz/getUrl";
 
 export default class GameEnv {
+  constructor() {
+    this.canvas = document.createElement("canvas");
+    this.initCanvas();
+    this.ctx = this.ctxGetter(this.canvas);
+  }
   private static TILE_SIZE: number = 32;
-  private static MAP_COLUMNS: number = 40;
-  private static MAP_ROWS: number = 25;
-  private static TILES_MAP_COLUMNS: number = 17;
-  private static GAME_WIDTH: number = this.TILE_SIZE * this.MAP_COLUMNS;
-  private static GAME_HEIGHT: number = this.TILE_SIZE * this.MAP_ROWS;
-  private static TERRAIN_TILE: string = tileAtlas;
+  public getTileSize() {
+    return GameEnv.TILE_SIZE;
+  }
 
-  private static BASIC_LEVEL_JSON: string = getURL("../res/basic.json");
-  public getBasicLevelJson() {
-    return GameEnv.BASIC_LEVEL_JSON;
+  private static MAP_COLUMNS: number = 40;
+  public getMapColumns() {
+    return GameEnv.MAP_COLUMNS;
+  }
+
+  private static MAP_ROWS: number = 25;
+  public getMapRows() {
+    return GameEnv.MAP_ROWS;
+  }
+
+  private static TILES_MAP_COLUMNS: number = 17;
+  public getTilesMapColumns() {
+    return GameEnv.TILES_MAP_COLUMNS;
+  }
+
+  private static GAME_WIDTH: number = this.TILE_SIZE * this.MAP_COLUMNS;
+  public getGameWidth() {
+    return GameEnv.GAME_WIDTH;
+  }
+
+  private static GAME_HEIGHT: number = this.TILE_SIZE * this.MAP_ROWS;
+  public getGameHeight(): number {
+    return GameEnv.GAME_HEIGHT;
   }
 
   private static ZINDEX: number = 0;
@@ -34,39 +55,6 @@ export default class GameEnv {
 
   public canvas: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;
-
-  constructor() {
-    this.canvas = document.createElement("canvas");
-    this.initCanvas();
-    this.ctx = this.ctxGetter(this.canvas);
-  }
-
-  public getTerrainTile() {
-    return GameEnv.TERRAIN_TILE;
-  }
-
-  public getTileSize() {
-    return GameEnv.TILE_SIZE;
-  }
-
-  public getGameHeight(): number {
-    return GameEnv.GAME_HEIGHT;
-  }
-  public getGameWidth() {
-    return GameEnv.GAME_WIDTH;
-  }
-
-  public getMapColumns() {
-    return GameEnv.MAP_COLUMNS;
-  }
-
-  public getMapRows() {
-    return GameEnv.MAP_ROWS;
-  }
-
-  public getTilesMapColumns() {
-    return GameEnv.TILES_MAP_COLUMNS;
-  }
 
   public initCanvas() {
     this.setCanvasWidthHeight();

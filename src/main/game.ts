@@ -1,11 +1,12 @@
 import GameEnv from "../env/GameEnv";
 import Level from "../levels/level";
+import { getURL } from "../utilz/getUrl";
 
 export default class Game extends GameEnv {
   private map: Level;
   public constructor() {
     super();
-    this.map = new Level();
+    this.map = new Level(getURL("../res/basic.json"));
   }
 
   public tester() {

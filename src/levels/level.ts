@@ -1,12 +1,16 @@
 import GameEnv from "../env/GameEnv";
+import tileAtlas from "../res/terrain.png";
 
 export default class Level extends GameEnv {
   public resolvedImages: ImageBitmap[] = [];
   private tileAtlasImage: HTMLImageElement;
+  private mapJsonURL: string;
 
-  constructor() {
+  private static TERRAIN_TILE: string = tileAtlas;
+  constructor(mapJsonURL: string) {
     super();
     this.tileAtlasImage = new Image();
+    this.mapJsonURL = mapJsonURL;
   }
 
   /**
@@ -33,7 +37,7 @@ export default class Level extends GameEnv {
    * */
   public resolveImages() {
     const resolvedImagesEvent = new Event("resolvedImages", { bubbles: true });
-    this.tileAtlasImage.src = this.getTerrainTile();
+    this.tileAtlasImage.src = Level.TERRAIN_TILE;
     this.tileAtlasImage.addEventListener(
       "load",
       async () => {
@@ -45,6 +49,9 @@ export default class Level extends GameEnv {
     );
   }
 
+  /**
+   * create bitmap image sets using json data
+   * */
   public async createBitImageSet() {
     const images: Promise<ImageBitmap>[] = [];
     const data = await this.getData();
@@ -58,12 +65,18 @@ export default class Level extends GameEnv {
     return images;
   }
 
+  /**
+   * get data from json file
+   * */
   public async getData() {
-    const res = await fetch(this.getBasicLevelJson());
+    const res = await fetch(this.mapJsonURL);
     const json: JsonTypes = await res.json();
     return json.layers[0].data;
   }
 
+  /**
+   * crop tile atlas image
+   * */
   private cropTileAtlasImage(ty: number, tx: number) {
     const tilesize = this.getTileSize();
     const opt: ImageBitmapOptions = {
@@ -86,6 +99,9 @@ export default class Level extends GameEnv {
     );
   }
 
+  /**
+   * utility function to loop over data
+   * */
   public tileLoop(callback: (col: number, row: number) => void) {
     for (let row = 0; row < this.getMapRows(); row++) {
       for (let col = 0; col < this.getMapColumns(); col++) {

@@ -9,11 +9,11 @@
     ],
     "fileStates": {
         "basic.tmx": {
-            "scale": 0.5225,
+            "scale": 0.7695,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 363.6363636363637,
-                "y": 400.0000000000001
+                "x": 63.677712800519835,
+                "y": 218.32358674463939
             }
         },
         "mylevel.tsx": {
@@ -25,7 +25,7 @@
             "scaleInEditor": 1
         }
     },
-    "last.exportedFilePath": "/Users/kyungsubkim/Programming/JS/canvas-game/res",
+    "last.exportedFilePath": "/Users/kyungsubkim/Programming/JS/canvas-game/src/res",
     "last.imagePath": "/Users/kyungsubkim/Programming/JS/canvas-game/res",
     "map.height": 25,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",

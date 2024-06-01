@@ -13,6 +13,7 @@ export default class Character extends GameEnv {
   protected imgHeight: number;
   protected animationState: number;
   protected scale: number;
+  public messageChan = new MessageChannel();
 
   constructor(
     imgWidth: number,
@@ -34,9 +35,7 @@ export default class Character extends GameEnv {
   }
 
   public render() {
-    this.canvas.addEventListener("setAnimationEvent", () =>
-      this.drawAnimation(),
-    );
+    this.drawAnimation();
   }
 
   //5 % 2 = 1
@@ -98,10 +97,7 @@ export default class Character extends GameEnv {
     img.addEventListener("load", async () => {
       const animationSets = await Promise.all(animation.loadAnimationSets());
       this.animation = animationSets;
-      const setAnimationEvent = new Event("setAnimationEvent", {
-        bubbles: true,
-      });
-      this.canvas.dispatchEvent(setAnimationEvent);
+      this.messageChan.port1.postMessage("resolvedImages");
     });
   }
 

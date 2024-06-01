@@ -5,6 +5,7 @@ export default class Level extends GameEnv {
   public resolvedImages: ImageBitmap[] = [];
   private tileAtlasImage: HTMLImageElement;
   private mapJsonURL: string;
+  public messageChan = new MessageChannel();
 
   private static TERRAIN_TILE: string = tileAtlas;
   constructor(mapJsonURL: string) {
@@ -17,16 +18,14 @@ export default class Level extends GameEnv {
    * paint level on screen when resolvedImages event is fired from resolveImages function
    * */
   public render() {
-    this.canvas.addEventListener("resolvedImages", () => {
-      const tilesize = this.getTileSize();
-      const mapColumns = this.getMapColumns();
-      this.tileLoop((col, row) => {
-        this.ctx.drawImage(
-          this.resolvedImages[row * mapColumns + col],
-          col * tilesize,
-          row * tilesize,
-        );
-      });
+    const tilesize = this.getTileSize();
+    const mapColumns = this.getMapColumns();
+    this.tileLoop((col, row) => {
+      this.ctx.drawImage(
+        this.resolvedImages[row * mapColumns + col],
+        col * tilesize,
+        row * tilesize,
+      );
     });
   }
 
@@ -36,14 +35,13 @@ export default class Level extends GameEnv {
    *
    * */
   public resolveImages() {
-    const resolvedImagesEvent = new Event("resolvedImages", { bubbles: true });
     this.tileAtlasImage.src = Level.TERRAIN_TILE;
     this.tileAtlasImage.addEventListener(
       "load",
       async () => {
         const images = await this.createBitImageSet();
         this.resolvedImages = await Promise.all(images);
-        this.canvas.dispatchEvent(resolvedImagesEvent);
+        this.messageChan.port1.postMessage("resolvedImages");
       },
       { once: true },
     );

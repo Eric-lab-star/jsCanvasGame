@@ -1,38 +1,51 @@
+import Matter from "matter-js";
+
+//@ts-ignore
+import polyDecomp from "poly-decomp";
+import TileMapProps from "../main/tileMap";
+
+const { Bodies, Engine, Render, Composite, Common } = Matter;
+
 export default class GameEnv {
-  constructor() {
-    this.canvas = document.createElement("canvas");
-    this.initCanvas();
-    this.ctx = this.ctxGetter(this.canvas);
-  }
-
-  private static TILE_SIZE: number = 32;
-  public getTileSize() {
-    return GameEnv.TILE_SIZE;
-  }
-
-  private static MAP_COLUMNS: number = 40;
-  public getMapColumns() {
-    return GameEnv.MAP_COLUMNS;
-  }
-
-  private static MAP_ROWS: number = 25;
-  public getMapRows() {
-    return GameEnv.MAP_ROWS;
-  }
-
-  private static TILES_MAP_COLUMNS: number = 17;
-  public getTilesMapColumns() {
-    return GameEnv.TILES_MAP_COLUMNS;
-  }
-
-  private static GAME_WIDTH: number = this.TILE_SIZE * this.MAP_COLUMNS;
+  protected static tileMapProps = new TileMapProps();
+  private static GAME_WIDTH: number =
+    this.tileMapProps.getTileSize() * this.tileMapProps.getMapColumns();
   public getGameWidth() {
     return GameEnv.GAME_WIDTH;
   }
 
-  private static GAME_HEIGHT: number = this.TILE_SIZE * this.MAP_ROWS;
+  private static GAME_HEIGHT: number =
+    this.tileMapProps.getTileSize() * this.tileMapProps.getMapRows();
+
   public getGameHeight(): number {
     return GameEnv.GAME_HEIGHT;
+  }
+
+  public renderMatter: Matter.Render;
+
+  constructor() {
+    this.canvas = document.createElement("canvas");
+    this.initCanvas();
+    this.ctx = this.ctxGetter(this.canvas);
+    this.renderMatter = Render.create({
+      canvas: this.canvas,
+      context: this.ctx,
+      engine: GameEnv.Engine,
+      options: {
+        background: "white",
+        height: GameEnv.GAME_HEIGHT,
+        width: GameEnv.GAME_WIDTH,
+        wireframes: false,
+      },
+    });
+    Common.setDecomp(polyDecomp);
+  }
+
+  protected static Engine = Engine.create();
+  protected static World = GameEnv.Engine.world;
+
+  protected addComponent(...components: Matter.Body[]) {
+    Composite.add(GameEnv.World, components);
   }
 
   private static ZINDEX: number = 0;

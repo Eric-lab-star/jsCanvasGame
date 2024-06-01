@@ -41,7 +41,7 @@ export default class Captain extends Character {
     this.pos = new Vector2d(
       100,
       this.getGameHeight() -
-        this.getTileSize() * 4 -
+        Captain.tileMapProps.getTileSize() * 4 -
         (Captain.captainImgSize.height * 2 - 15),
     );
     this.addKeyListener(new KeyBoardInput(this));

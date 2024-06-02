@@ -1,13 +1,11 @@
-import Matter, { Body } from "matter-js";
+import Matter from "matter-js";
 import Animation from "../animation/animation";
 import GameEnv from "../env/GameEnv";
-import Vector2d from "../utilz/Vector2d";
 import { getModulofromAnimation } from "../utilz/getUrl";
 
 const { Bodies } = Matter;
 
 export default class Character extends GameEnv {
-  protected pos: Vector2d;
   public speed: number;
   protected animation: ImageBitmap[][] | null;
   protected spriteImage: string;
@@ -27,7 +25,6 @@ export default class Character extends GameEnv {
     scale: number,
   ) {
     super();
-    this.pos = new Vector2d(100, 100);
     this.speed = 5;
     this.animationFrames = animationFrames;
     this.spriteImage = imgsrc;
@@ -42,13 +39,27 @@ export default class Character extends GameEnv {
     this.drawAnimation();
   }
 
-  public setHitBox() {
+  public setHitBox(
+    xPos: number,
+    yPos: number,
+    xOffset: number,
+    yOffset: number,
+  ) {
     const hitBox = Bodies.rectangle(
-      this.pos.x,
-      this.pos.y,
-      this.imgWidth,
-      this.imgHeight,
+      xPos,
+      yPos,
+      this.imgWidth - xOffset,
+      this.imgHeight - yOffset,
+      {
+        render: {
+          opacity: 0,
+        },
+        frictionAir: 0.01,
+      },
     );
+
+    Matter.Body.setVelocity(hitBox, { x: 5, y: 5 });
+    this.speed = hitBox.speed;
 
     this.addComponent(hitBox);
     return hitBox;
@@ -71,27 +82,12 @@ export default class Character extends GameEnv {
       this.animationState,
     );
 
-    this.ctx.strokeStyle = "blue";
-    this.ctx.clearRect(
-      this.hitBox.position.x - this.imgWidth * 1.5,
-      this.hitBox.position.y - this.imgHeight * 1.5,
-      this.imgWidth * this.scale * 1.5,
-      this.imgHeight * this.scale * 1.5,
-    );
-
-    this.ctx.strokeStyle = "red";
-
-    this.ctx.strokeRect(
-      this.hitBox.position.x - this.imgWidth / 2,
-      this.hitBox.position.y - this.imgHeight / 2,
-      this.imgWidth,
-      this.imgHeight,
-    );
+    this.ctx.clearRect(0, 0, this.getGameWidth(), this.getGameHeight());
 
     this.ctx.drawImage(
       this.animation[this.animationState][modulo],
       this.hitBox.position.x - this.imgWidth,
-      this.hitBox.position.y - this.imgHeight,
+      this.hitBox.position.y - this.imgHeight - 2,
     );
     requestAnimationFrame(() => this.drawAnimation());
   }
@@ -116,13 +112,5 @@ export default class Character extends GameEnv {
       this.animation = animationSets;
       this.messageChan.port1.postMessage("resolvedImages");
     });
-  }
-
-  public update(x: number, y: number) {
-    this.pos.update(x, y);
-  }
-
-  public setSpeed(s: number) {
-    this.speed = s;
   }
 }

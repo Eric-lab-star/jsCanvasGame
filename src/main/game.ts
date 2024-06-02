@@ -1,4 +1,4 @@
-import Matter, { Composite, Render, Runner } from "matter-js";
+import Matter, { Render, Runner } from "matter-js";
 import Captain from "../character/Capatain";
 import GameEnv from "../env/GameEnv";
 import Level from "../levels/level";
@@ -17,8 +17,8 @@ export default class Game extends GameEnv {
 
   public run() {
     Render.run(this.renderMatter);
-    const runner = Matter.Runner.create();
-    Runner.run(runner, Game.Engine);
+    const runner = Runner.create();
+    Runner.run(runner, GameEnv.Engine);
   }
 
   private initGameScene() {
@@ -72,9 +72,6 @@ export default class Game extends GameEnv {
     this.map.messageChan.port2.onmessage = () => {
       this.captain.messageChan.port2.onmessage = () => {
         this.renderAll();
-        // addEventListener("click", () => {
-        //   this.renderAll();
-        // });
       };
     };
   }
@@ -87,8 +84,9 @@ export default class Game extends GameEnv {
 
   public start() {
     this.initGameScene();
-    this.preload();
-    this.render();
+    this.map.addMatter();
+    // this.preload();
+    // this.render();
     this.run();
   }
 

@@ -23,6 +23,7 @@ export default class Level extends GameEnv {
       this.getGameWidth(),
       Level.tileMapProps.getTileSize() * 4,
       {
+        label: "ground",
         isStatic: true,
         render: {
           opacity: 0,

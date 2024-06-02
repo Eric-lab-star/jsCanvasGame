@@ -26,7 +26,7 @@ export default class KeyBoardInput {
       case "W":
       case "ㅈ":
         this.character.setUp(true);
-        this.character.setAnimationState(Captain.aniStates.enum("run"));
+        this.character.setAnimationState(Captain.aniStates.enum("jump"));
         this.character.moveCaptain();
         break;
       case "s":

@@ -1,8 +1,12 @@
+import Matter, { Body } from "matter-js";
 import AnimationManager from "../animationManager/AnimationManager";
 import KeyBoardInput from "../inputs/Keyboard";
 import Vector2d from "../utilz/Vector2d";
 import { getURL } from "../utilz/getUrl";
 import Character from "./Character";
+import GameEnv from "../env/GameEnv";
+
+const { Bodies } = Matter;
 
 export default class Captain extends Character {
   private left: boolean = false;
@@ -29,6 +33,7 @@ export default class Captain extends Character {
   };
 
   public static aniStates = new AnimationManager(Captain.states);
+  public hitBox: Matter.Body;
 
   constructor() {
     super(
@@ -38,13 +43,14 @@ export default class Captain extends Character {
       Captain.captainImg,
       2,
     );
-    this.pos = new Vector2d(
-      100,
-      this.getGameHeight() -
-        Captain.tileMapProps.getTileSize() * 4 -
-        (Captain.captainImgSize.height * 2 - 15),
-    );
+    // this.pos = new Vector2d(
+    //   0,
+    //   this.getGameHeight() -
+    //     Captain.tileMapProps.getTileSize() * 4 -
+    //     (Captain.captainImgSize.height * 2 - 15),
+    // );
     this.addKeyListener(new KeyBoardInput(this));
+    this.hitBox = this.setHitBox();
   }
 
   private addKeyListener(input: KeyBoardInput) {
@@ -78,8 +84,18 @@ export default class Captain extends Character {
         normal.x * this.speed * xDirection,
         normal.y * this.speed * yDirection,
       );
+
+      Body.translate(this.hitBox, {
+        x: normal.x * this.speed * xDirection,
+        y: normal.y * this.speed * yDirection,
+      });
     } else {
       this.pos.update(this.speed * xDirection, this.speed * yDirection);
+
+      Body.translate(this.hitBox, {
+        x: this.speed * xDirection,
+        y: this.speed * yDirection,
+      });
     }
   }
 

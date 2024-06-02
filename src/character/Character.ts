@@ -1,7 +1,10 @@
+import Matter, { Body } from "matter-js";
 import Animation from "../animation/animation";
 import GameEnv from "../env/GameEnv";
 import Vector2d from "../utilz/Vector2d";
 import { getModulofromAnimation } from "../utilz/getUrl";
+
+const { Bodies } = Matter;
 
 export default class Character extends GameEnv {
   protected pos: Vector2d;
@@ -14,6 +17,7 @@ export default class Character extends GameEnv {
   protected animationState: number;
   protected scale: number;
   public messageChan = new MessageChannel();
+  protected hitBox?: Matter.Body;
 
   constructor(
     imgWidth: number,
@@ -23,7 +27,7 @@ export default class Character extends GameEnv {
     scale: number,
   ) {
     super();
-    this.pos = new Vector2d(0, 0);
+    this.pos = new Vector2d(100, 100);
     this.speed = 5;
     this.animationFrames = animationFrames;
     this.spriteImage = imgsrc;
@@ -38,9 +42,24 @@ export default class Character extends GameEnv {
     this.drawAnimation();
   }
 
+  public setHitBox() {
+    const hitBox = Bodies.rectangle(
+      this.pos.x,
+      this.pos.y,
+      this.imgWidth,
+      this.imgHeight,
+    );
+
+    this.addComponent(hitBox);
+    return hitBox;
+  }
+
   //5 % 2 = 1
   //1 = 5 - 2*(5/2)
   public drawAnimation() {
+    if (this.hitBox === undefined) {
+      return;
+    }
     let animationTick = this.runAnimationTick();
     if (this.animation == null) {
       throw new Error("need to set animation first");
@@ -52,31 +71,29 @@ export default class Character extends GameEnv {
       this.animationState,
     );
 
+    this.ctx.strokeStyle = "blue";
     this.ctx.clearRect(
-      this.pos.x + this.imgHeight - 20,
-      this.pos.y - 20,
-      this.imgWidth + 10 + 40,
-      this.imgHeight + 25 + 40,
+      this.hitBox.position.x - this.imgWidth * 1.5,
+      this.hitBox.position.y - this.imgHeight * 1.5,
+      this.imgWidth * this.scale * 1.5,
+      this.imgHeight * this.scale * 1.5,
     );
 
-    this.drawHitBox();
+    this.ctx.strokeStyle = "red";
+
+    this.ctx.strokeRect(
+      this.hitBox.position.x - this.imgWidth / 2,
+      this.hitBox.position.y - this.imgHeight / 2,
+      this.imgWidth,
+      this.imgHeight,
+    );
 
     this.ctx.drawImage(
       this.animation[this.animationState][modulo],
-      this.pos.x,
-      this.pos.y,
+      this.hitBox.position.x - this.imgWidth,
+      this.hitBox.position.y - this.imgHeight,
     );
     requestAnimationFrame(() => this.drawAnimation());
-  }
-
-  public drawHitBox() {
-    this.ctx.strokeStyle = "red";
-    this.ctx.strokeRect(
-      this.pos.x + this.imgHeight,
-      this.pos.y,
-      this.imgWidth + 10,
-      this.imgHeight + 25,
-    );
   }
 
   /**

@@ -4,7 +4,7 @@ import Matter from "matter-js";
 import polyDecomp from "poly-decomp";
 import TileMapProps from "../main/tileMap";
 
-const { Bodies, Engine, Render, Composite, Common } = Matter;
+const { Engine, Render, Composite, Common } = Matter;
 
 export default class GameEnv {
   protected static tileMapProps = new TileMapProps();
@@ -35,7 +35,9 @@ export default class GameEnv {
         background: "white",
         height: GameEnv.GAME_HEIGHT,
         width: GameEnv.GAME_WIDTH,
-        wireframes: false,
+        wireframes: true,
+        showIds: true,
+        pixelRatio: 1,
       },
     });
     Common.setDecomp(polyDecomp);

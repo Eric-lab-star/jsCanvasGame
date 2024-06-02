@@ -46,7 +46,6 @@ export default class Level extends GameEnv {
         row * tilesize,
       );
     });
-    this.addMatter();
   }
 
   /**
@@ -55,6 +54,7 @@ export default class Level extends GameEnv {
    *
    * */
   public resolveImages() {
+    this.addMatter();
     this.tileAtlasImage.src = Level.TERRAIN_TILE;
     this.tileAtlasImage.addEventListener(
       "load",

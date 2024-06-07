@@ -1,47 +1,32 @@
-import Matter from "matter-js";
 import GameEnv from "../env/GameEnv";
 import tileAtlas from "../res/terrain.png";
+import TileMapProps from "../main/tileMap";
+import CanvasEnv from "../env/CanvasEnv";
 
-const { Bodies } = Matter;
-export default class Level extends GameEnv {
+export default class Level {
   public resolvedImages: ImageBitmap[] = [];
   private tileAtlasImage: HTMLImageElement;
   private mapJsonURL: string;
   public messageChan = new MessageChannel();
+  public levelCanvas: CanvasEnv;
 
   private static TERRAIN_TILE: string = tileAtlas;
+
   constructor(mapJsonURL: string) {
-    super();
     this.tileAtlasImage = new Image();
     this.mapJsonURL = mapJsonURL;
-  }
-
-  public addMatter() {
-    const ground = Bodies.rectangle(
-      this.getGameWidth() / 2,
-      this.getGameHeight() - (Level.tileMapProps.getTileSize() * 4) / 2,
-      this.getGameWidth(),
-      Level.tileMapProps.getTileSize() * 4,
-      {
-        label: "ground",
-        isStatic: true,
-        render: {
-          opacity: 0,
-        },
-      },
-    );
-
-    this.addComponent(ground);
+    this.levelCanvas = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
   }
 
   /**
    * paint level on screen when resolvedImages event is fired from resolveImages function
    * */
   public render() {
-    const tilesize = Level.tileMapProps.getTileSize();
-    const mapColumns = Level.tileMapProps.getMapColumns();
+    const tilesize = TileMapProps.TILE_SIZE;
+    const mapColumns = TileMapProps.MAP_COLUMNS;
+
     this.tileLoop((col, row) => {
-      this.ctx.drawImage(
+      this.levelCanvas.ctx.drawImage(
         this.resolvedImages[row * mapColumns + col],
         col * tilesize,
         row * tilesize,
@@ -55,7 +40,6 @@ export default class Level extends GameEnv {
    *
    * */
   public resolveImages() {
-    this.addMatter();
     this.tileAtlasImage.src = Level.TERRAIN_TILE;
     this.tileAtlasImage.addEventListener(
       "load",
@@ -75,9 +59,9 @@ export default class Level extends GameEnv {
     const images: Promise<ImageBitmap>[] = [];
     const data = await this.getData();
     this.tileLoop((x: number, y: number) => {
-      const id = data[y * Level.tileMapProps.getMapColumns() + x] - 1;
-      const ty = Math.floor(id / Level.tileMapProps.getTilesMapColumns());
-      const tx = id - ty * Level.tileMapProps.getTilesMapColumns();
+      const id = data[y * TileMapProps.MAP_COLUMNS + x] - 1;
+      const ty = Math.floor(id / TileMapProps.TILES_MAP_COLUMNS);
+      const tx = id - ty * TileMapProps.TILES_MAP_COLUMNS;
       const bitImg = this.cropTileAtlasImage(ty, tx);
       images.push(bitImg);
     });
@@ -97,7 +81,7 @@ export default class Level extends GameEnv {
    * crop tile atlas image
    * */
   private cropTileAtlasImage(ty: number, tx: number) {
-    const tilesize = Level.tileMapProps.getTileSize();
+    const tilesize = TileMapProps.TILE_SIZE;
     const opt: ImageBitmapOptions = {
       resizeQuality: "pixelated",
     };
@@ -122,9 +106,16 @@ export default class Level extends GameEnv {
    * utility function to loop over data
    * */
   public tileLoop(callback: (col: number, row: number) => void) {
-    for (let row = 0; row < Level.tileMapProps.getMapRows(); row++) {
-      for (let col = 0; col < Level.tileMapProps.getMapColumns(); col++) {
-        callback(col, row);
+    for (let row = 0; row < TileMapProps.MAP_ROWS; row++) {
+      for (let col = 0; col < TileMapProps.MAP_COLUMNS; col++) {
+        try {
+          callback(col, row);
+        } catch (e) {
+          console.trace(
+            `could not execute callback on\n col: ${col}, row: ${row}`,
+          );
+          return;
+        }
       }
     }
   }

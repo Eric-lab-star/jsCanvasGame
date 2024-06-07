@@ -1,10 +1,6 @@
-import Level from "./level";
-
-export default class BasicLevel extends Level {
+export default class {
   /**
    *
    */
-  constructor() {
-    super();
-  }
+  constructor() {}
 }

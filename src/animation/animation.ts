@@ -2,14 +2,14 @@
  * creates animation from sprite image
  * */
 export default class Animation {
-  protected image: HTMLImageElement;
+  protected image: ImageBitmap;
   protected opt: ImageBitmapOptions;
   protected imgHeight: number;
   protected imgWidth: number;
   protected frames: number[];
 
   constructor(
-    image: HTMLImageElement,
+    image: ImageBitmap,
     frames: number[],
     imgWidth: number,
     imgHeight: number,

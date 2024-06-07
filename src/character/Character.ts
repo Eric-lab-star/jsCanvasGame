@@ -1,21 +1,16 @@
 import Matter from "matter-js";
-import Animation from "../animation/animation";
 import GameEnv from "../env/GameEnv";
-import { getModulofromAnimation } from "../utilz/getUrl";
 import CanvasEnv from "../env/CanvasEnv";
 
 const { Bodies } = Matter;
 
 export default class Character {
-  protected animation: ImageBitmap[][] | null;
-  protected spriteImage: string;
+  protected spriteImageSrc: string;
   protected animationFrames: number[];
   protected imgWidth: number;
   protected imgHeight: number;
-  protected animationState: number;
   protected scale: number;
-  public messageChan = new MessageChannel();
-  protected hitBox?: Matter.Body;
+  public hitBox: Matter.Body;
   protected characterCanvas: CanvasEnv;
 
   constructor(
@@ -26,9 +21,7 @@ export default class Character {
     scale: number,
   ) {
     this.animationFrames = animationFrames;
-    this.spriteImage = imgsrc;
-    this.animation = null;
-    this.animationState = 0;
+    this.spriteImageSrc = imgsrc;
     this.scale = scale;
     this.imgWidth = imgWidth;
     this.imgHeight = imgHeight;
@@ -36,6 +29,41 @@ export default class Character {
       GameEnv.GAME_WIDTH,
       GameEnv.GAME_HEIGHT,
     );
+    this.hitBox = this.setHitBox(
+      GameEnv.GAME_WIDTH / 2,
+      GameEnv.GAME_HEIGHT / 2,
+      0,
+      0,
+    );
+  }
+
+  public render() {
+    const worker = new Worker(
+      new URL("../workers/characterWorker.ts", import.meta.url),
+      {
+        type: "module",
+      },
+    );
+
+    const offscreen = this.characterCanvas.canvas.transferControlToOffscreen();
+
+    const img = new Image();
+    img.src = this.spriteImageSrc;
+    img.addEventListener("load", async () => {
+      const spriteImage = await createImageBitmap(img);
+      worker.postMessage(
+        {
+          offscreen: offscreen,
+          hitBox: this.hitBox,
+          spriteImage: spriteImage,
+          imgWidth: this.imgWidth,
+          imgHeight: this.imgHeight,
+          animationFrames: this.animationFrames,
+          scale: this.scale,
+        },
+        [offscreen, spriteImage],
+      );
+    });
   }
 
   public setHitBox(
@@ -58,59 +86,5 @@ export default class Character {
       },
     );
     return hitBox;
-  }
-
-  //5 % 2 = 1
-  //1 = 5 - 2*(5/2)
-  public render() {
-    if (this.hitBox === undefined) {
-      return;
-    }
-    let animationTick = GameEnv.runAnimationTick();
-    if (this.animation == null) {
-      throw new Error("need to set animation first");
-    }
-
-    const modulo = getModulofromAnimation(
-      animationTick,
-      this.animation,
-      this.animationState,
-    );
-
-    this.characterCanvas.ctx.clearRect(
-      0,
-      0,
-      GameEnv.GAME_WIDTH,
-      GameEnv.GAME_HEIGHT,
-    );
-
-    this.characterCanvas.ctx.drawImage(
-      this.animation[this.animationState][modulo],
-      this.hitBox.position.x - this.imgWidth,
-      this.hitBox.position.y - this.imgHeight - 2,
-    );
-    requestAnimationFrame(() => this.render());
-  }
-
-  /**
-   * create Character image and set animation
-   * */
-  public setAnimation() {
-    const img = new Image();
-    img.src = this.spriteImage;
-
-    const animation = new Animation(
-      img,
-      this.animationFrames,
-      this.imgWidth,
-      this.imgHeight,
-      this.scale,
-    );
-
-    img.addEventListener("load", async () => {
-      const animationSets = await Promise.all(animation.loadAnimationSets());
-      this.animation = animationSets;
-      this.messageChan.port1.postMessage("resolvedImages");
-    });
   }
 }

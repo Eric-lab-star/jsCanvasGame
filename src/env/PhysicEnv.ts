@@ -13,9 +13,10 @@ export default class PhysicEnv {
     this.Engine = Engine.create();
     this.World = this.Engine.world;
     this.canvasEnv = new CanvasEnv(width, height);
+    const ctx = this.canvasEnv.canvas.getContext("2d")!;
     this.Render = Render.create({
       canvas: this.canvasEnv.canvas,
-      context: this.canvasEnv.ctx,
+      context: ctx,
       engine: this.Engine,
       options: {
         background: "white",

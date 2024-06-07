@@ -13,7 +13,7 @@ export default class Level {
     this.levelCanvas = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
   }
 
-  public transferCanvas() {
+  public render() {
     const levelWorker = new Worker(
       new URL("../workers/levelWorker.ts", import.meta.url),
       {

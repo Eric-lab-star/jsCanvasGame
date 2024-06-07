@@ -1,10 +1,7 @@
-import { Composite, Detector } from "matter-js";
 import AnimationManager from "../animationManager/AnimationManager";
 import KeyBoardInput from "../inputs/Keyboard";
 import { getURL } from "../utilz/getUrl";
 import Character from "./Character";
-import GameEnv from "../env/GameEnv";
-import PhysicEnv from "../env/physicEnv";
 
 export default class Captain extends Character {
   private left: boolean = false;
@@ -87,26 +84,6 @@ export default class Captain extends Character {
 
     return xDirection;
   }
-
-  // public isOnAir() {
-  //   if (this.hitBox == undefined) {
-  //     throw new Error("hitbox is undefined");
-  //   }
-  //   const ground = Composite.allBodies(PhysicEnv.World).find((body) => {
-  //     return body.label == "ground";
-  //   });
-  //
-  //   if (ground == undefined) {
-  //     throw new Error("ground is undefined");
-  //   }
-  //
-  //   const det = Detector.create({ bodies: [this.hitBox, ground] });
-  //   const collisions = Detector.collisions(det);
-  //   if (collisions.length > 0) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
 
   public setLeft(bool: boolean) {
     this.left = bool;

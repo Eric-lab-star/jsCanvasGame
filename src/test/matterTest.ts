@@ -1,12 +1,13 @@
-import { Body, Render, Runner } from "matter-js";
+import { Body } from "matter-js";
 import {
+  base,
   dummie,
   ground,
   leftWall,
   rightWall,
   topWall,
 } from "../utilz/matterComponents";
-import PhysicEnv from "../env/physicEnv";
+import PhysicEnv from "../env/MatterEnv";
 import GameEnv from "../env/GameEnv";
 
 export default class MatterTest {
@@ -16,18 +17,23 @@ export default class MatterTest {
   }
 
   public run() {
-    Render.run(this.physic.Render);
-    const runner = Runner.create();
-    Runner.run(runner, this.physic.Engine);
+    this.physic.run();
   }
 
   private initGameScene() {
-    this.physic.addComponent(leftWall, rightWall, ground, topWall, dummie);
+    this.physic.addComponent(
+      base,
+      ground,
+      leftWall,
+      rightWall,
+      topWall,
+      dummie,
+    );
   }
 
   private update() {
-    Body.setVelocity(dummie, { x: 1, y: 0 });
-    Body.setSpeed(dummie, 10);
+    Body.setVelocity(dummie, { x: 10, y: 0 });
+    Body.setSpeed(dummie, 20);
   }
 
   public start() {

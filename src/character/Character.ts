@@ -12,6 +12,7 @@ export default class Character {
   protected scale: number;
   public hitBox: Matter.Body;
   protected characterCanvas: CanvasEnv;
+  protected animationState: number = 0;
 
   constructor(
     imgWidth: number,

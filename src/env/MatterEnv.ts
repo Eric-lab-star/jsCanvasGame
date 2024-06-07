@@ -1,4 +1,4 @@
-import { Composite, Engine, Render, World } from "matter-js";
+import Matter, { Composite, Engine, Render, Runner, World } from "matter-js";
 import CanvasEnv from "./CanvasEnv";
 
 export default class PhysicEnv {
@@ -19,7 +19,7 @@ export default class PhysicEnv {
       context: ctx,
       engine: this.Engine,
       options: {
-        background: "white",
+        background: "transparent",
         height: this.canvasEnv.canvas.height,
         width: this.canvasEnv.canvas.width,
         wireframes: true,
@@ -31,5 +31,11 @@ export default class PhysicEnv {
 
   public addComponent(...components: Matter.Body[]) {
     Composite.add(this.World, components);
+  }
+
+  public run() {
+    Matter.Render.run(this.Render);
+    const runner = Runner.create();
+    Matter.Runner.run(runner, this.Engine);
   }
 }

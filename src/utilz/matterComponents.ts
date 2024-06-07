@@ -1,5 +1,6 @@
 import { Bodies } from "matter-js";
 import GameEnv from "../env/GameEnv";
+import TileMapProps from "../main/tileMap";
 
 const dummie = Bodies.rectangle(400, 20, 80, 80);
 const ground = Bodies.rectangle(
@@ -52,4 +53,17 @@ const topWall = Bodies.rectangle(
   },
 );
 
-export { dummie, ground, leftWall, rightWall, topWall };
+const base = Bodies.rectangle(
+  GameEnv.GAME_WIDTH / 2,
+  GameEnv.GAME_HEIGHT - 2 * TileMapProps.TILE_SIZE,
+  GameEnv.GAME_WIDTH,
+  4 * TileMapProps.TILE_SIZE,
+  {
+    isStatic: true,
+    render: {
+      opacity: 0,
+    },
+  },
+);
+
+export { base, dummie, ground, leftWall, rightWall, topWall };

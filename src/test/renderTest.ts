@@ -13,6 +13,6 @@ export default class RenderTest {
   // level specific test worker
   public start() {
     this.map.render();
-    this.captain.workerProvider();
+    this.captain.render();
   }
 }

@@ -2,11 +2,11 @@ import Matter from "matter-js";
 import Animation from "../animation/animation";
 import GameEnv from "../env/GameEnv";
 import { getModulofromAnimation } from "../utilz/getUrl";
+import CanvasEnv from "../env/CanvasEnv";
 
 const { Bodies } = Matter;
 
-export default class Character extends GameEnv {
-  public speed: number;
+export default class Character {
   protected animation: ImageBitmap[][] | null;
   protected spriteImage: string;
   protected animationFrames: number[];
@@ -16,6 +16,7 @@ export default class Character extends GameEnv {
   protected scale: number;
   public messageChan = new MessageChannel();
   protected hitBox?: Matter.Body;
+  protected characterCanvas: CanvasEnv;
 
   constructor(
     imgWidth: number,
@@ -24,8 +25,6 @@ export default class Character extends GameEnv {
     imgsrc: string,
     scale: number,
   ) {
-    super();
-    this.speed = 5;
     this.animationFrames = animationFrames;
     this.spriteImage = imgsrc;
     this.animation = null;
@@ -33,10 +32,10 @@ export default class Character extends GameEnv {
     this.scale = scale;
     this.imgWidth = imgWidth;
     this.imgHeight = imgHeight;
-  }
-
-  public render() {
-    this.drawAnimation();
+    this.characterCanvas = new CanvasEnv(
+      GameEnv.GAME_WIDTH,
+      GameEnv.GAME_HEIGHT,
+    );
   }
 
   public setHitBox(
@@ -54,24 +53,20 @@ export default class Character extends GameEnv {
         render: {
           opacity: 0,
         },
-        frictionAir: 0.01,
+        frictionAir: 0,
+        label: "character",
       },
     );
-
-    Matter.Body.setVelocity(hitBox, { x: 5, y: 5 });
-    this.speed = hitBox.speed;
-
-    this.addComponent(hitBox);
     return hitBox;
   }
 
   //5 % 2 = 1
   //1 = 5 - 2*(5/2)
-  public drawAnimation() {
+  public render() {
     if (this.hitBox === undefined) {
       return;
     }
-    let animationTick = this.runAnimationTick();
+    let animationTick = GameEnv.runAnimationTick();
     if (this.animation == null) {
       throw new Error("need to set animation first");
     }
@@ -82,14 +77,19 @@ export default class Character extends GameEnv {
       this.animationState,
     );
 
-    this.ctx.clearRect(0, 0, this.getGameWidth(), this.getGameHeight());
+    this.characterCanvas.ctx.clearRect(
+      0,
+      0,
+      GameEnv.GAME_WIDTH,
+      GameEnv.GAME_HEIGHT,
+    );
 
-    this.ctx.drawImage(
+    this.characterCanvas.ctx.drawImage(
       this.animation[this.animationState][modulo],
       this.hitBox.position.x - this.imgWidth,
       this.hitBox.position.y - this.imgHeight - 2,
     );
-    requestAnimationFrame(() => this.drawAnimation());
+    requestAnimationFrame(() => this.render());
   }
 
   /**

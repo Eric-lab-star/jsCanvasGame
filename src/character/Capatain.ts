@@ -1,4 +1,4 @@
-import { Body, Composite, Composites, Detector } from "matter-js";
+import { Composite, Detector } from "matter-js";
 import AnimationManager from "../animationManager/AnimationManager";
 import KeyBoardInput from "../inputs/Keyboard";
 import { getURL } from "../utilz/getUrl";
@@ -28,7 +28,6 @@ export default class Captain extends Character {
     attack2: 3,
     attack3: 3,
   };
-
   public static aniStates = new AnimationManager(Captain.states);
 
   constructor() {
@@ -46,10 +45,12 @@ export default class Captain extends Character {
   private addKeyListener(input: KeyBoardInput) {
     addEventListener("keydown", (event: KeyboardEvent) => {
       input.keyPressed(event.key);
+      this.moveCaptain();
     });
 
     addEventListener("keyup", (event: KeyboardEvent) => {
       input.keyReleased(event.key);
+      this.moveCaptain();
     });
 
     addEventListener("visibilitychange", () => {
@@ -65,34 +66,25 @@ export default class Captain extends Character {
 
   /// controls
   public moveCaptain() {
-    const xDirection = this.isRight() ? 1 : this.isLeft() ? -1 : 0;
-    this.runCaption(xDirection);
-    if (this.isUp()) {
-      this.jumpCaptain();
+    if (this.hitBox == undefined) {
+      throw new Error("hitbox is undefine");
     }
   }
 
-  public runCaption(xDirection: number) {
-    if (this.hitBox == undefined) {
-      throw new Error("hitbox is undefined");
+  private setXDirection() {
+    let xDirection = 0;
+    if (this.isLeft()) {
+      xDirection = -1;
+    }
+    if (this.isRight()) {
+      xDirection = 1;
     }
 
-    Body.setVelocity(this.hitBox, { x: xDirection * this.speed, y: -10 });
-  }
-
-  public jumpCaptain() {
-    if (this.hitBox == undefined) {
-      throw new Error("hitbox is undefined");
+    if (this.isRight() && this.isLeft()) {
+      xDirection = 0;
     }
 
-    Body.setVelocity(this.hitBox, { x: 0, y: -10 });
-
-    // for (let i = 0; i < 100; i++) {
-    //   Body.translate(this.hitBox, {
-    //     x: 0,
-    //     y: -2,
-    //   });
-    // }
+    return xDirection;
   }
 
   public isOnAir() {
@@ -110,24 +102,9 @@ export default class Captain extends Character {
     const det = Detector.create({ bodies: [this.hitBox, ground] });
     const collisions = Detector.collisions(det);
     if (collisions.length > 0) {
-      return true;
+      return false;
     }
-    return false;
-  }
-
-  public actionController() {
-    if (this.isRight()) {
-      this.moveCaptain();
-    }
-    if (this.isLeft()) {
-      this.moveCaptain();
-    }
-    if (this.isUp()) {
-      this.jumpCaptain();
-    }
-    if (this.isDown()) {
-      this.moveCaptain();
-    }
+    return true;
   }
 
   public setLeft(bool: boolean) {

@@ -1,9 +1,10 @@
 import Captain from "../character/Capatain";
 import Level from "../levels/level";
-import { getURL } from "../utilz/getUrl";
+import levelJson from "../res/basic.json";
 import CanvasEnv from "../env/CanvasEnv";
 import GameEnv from "../env/GameEnv";
 import PhysicEnv from "../env/PhysicEnv";
+import { JsonTypes } from "../workers/levelConsumer";
 
 export default class Game {
   private map: Level;
@@ -12,7 +13,7 @@ export default class Game {
   public physicEnv: PhysicEnv;
 
   public constructor() {
-    this.map = new Level(getURL("../res/basic.json"));
+    this.map = new Level(levelJson as JsonTypes);
     this.captain = new Captain();
     this.canvasEnv = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.physicEnv = new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);

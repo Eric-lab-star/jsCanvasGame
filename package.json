@@ -10,8 +10,11 @@
     "test": "vitest --watch"
   },
   "devDependencies": {
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.5.25",
     "@types/jsdom": "^21.1.6",
     "@types/matter-js": "^0.19.6",
+    "chokidar": "^3.6.0",
     "jsdom": "^24.0.0",
     "prettier": "^3.2.5",
     "typescript": "^5.2.2",

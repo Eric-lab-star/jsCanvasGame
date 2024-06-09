@@ -1,4 +1,4 @@
-import { matterTestRunner } from "./main/runner";
+import { matterTestRunner, renderTestRunner } from "./main/runner";
 // runner();
 // renderTestRunner();
 matterTestRunner();

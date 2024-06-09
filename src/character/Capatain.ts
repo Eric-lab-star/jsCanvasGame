@@ -1,6 +1,6 @@
 import AnimationManager from "../animation/animationManager/AnimationManager";
 import KeyBoardInput from "../inputs/Keyboard";
-import { getURL } from "../utilz/getUrl";
+import captainSprite from "../res/player_sprites.png";
 import Character from "./Character";
 
 export default class Captain extends Character {
@@ -13,7 +13,7 @@ export default class Captain extends Character {
     height: 40,
   };
 
-  private static captainImg = getURL("../res/player_sprites.png");
+  private static captainImg = captainSprite;
 
   private static states = {
     idle: 5,

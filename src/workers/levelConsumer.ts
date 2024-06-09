@@ -3,11 +3,15 @@ import TileMapProps from "../levels/tileMap";
 // level consumer is responsible for rendering the level on worker thread
 export default class LevelConsumer {
   public resolvedImages: ImageBitmap[];
-  private mapJsonURL: string;
+  private mapJsonURL: JsonTypes;
   public levelCanvas: OffscreenCanvas;
   public image: ImageBitmap;
 
-  constructor(canvas: OffscreenCanvas, mapJsonURL: string, image: ImageBitmap) {
+  constructor(
+    canvas: OffscreenCanvas,
+    mapJsonURL: JsonTypes,
+    image: ImageBitmap,
+  ) {
     this.levelCanvas = canvas;
     this.mapJsonURL = mapJsonURL;
     this.image = image;
@@ -67,8 +71,7 @@ export default class LevelConsumer {
    * get data from json file
    * */
   private async getData() {
-    const res = await fetch(this.mapJsonURL);
-    const json: JsonTypes = await res.json();
+    const json = this.mapJsonURL;
     return json.layers[0].data;
   }
 
@@ -112,7 +115,7 @@ export default class LevelConsumer {
   }
 }
 
-interface JsonTypes {
+export interface JsonTypes {
   compressionlevel: -1;
   height: 25;
   infinite: false;

@@ -1,6 +1,7 @@
 import { Bodies } from "matter-js";
 import GameEnv from "../env/GameEnv";
 import TileMapProps from "../levels/tileMap";
+import { randomColor } from "./helper";
 
 const dummie = Bodies.rectangle(400, 20, 80, 80);
 const ground = Bodies.rectangle(
@@ -11,7 +12,8 @@ const ground = Bodies.rectangle(
   {
     isStatic: true,
     render: {
-      opacity: 0,
+      fillStyle: randomColor(),
+      opacity: 1,
     },
   },
 );
@@ -23,7 +25,8 @@ const leftWall = Bodies.rectangle(
   {
     isStatic: true,
     render: {
-      opacity: 0,
+      fillStyle: randomColor(),
+      opacity: 1,
     },
   },
 );
@@ -35,7 +38,8 @@ const rightWall = Bodies.rectangle(
   {
     isStatic: true,
     render: {
-      opacity: 0,
+      fillStyle: randomColor(),
+      opacity: 1,
     },
   },
 );
@@ -48,7 +52,8 @@ const topWall = Bodies.rectangle(
   {
     isStatic: true,
     render: {
-      opacity: 0,
+      fillStyle: randomColor(),
+      opacity: 1,
     },
   },
 );
@@ -61,9 +66,13 @@ const base = Bodies.rectangle(
   {
     isStatic: true,
     render: {
-      opacity: 0,
+      opacity: 1,
     },
   },
 );
 
-export { base, dummie, ground, leftWall, rightWall, topWall };
+const getWorldEelement = () => {
+  return [ground, leftWall, rightWall, topWall];
+};
+
+export { base, dummie, ground, leftWall, rightWall, topWall, getWorldEelement };

@@ -1,10 +1,10 @@
-import LevelConsumer from "./levelConsumer";
+import LevelConsumer, { JsonTypes } from "./levelConsumer";
 
 self.onmessage = async ({
   data,
 }: MessageEvent<{
   canvas: OffscreenCanvas;
-  levelJsonURL: string;
+  levelJsonURL: JsonTypes;
   image: ImageBitmap;
 }>) => {
   const canvas = data.canvas;

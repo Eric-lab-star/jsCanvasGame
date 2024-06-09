@@ -1,13 +1,14 @@
 import GameEnv from "../env/GameEnv";
 import tileAtlas from "../res/terrain.png";
 import CanvasEnv from "../env/CanvasEnv";
+import { JsonTypes } from "../workers/levelConsumer";
 
 export default class Level {
   private tileAtlasImage: HTMLImageElement;
-  private mapJsonURL: string;
+  private mapJsonURL: JsonTypes;
   public levelCanvas: CanvasEnv;
 
-  constructor(mapJsonURL: string) {
+  constructor(mapJsonURL: JsonTypes) {
     this.tileAtlasImage = new Image();
     this.mapJsonURL = mapJsonURL;
     this.levelCanvas = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);

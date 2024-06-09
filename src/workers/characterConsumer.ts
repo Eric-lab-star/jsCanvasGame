@@ -1,6 +1,6 @@
 import Animation from "../animation/animation";
 import GameEnv from "../env/GameEnv";
-import { getModulofromAnimation } from "../utilz/getUrl";
+import { getModulofromAnimation } from "../utilz/helper";
 
 export default class CharacterConsumer {
   protected animation: ImageBitmap[][] | null;

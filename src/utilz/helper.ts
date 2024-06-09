@@ -1,7 +1,3 @@
-export function getURL(name: string) {
-  return new URL(name, import.meta.url).href;
-}
-
 export function getModulofromAnimation(
   animationTick: number,
   animationArray: ImageBitmap[][],
@@ -12,4 +8,8 @@ export function getModulofromAnimation(
   // 0 <= sprites[animation].length < i
   const modulo = animationTick - animationArray[state].length * intValue;
   return modulo;
+}
+
+export function randomColor() {
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }

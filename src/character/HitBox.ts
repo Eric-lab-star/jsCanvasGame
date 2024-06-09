@@ -9,7 +9,7 @@ export class HitBox {
     console.log(this.box);
   }
 
-  public create(): Body {
-    return this.box;
+  public static create(): Body {
+    return Bodies.rectangle(0, 0, 100, 100);
   }
 }

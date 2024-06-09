@@ -3,14 +3,7 @@ import Level from "../levels/level";
 import { getURL } from "../utilz/getUrl";
 import CanvasEnv from "../env/CanvasEnv";
 import GameEnv from "../env/GameEnv";
-import {
-  dummie,
-  ground,
-  leftWall,
-  rightWall,
-  topWall,
-} from "../utilz/matterComponents";
-import PhysicEnv from "../env/MatterEnv";
+import PhysicEnv from "../env/PhysicEnv";
 
 export default class Game {
   private map: Level;
@@ -29,17 +22,12 @@ export default class Game {
     this.physicEnv.run();
   }
 
-  public render() {}
+  public render() {
+    this.map.render();
+    this.captain.render();
+  }
 
   public start() {
-    this.physicEnv.addComponent(
-      topWall,
-      ground,
-      leftWall,
-      rightWall,
-      topWall,
-      dummie,
-    );
-    this.run();
+    this.render();
   }
 }

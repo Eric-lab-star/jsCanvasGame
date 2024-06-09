@@ -1,6 +1,6 @@
 import { Bodies } from "matter-js";
 import GameEnv from "../env/GameEnv";
-import TileMapProps from "../main/tileMap";
+import TileMapProps from "../levels/tileMap";
 
 const dummie = Bodies.rectangle(400, 20, 80, 80);
 const ground = Bodies.rectangle(

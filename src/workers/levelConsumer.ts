@@ -1,5 +1,6 @@
+import TileMapProps from "../levels/tileMap";
+
 // level consumer is responsible for rendering the level on worker thread
-import TileMapProps from "../main/tileMap";
 export default class LevelConsumer {
   public resolvedImages: ImageBitmap[];
   private mapJsonURL: string;

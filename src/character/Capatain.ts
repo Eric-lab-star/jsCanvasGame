@@ -1,4 +1,4 @@
-import AnimationManager from "../animationManager/AnimationManager";
+import AnimationManager from "../animation/animationManager/AnimationManager";
 import KeyBoardInput from "../inputs/Keyboard";
 import { getURL } from "../utilz/getUrl";
 import Character from "./Character";
@@ -67,22 +67,6 @@ export default class Captain extends Character {
     if (this.hitBox == undefined) {
       throw new Error("hitbox is undefine");
     }
-  }
-
-  private setXDirection() {
-    let xDirection = 0;
-    if (this.isLeft()) {
-      xDirection = -1;
-    }
-    if (this.isRight()) {
-      xDirection = 1;
-    }
-
-    if (this.isRight() && this.isLeft()) {
-      xDirection = 0;
-    }
-
-    return xDirection;
   }
 
   public setLeft(bool: boolean) {

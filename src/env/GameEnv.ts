@@ -1,4 +1,4 @@
-import TileMapProps from "../main/tileMap";
+import TileMapProps from "../levels/tileMap";
 
 export default class GameEnv {
   public static GAME_WIDTH: number =

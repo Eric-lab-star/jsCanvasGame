@@ -15,6 +15,7 @@ const ground = Bodies.rectangle(
       fillStyle: randomColor(),
       opacity: 1,
     },
+    label: "ground",
   },
 );
 const leftWall = Bodies.rectangle(
@@ -23,6 +24,7 @@ const leftWall = Bodies.rectangle(
   40,
   GameEnv.GAME_HEIGHT,
   {
+    label: "leftWall",
     isStatic: true,
     render: {
       fillStyle: randomColor(),
@@ -36,6 +38,7 @@ const rightWall = Bodies.rectangle(
   40,
   GameEnv.GAME_HEIGHT,
   {
+    label: "rightWall",
     isStatic: true,
     render: {
       fillStyle: randomColor(),
@@ -51,6 +54,7 @@ const topWall = Bodies.rectangle(
   40,
   {
     isStatic: true,
+    label: "topWall",
     render: {
       fillStyle: randomColor(),
       opacity: 1,
@@ -65,6 +69,7 @@ const base = Bodies.rectangle(
   4 * TileMapProps.TILE_SIZE,
   {
     isStatic: true,
+    label: "base",
     render: {
       opacity: 1,
     },

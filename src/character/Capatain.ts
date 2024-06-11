@@ -1,25 +1,24 @@
 import AnimationManager from "../animation/animationManager/AnimationManager";
-import captainSprite from "../res/player_sprites.png";
+import captain2x from "../res/captain2x.png";
 import Character from "./Character";
 
 export default class Captain extends Character {
   private static captainImgSize = {
-    width: 64,
-    height: 40,
+    width: 192,
+    height: 192,
   };
 
-  private static captainImg = captainSprite;
+  private static captainImg = captain2x;
 
   private static states = {
     idle: 5,
     run: 6,
     jump: 3,
     fall: 1,
-    hit1: 2,
-    hit2: 3,
-    attack1: 3,
-    attack2: 3,
-    attack3: 3,
+    ground: 2,
+    hit: 4,
+    deadHit: 4,
+    deadGround: 4,
   };
   public static aniStates = new AnimationManager(Captain.states);
 
@@ -29,11 +28,6 @@ export default class Captain extends Character {
       Captain.captainImgSize.height,
       Captain.aniStates.frames(),
       Captain.captainImg,
-      2,
     );
-  }
-
-  public setAnimationState(state: number) {
-    this.animationState = state;
   }
 }

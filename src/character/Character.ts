@@ -6,20 +6,16 @@ export default class Character {
   protected animationFrames: number[];
   protected imgWidth: number;
   protected imgHeight: number;
-  protected scale: number;
   protected characterCanvas: CanvasEnv;
-  protected animationState: number = 0;
 
   constructor(
     imgWidth: number,
     imgHeight: number,
     animationFrames: number[],
     imgsrc: string,
-    scale: number,
   ) {
     this.animationFrames = animationFrames;
     this.spriteImageSrc = imgsrc;
-    this.scale = scale;
     this.imgWidth = imgWidth;
     this.imgHeight = imgHeight;
     this.characterCanvas = new CanvasEnv(
@@ -49,7 +45,6 @@ export default class Character {
           imgWidth: this.imgWidth,
           imgHeight: this.imgHeight,
           animationFrames: this.animationFrames,
-          scale: this.scale,
         },
         [offscreen, spriteImage],
       );

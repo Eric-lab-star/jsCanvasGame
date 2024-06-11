@@ -16,8 +16,29 @@ export default class RenderTest {
 
   public center() {
     const canvas = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
-    const ctx = canvas.canvas.getContext("2d");
-    ctx?.fillRect(GameEnv.GAME_WIDTH / 2, GameEnv.GAME_HEIGHT / 2, 4, 4);
+    const ctx = canvas.canvas.getContext("2d")!;
+    ctx.fillRect(GameEnv.GAME_WIDTH / 2, GameEnv.GAME_HEIGHT / 2, 4, 4);
+  }
+
+  public text() {
+    const canvas = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
+    const ctx = canvas.canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(GameEnv.GAME_WIDTH / 2, GameEnv.GAME_HEIGHT / 2);
+    ctx.scale(-1, 1);
+    ctx.font = "48px serif";
+    ctx.fillText("Hello world!", 0, 0);
+    ctx.restore();
+  }
+
+  public flipedText() {
+    const canvas = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
+    const ctx = canvas.canvas.getContext("2d")!;
+
+    ctx.scale(-1, 1);
+    ctx.font = "48px serif";
+    ctx.fillText("Hello world!", -280, 90);
+    // ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
   // level specific test worker
@@ -28,8 +49,9 @@ export default class RenderTest {
         window.location.reload();
       }
     });
-    this.map.render();
-    this.captain.render();
-    this.center();
+    // this.map.render();
+    // this.captain.render();
+    this.flipedText();
+    this.text();
   }
 }

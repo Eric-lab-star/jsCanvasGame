@@ -12,6 +12,11 @@ export default class CharacterConsumer {
   protected spriteImage: ImageBitmap;
   public posPort: MessagePort;
   private bodyPosition: { x: number; y: number } = { x: 0, y: 0 };
+  // private bodyPosition: { x: number; y: number } = {
+  //   x: GameEnv.GAME_WIDTH / 2,
+  //   y: GameEnv.GAME_HEIGHT / 2,
+  // };
+  private shouldFlip: boolean = false;
 
   constructor(
     imgWidth: number,
@@ -32,10 +37,36 @@ export default class CharacterConsumer {
     this.readPort();
   }
 
+  // read hitbox position
   public readPort() {
     this.posPort.onmessage = (e) => {
-      this.bodyPosition = e.data;
+      this.setAnimationState(e.data.pos);
+      this.bodyPosition = e.data.pos;
     };
+  }
+
+  public setAnimationState(pos: { x: number; y: number }) {
+    if (pos.x > this.bodyPosition.x + 1) {
+      this.animationState = 1;
+      this.shouldFlip = false;
+      return;
+    }
+    if (pos.x < this.bodyPosition.x - 1) {
+      this.animationState = 1;
+      this.shouldFlip = true;
+      return;
+    }
+
+    if (pos.y < this.bodyPosition.y - 1) {
+      this.animationState = 2;
+      return;
+    }
+
+    if (pos.y > this.bodyPosition.y + 1) {
+      this.animationState = 3;
+      return;
+    }
+    this.animationState = 0;
   }
 
   public render() {
@@ -54,14 +85,25 @@ export default class CharacterConsumer {
     );
 
     ctx.clearRect(0, 0, GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
-
-    ctx.drawImage(
-      this.animation[this.animationState][modulo],
-      this.bodyPosition.x - this.imgWidth / 2,
-      this.bodyPosition.y - this.imgHeight / 2,
-      this.imgWidth,
-      this.imgHeight,
-    );
+    if (this.shouldFlip) {
+      ctx.scale(-1, 1);
+      ctx.drawImage(
+        this.animation[this.animationState][modulo],
+        -(this.bodyPosition.x + this.imgWidth / 2),
+        this.bodyPosition.y - this.imgHeight / 2,
+        this.imgWidth,
+        this.imgHeight,
+      );
+    } else {
+      ctx.scale(1, 1);
+      ctx.drawImage(
+        this.animation[this.animationState][modulo],
+        this.bodyPosition.x - this.imgWidth / 2,
+        this.bodyPosition.y - this.imgHeight / 2,
+        this.imgWidth,
+        this.imgHeight,
+      );
+    }
 
     requestAnimationFrame(() => this.render());
   }

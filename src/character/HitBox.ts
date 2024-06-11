@@ -36,7 +36,7 @@ export class HitBox {
   public static withCharacter(character: Character) {
     const hitBox = HitBox.withKeyBoardInput();
     let pos = hitBox.body.position;
-    character.setPosition(pos);
+    character.updates(pos);
     return hitBox;
   }
 

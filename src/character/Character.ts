@@ -34,10 +34,10 @@ export default class Character {
     );
   }
 
-  public setPosition(pos: { x: number; y: number }) {
-    this.messageChannel.port1.postMessage(pos);
+  public updates(pos: { x: number; y: number }) {
+    this.messageChannel.port1.postMessage({ pos });
     this.position = pos;
-    requestAnimationFrame(() => this.setPosition(pos));
+    requestAnimationFrame(() => this.updates(pos));
   }
 
   public render() {

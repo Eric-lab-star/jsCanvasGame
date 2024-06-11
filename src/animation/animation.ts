@@ -3,7 +3,6 @@
  * */
 export default class Animation {
   protected image: ImageBitmap;
-  protected opt: ImageBitmapOptions;
   protected imgHeight: number;
   protected imgWidth: number;
   protected frames: number[];
@@ -18,9 +17,6 @@ export default class Animation {
     this.frames = frames;
     this.imgHeight = imgHeight;
     this.imgWidth = imgWidth;
-    this.opt = {
-      resizeQuality: "pixelated",
-    };
   }
 
   /**
@@ -65,7 +61,6 @@ export default class Animation {
       this.imgHeight * y,
       this.imgWidth,
       this.imgHeight,
-      this.opt,
     );
   }
 }

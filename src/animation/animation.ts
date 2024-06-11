@@ -13,15 +13,12 @@ export default class Animation {
     frames: number[],
     imgWidth: number,
     imgHeight: number,
-    scale: number,
   ) {
     this.image = image;
     this.frames = frames;
     this.imgHeight = imgHeight;
     this.imgWidth = imgWidth;
     this.opt = {
-      resizeWidth: this.imgWidth * scale,
-      resizeHeight: this.imgHeight * scale,
       resizeQuality: "pixelated",
     };
   }

@@ -1,8 +1,5 @@
-import Matter from "matter-js";
 import GameEnv from "../env/GameEnv";
 import CanvasEnv from "../env/CanvasEnv";
-
-const { Bodies } = Matter;
 
 export default class Character {
   protected spriteImageSrc: string;
@@ -10,7 +7,6 @@ export default class Character {
   protected imgWidth: number;
   protected imgHeight: number;
   protected scale: number;
-  public hitBox: Matter.Body;
   protected characterCanvas: CanvasEnv;
   protected animationState: number = 0;
 
@@ -29,12 +25,6 @@ export default class Character {
     this.characterCanvas = new CanvasEnv(
       GameEnv.GAME_WIDTH,
       GameEnv.GAME_HEIGHT,
-    );
-    this.hitBox = this.setHitBox(
-      GameEnv.GAME_WIDTH / 2,
-      GameEnv.GAME_HEIGHT / 2,
-      0,
-      0,
     );
   }
 
@@ -55,7 +45,6 @@ export default class Character {
       worker.postMessage(
         {
           offscreen: offscreen,
-          hitBox: this.hitBox,
           spriteImage: spriteImage,
           imgWidth: this.imgWidth,
           imgHeight: this.imgHeight,
@@ -65,27 +54,5 @@ export default class Character {
         [offscreen, spriteImage],
       );
     });
-  }
-
-  public setHitBox(
-    xPos: number,
-    yPos: number,
-    xOffset: number,
-    yOffset: number,
-  ) {
-    const hitBox = Bodies.rectangle(
-      xPos,
-      yPos,
-      this.imgWidth - xOffset,
-      this.imgHeight - yOffset,
-      {
-        render: {
-          opacity: 0,
-        },
-        frictionAir: 0,
-        label: "character",
-      },
-    );
-    return hitBox;
   }
 }

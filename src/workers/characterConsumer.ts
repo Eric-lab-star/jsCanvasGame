@@ -71,6 +71,7 @@ export default class CharacterConsumer {
     this.animationState = 0;
   }
 
+  // must be called after setting this.animation
   public render() {
     this.ctx.reset();
 
@@ -89,15 +90,15 @@ export default class CharacterConsumer {
         this.imgWidth,
         this.imgHeight,
       );
+    } else {
+      this.ctx.drawImage(
+        this.animation![this.animationState][modulo],
+        this.bodyPosition.x - this.imgWidth / 2,
+        this.bodyPosition.y - this.imgHeight / 2,
+        this.imgWidth,
+        this.imgHeight,
+      );
     }
-
-    this.ctx.drawImage(
-      this.animation![this.animationState][modulo],
-      this.bodyPosition.x - this.imgWidth / 2,
-      this.bodyPosition.y - this.imgHeight / 2,
-      this.imgWidth,
-      this.imgHeight,
-    );
 
     requestAnimationFrame(() => this.render());
   }

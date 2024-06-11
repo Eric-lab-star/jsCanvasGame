@@ -1,4 +1,6 @@
 import Captain from "../character/Capatain";
+import CanvasEnv from "../env/CanvasEnv";
+import GameEnv from "../env/GameEnv";
 import Level from "../levels/level";
 import levelJson from "../res/basic.json";
 import { JsonTypes } from "../workers/levelConsumer";
@@ -12,6 +14,12 @@ export default class RenderTest {
     this.captain = new Captain();
   }
 
+  public center() {
+    const canvas = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
+    const ctx = canvas.canvas.getContext("2d");
+    ctx?.fillRect(GameEnv.GAME_WIDTH / 2, GameEnv.GAME_HEIGHT / 2, 4, 4);
+  }
+
   // level specific test worker
   public start() {
     addEventListener("keydown", (e: KeyboardEvent) => {
@@ -22,5 +30,6 @@ export default class RenderTest {
     });
     this.map.render();
     this.captain.render();
+    this.center();
   }
 }

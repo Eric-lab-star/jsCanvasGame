@@ -2,6 +2,8 @@ import { Bodies, Body, Composite, Detector, Vector } from "matter-js";
 import BodyKeyMaps from "../inputs/BodyKeyMaps";
 import { randomColor } from "../utilz/helper";
 import PhysicEnv from "../env/PhysicEnv";
+import Character from "./Character";
+import { base } from "../utilz/matterComponents";
 
 export class HitBox {
   public body: Body;
@@ -26,9 +28,15 @@ export class HitBox {
 
   public static withKeyBoardInput() {
     const hitBox = new HitBox();
-    const initV = Vector.create(10, 0);
-    Body.setVelocity(hitBox.getBody(), initV);
-    BodyKeyMaps.keyBoardHanlder(hitBox);
+    BodyKeyMaps.bodyHandler(hitBox);
+    Body.setVelocity(hitBox.body, Vector.create(5, 0));
+    return hitBox;
+  }
+
+  public static withCharacter(character: Character) {
+    const hitBox = HitBox.withKeyBoardInput();
+    let pos = hitBox.body.position;
+    character.setPosition(pos);
     return hitBox;
   }
 
@@ -52,11 +60,12 @@ export class HitBox {
   }
 
   public initBody() {
-    const box = Bodies.circle(10, 10, 30, {
+    const box = Bodies.circle(10, 10, 25, {
       render: {
         fillStyle: randomColor(),
-        opacity: 1,
+        opacity: 0.5,
       },
+      friction: 1,
       label: "hitBox",
     });
     Body.setSpeed(box, 10);
@@ -69,7 +78,7 @@ export class HitBox {
       (body) => body.label === "ground",
     )!;
     const detector = Detector.create({
-      bodies: [this.body, ground],
+      bodies: [this.body, ground, base],
     });
 
     const bodies = Detector.collisions(detector);

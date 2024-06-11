@@ -1,7 +1,14 @@
 import CharacterConsumer from "./characterConsumer";
 
 self.onmessage = async ({
-  data: { spriteImage, offscreen, animationFrames, imgWidth, imgHeight },
+  data: {
+    spriteImage,
+    offscreen,
+    animationFrames,
+    imgWidth,
+    imgHeight,
+    posPort,
+  },
 }: MessageEvent<MessageDataType>) => {
   const characterConsumer = new CharacterConsumer(
     imgWidth,
@@ -9,8 +16,8 @@ self.onmessage = async ({
     animationFrames,
     offscreen,
     spriteImage,
+    posPort,
   );
-
   await characterConsumer.setAnimation();
   characterConsumer.render();
 };
@@ -22,4 +29,5 @@ interface MessageDataType {
   animationFrames: [];
   imgWidth: number;
   imgHeight: number;
+  posPort: MessagePort;
 }

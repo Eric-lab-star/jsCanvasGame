@@ -7,54 +7,54 @@ export default class BodyKeyMaps {
     this.hitbox = hitBox;
   }
 
-  public static keyBoardHanlder(body: HitBox) {
-    const keymapper = new BodyKeyMaps(body);
+  public static bodyHandler(hitBox: HitBox) {
+    const keymapper = new BodyKeyMaps(hitBox);
     document.addEventListener("keydown", (e) => {
       e.preventDefault();
-      keymapper.keyDown(body, e.key);
+      keymapper.keyDown(hitBox, e.key);
     });
     document.addEventListener("keyup", (e) => {
       e.preventDefault();
-      keymapper.keyUp(body, e.key);
+      keymapper.keyUp(hitBox, e.key);
     });
   }
 
   private static newV = Vector.create(0, 0);
 
-  public keyDown(body: HitBox, key: string) {
-    if (body.onFloor()) {
-      body.didRight = false;
-      body.didLeft = false;
-      body.didUp = false;
+  public keyDown(hitBox: HitBox, key: string) {
+    if (hitBox.onFloor()) {
+      hitBox.didRight = false;
+      hitBox.didLeft = false;
+      hitBox.didUp = false;
     }
 
     switch (true) {
       case this.rightKey(key):
-        if (!body.didRight) {
-          body.didRight = true;
-          this.xDirectionHandler(body, 1);
+        if (!hitBox.didRight) {
+          hitBox.didRight = true;
+          this.xDirectionHandler(hitBox, 1);
         }
         break;
       case this.leftKey(key):
-        if (!body.didLeft) {
-          body.didLeft = true;
-          this.xDirectionHandler(body, -1);
+        if (!hitBox.didLeft) {
+          hitBox.didLeft = true;
+          this.xDirectionHandler(hitBox, -1);
         }
         break;
 
       case this.upKey(key):
-        if (body.onFloor()) {
+        if (hitBox.onFloor()) {
           BodyKeyMaps.newV = Vector.create(0, 0);
-          BodyKeyMaps.newV = body.moveUp(BodyKeyMaps.newV);
-          Body.setVelocity(body.getBody(), BodyKeyMaps.newV);
+          BodyKeyMaps.newV = hitBox.moveUp(BodyKeyMaps.newV);
+          Body.setVelocity(hitBox.body, BodyKeyMaps.newV);
         }
         break;
 
       case this.downKey(key):
-        if (body.onFloor()) {
+        if (hitBox.onFloor()) {
           BodyKeyMaps.newV = Vector.create(0, 0);
-          BodyKeyMaps.newV = body.moveDown(BodyKeyMaps.newV);
-          Body.setVelocity(body.getBody(), BodyKeyMaps.newV);
+          BodyKeyMaps.newV = hitBox.moveDown(BodyKeyMaps.newV);
+          Body.setVelocity(hitBox.body, BodyKeyMaps.newV);
         }
         break;
 
@@ -108,10 +108,12 @@ export default class BodyKeyMaps {
     body.inputCoolDownSwitch(body);
   }
 
-  private xMove(body: HitBox, direction: 1 | -1) {
-    BodyKeyMaps.newV = body.onFloor() ? Vector.create(0, 0) : BodyKeyMaps.newV;
-    BodyKeyMaps.newV = body.moveXDirection(BodyKeyMaps.newV, direction);
-    Body.setVelocity(body.getBody(), BodyKeyMaps.newV);
+  private xMove(hitBox: HitBox, direction: 1 | -1) {
+    BodyKeyMaps.newV = hitBox.onFloor()
+      ? Vector.create(0, 0)
+      : BodyKeyMaps.newV;
+    BodyKeyMaps.newV = hitBox.moveXDirection(BodyKeyMaps.newV, direction);
+    Body.setVelocity(hitBox.body, BodyKeyMaps.newV);
     BodyKeyMaps.newV = Vector.create(0, 0);
   }
 }

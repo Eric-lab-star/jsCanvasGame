@@ -1,27 +1,24 @@
 import { Composite } from "matter-js";
-import Captain from "../character/Capatain";
 import GameEnv from "../env/GameEnv";
 import PhysicEnv from "../env/PhysicEnv";
-import { getWorldEelement } from "../utilz/matterComponents";
 import { HitBox } from "../character/HitBox";
+import { getWorldEelement } from "../utilz/matterComponents";
+import Captain from "../character/Capatain";
 
 export default class MatterTest {
-  private physic: PhysicEnv;
-  private captain: Captain;
-  public constructor() {
-    this.captain = new Captain();
-    this.physic = new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
-  }
+  public constructor() {}
 
   public gen() {
-    const box = HitBox.withKeyBoardInput();
-    Composite.add(PhysicEnv.World, box.getBody());
+    const captain = new Captain();
+    const physic = new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
+    const hitBox = HitBox.withCharacter(captain);
+    Composite.add(PhysicEnv.World, hitBox.body);
+    Composite.add(PhysicEnv.World, [...getWorldEelement()]);
+    physic.run();
+    captain.render();
   }
 
   public run() {
     this.gen();
-    Composite.add(PhysicEnv.World, [...getWorldEelement()]);
-    this.physic.run();
-    this.captain.render();
   }
 }

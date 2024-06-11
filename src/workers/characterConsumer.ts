@@ -10,12 +10,16 @@ export default class CharacterConsumer {
   protected animationState: number;
   protected offscreen: OffscreenCanvas;
   protected spriteImage: ImageBitmap;
+  public posPort: MessagePort;
+  private bodyPosition: { x: number; y: number } = { x: 0, y: 0 };
+
   constructor(
     imgWidth: number,
     imgHeight: number,
     animationFrames: number[],
     offscreen: OffscreenCanvas,
     spriteImage: ImageBitmap,
+    posPort: MessagePort,
   ) {
     this.animationFrames = animationFrames;
     this.animation = null;
@@ -24,6 +28,14 @@ export default class CharacterConsumer {
     this.imgHeight = imgHeight;
     this.offscreen = offscreen;
     this.spriteImage = spriteImage;
+    this.posPort = posPort;
+    this.readPort();
+  }
+
+  public readPort() {
+    this.posPort.onmessage = (e) => {
+      this.bodyPosition = e.data;
+    };
   }
 
   public render() {
@@ -45,12 +57,8 @@ export default class CharacterConsumer {
 
     ctx.drawImage(
       this.animation[this.animationState][modulo],
-      0,
-      0,
-      this.imgWidth,
-      this.imgHeight,
-      0,
-      0,
+      this.bodyPosition.x - this.imgWidth / 2,
+      this.bodyPosition.y - this.imgHeight / 2,
       this.imgWidth,
       this.imgHeight,
     );

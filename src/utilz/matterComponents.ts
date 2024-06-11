@@ -77,7 +77,7 @@ const base = Bodies.rectangle(
 );
 
 const getWorldEelement = () => {
-  return [ground, leftWall, rightWall, topWall];
+  return [base, ground, leftWall, rightWall, topWall];
 };
 
 export { base, dummie, ground, leftWall, rightWall, topWall, getWorldEelement };

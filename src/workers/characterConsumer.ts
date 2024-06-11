@@ -10,6 +10,7 @@ export default class CharacterConsumer {
   protected animationState: number;
   protected offscreen: OffscreenCanvas;
   protected spriteImage: ImageBitmap;
+  protected ctx: OffscreenCanvasRenderingContext2D;
   public posPort: MessagePort;
   private bodyPosition: { x: number; y: number } = { x: 0, y: 0 };
   // private bodyPosition: { x: number; y: number } = {
@@ -34,6 +35,7 @@ export default class CharacterConsumer {
     this.offscreen = offscreen;
     this.spriteImage = spriteImage;
     this.posPort = posPort;
+    this.ctx = this.offscreen.getContext("2d")!;
     this.readPort();
   }
 
@@ -70,40 +72,32 @@ export default class CharacterConsumer {
   }
 
   public render() {
-    const ctx = this.offscreen.getContext("2d");
-    if (ctx === null) {
-      throw new Error("context is null");
-    }
-    if (this.animation == null) {
-      throw new Error("need to set animation first");
-    }
+    this.ctx.reset();
 
     const modulo = getModulofromAnimation(
       GameEnv.runAnimationTick(),
-      this.animation,
+      this.animation!,
       this.animationState,
     );
 
-    ctx.clearRect(0, 0, GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     if (this.shouldFlip) {
-      ctx.scale(-1, 1);
-      ctx.drawImage(
-        this.animation[this.animationState][modulo],
+      this.ctx.scale(-1, 1);
+      this.ctx.drawImage(
+        this.animation![this.animationState][modulo],
         -(this.bodyPosition.x + this.imgWidth / 2),
         this.bodyPosition.y - this.imgHeight / 2,
         this.imgWidth,
         this.imgHeight,
       );
-    } else {
-      ctx.scale(1, 1);
-      ctx.drawImage(
-        this.animation[this.animationState][modulo],
-        this.bodyPosition.x - this.imgWidth / 2,
-        this.bodyPosition.y - this.imgHeight / 2,
-        this.imgWidth,
-        this.imgHeight,
-      );
     }
+
+    this.ctx.drawImage(
+      this.animation![this.animationState][modulo],
+      this.bodyPosition.x - this.imgWidth / 2,
+      this.bodyPosition.y - this.imgHeight / 2,
+      this.imgWidth,
+      this.imgHeight,
+    );
 
     requestAnimationFrame(() => this.render());
   }

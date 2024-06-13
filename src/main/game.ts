@@ -1,30 +1,29 @@
 import Captain from "../character/Capatain";
-import Level from "../levels/level";
-import levelJson from "../res/basic.json";
-import CanvasEnv from "../env/CanvasEnv";
 import GameEnv from "../env/GameEnv";
 import PhysicEnv from "../env/PhysicEnv";
-import { JsonTypes } from "../workers/levelConsumer";
 import { HitBox } from "../character/HitBox";
 import { Composite } from "matter-js";
-import { base, getWorldEelement } from "../utilz/matterComponents";
+import { getWorldEelement } from "../utilz/matterComponents";
+import World from "../levels/world";
 
 export default class Game {
-  private map: Level;
   private captain: Captain;
   private catptainHitBox: HitBox;
-  public canvasEnv: CanvasEnv;
-  public physicEnv: PhysicEnv;
+  private physicEnv: PhysicEnv;
+  private gameWorld: World;
 
   public constructor() {
-    this.canvasEnv = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.physicEnv = new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
-    this.map = new Level(levelJson as JsonTypes);
+    this.gameWorld = new World();
     this.captain = new Captain();
     this.catptainHitBox = HitBox.withCharacter(this.captain);
   }
 
-  public run() {
+  private async preload() {
+    await World.assetPreloader();
+  }
+
+  private run() {
     Composite.add(PhysicEnv.World, [
       this.catptainHitBox.body,
       ...getWorldEelement(),
@@ -32,12 +31,13 @@ export default class Game {
     this.physicEnv.run();
   }
 
-  public render() {
-    this.map.render();
-    this.captain.render();
+  private render() {
+    this.gameWorld.render();
+    this.captain.renderOffscreen();
   }
 
-  public start() {
+  public async start() {
+    await this.preload();
     this.run();
     this.render();
   }

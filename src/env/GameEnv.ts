@@ -1,11 +1,7 @@
-import TileMapProps from "../levels/tileMap";
-
 export default class GameEnv {
-  public static GAME_WIDTH: number =
-    TileMapProps.TILE_SIZE * TileMapProps.MAP_COLUMNS;
+  public static GAME_WIDTH: number = 1280;
 
-  public static GAME_HEIGHT: number =
-    TileMapProps.TILE_SIZE * TileMapProps.MAP_ROWS;
+  public static GAME_HEIGHT: number = 800;
 
   private static animationSpeed: number = 10;
   public static getAnimationSpeed() {

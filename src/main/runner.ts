@@ -2,14 +2,14 @@ import MatterTest from "../test/matterTest";
 import RenderTest from "../test/renderTest";
 import Game from "./game";
 
-export function runner() {
+export async function runner() {
   const game = new Game();
   game.start();
 }
 
 export function renderTestRunner() {
-  const rendeerTest = new RenderTest();
-  rendeerTest.start();
+  const renderTest = new RenderTest();
+  renderTest.start();
 }
 
 export function matterTestRunner() {

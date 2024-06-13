@@ -1,42 +1,34 @@
 import { Bodies } from "matter-js";
 import GameEnv from "../env/GameEnv";
-import TileMapProps from "../levels/tileMap";
 import { randomColor } from "./helper";
 
-const dummie = Bodies.rectangle(400, 20, 80, 80);
-const ground = Bodies.rectangle(
+export const foundation = Bodies.rectangle(
   GameEnv.GAME_WIDTH / 2,
-  GameEnv.GAME_HEIGHT,
-  GameEnv.GAME_WIDTH,
-  40,
+  642 + 163 / 2,
+  1280,
+  163,
   {
     isStatic: true,
     render: {
       fillStyle: randomColor(),
       opacity: 1,
     },
-    label: "ground",
+    label: "foundation",
   },
 );
-const leftWall = Bodies.rectangle(
-  0,
-  GameEnv.GAME_HEIGHT / 2,
-  40,
-  GameEnv.GAME_HEIGHT,
-  {
-    label: "leftWall",
-    isStatic: true,
-    render: {
-      fillStyle: randomColor(),
-      opacity: 1,
-    },
+const leftWall = Bodies.rectangle(67 / 2, 648 / 2, 67, 648, {
+  label: "leftWall",
+  isStatic: true,
+  render: {
+    fillStyle: randomColor(),
+    opacity: 1,
   },
-);
+});
 const rightWall = Bodies.rectangle(
-  GameEnv.GAME_WIDTH,
-  GameEnv.GAME_HEIGHT / 2,
-  40,
-  GameEnv.GAME_HEIGHT,
+  GameEnv.GAME_WIDTH - 70 / 2,
+  647 / 2,
+  70,
+  647,
   {
     label: "rightWall",
     isStatic: true,
@@ -47,14 +39,23 @@ const rightWall = Bodies.rectangle(
   },
 );
 
-const topWall = Bodies.rectangle(
-  GameEnv.GAME_WIDTH / 2,
-  0,
-  GameEnv.GAME_WIDTH,
-  40,
+const ceilling = Bodies.rectangle(1280 / 2, 69 / 2, 1280, 69, {
+  isStatic: true,
+  label: "ceilling",
+  render: {
+    fillStyle: randomColor(),
+    opacity: 1,
+  },
+});
+
+export const foundationPillar = Bodies.rectangle(
+  257 + 191 / 2,
+  386 + 259 / 2,
+  191,
+  259,
   {
     isStatic: true,
-    label: "topWall",
+    label: "foundationPillar",
     render: {
       fillStyle: randomColor(),
       opacity: 1,
@@ -62,22 +63,80 @@ const topWall = Bodies.rectangle(
   },
 );
 
-const base = Bodies.rectangle(
-  GameEnv.GAME_WIDTH / 2,
-  GameEnv.GAME_HEIGHT - 2 * TileMapProps.TILE_SIZE,
-  GameEnv.GAME_WIDTH,
-  4 * TileMapProps.TILE_SIZE,
+const ceilingPillar = Bodies.rectangle(897 + 124 / 2, 64 + 189 / 2, 124, 189, {
+  isStatic: true,
+  label: "ceilonPillar",
+  render: {
+    fillStyle: randomColor(),
+    opacity: 1,
+  },
+});
+
+const leftCorner = Bodies.rectangle(61 + 61 / 2, 63 + 63 / 2, 61, 63, {
+  isStatic: true,
+  label: "leftCorner",
+  render: {
+    fillStyle: randomColor(),
+    opacity: 1,
+  },
+});
+
+export const floatingPlatfrom = Bodies.rectangle(
+  133 + 60 / 2,
+  387 + 60 / 2,
+  60,
+  60,
   {
     isStatic: true,
-    label: "base",
+    label: "leftCorner",
     render: {
+      fillStyle: randomColor(),
       opacity: 1,
     },
   },
 );
 
-const getWorldEelement = () => {
-  return [base, ground, leftWall, rightWall, topWall];
-};
+export const floatingPlatfrom2 = Bodies.rectangle(
+  640 + 256 / 2,
+  449 + 63 / 2,
+  256,
+  63,
+  {
+    isStatic: true,
+    label: "leftCorner",
+    render: {
+      fillStyle: randomColor(),
+      opacity: 1,
+    },
+  },
+);
 
-export { base, dummie, ground, leftWall, rightWall, topWall, getWorldEelement };
+export const floatingPlatfrom3 = Bodies.rectangle(
+  1090 + 62 / 2,
+  513 + 63 / 2,
+  62,
+  63,
+  {
+    isStatic: true,
+    label: "leftCorner",
+    render: {
+      fillStyle: randomColor(),
+      opacity: 1,
+    },
+  },
+);
+
+export const getWorldEelement = () => {
+  return [
+    foundationPillar,
+    foundation,
+    leftWall,
+    rightWall,
+    ceilling,
+    leftCorner,
+    ceilingPillar,
+    floatingPlatfrom,
+    floatingPlatfrom2,
+    floatingPlatfrom3,
+  ];
+};

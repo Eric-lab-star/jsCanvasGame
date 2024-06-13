@@ -21,7 +21,7 @@ export default class BodyKeyMaps {
 
   private static newV = Vector.create(0, 0);
 
-  public keyDown(hitBox: HitBox, key: string) {
+  private keyDown(hitBox: HitBox, key: string) {
     if (hitBox.onFloor()) {
       hitBox.didRight = false;
       hitBox.didLeft = false;
@@ -66,7 +66,7 @@ export default class BodyKeyMaps {
     }
   }
 
-  public keyUp(body: HitBox, key: string) {
+  private keyUp(body: HitBox, key: string) {
     switch (true) {
       case this.rightKey(key):
         body.setRight(false);
@@ -85,25 +85,25 @@ export default class BodyKeyMaps {
     }
   }
 
-  public rightKey(key: string) {
+  private rightKey(key: string) {
     return key === "D" || key === "ㅇ" || key === "d";
   }
 
-  public leftKey(key: string) {
+  private leftKey(key: string) {
     return key === "a" || key === "A" || key === "ㅁ";
   }
 
-  public upKey(key: string) {
+  private upKey(key: string) {
     return key === "w" || key === "W" || key === "ㅈ";
   }
-  public downKey(key: string) {
+  private downKey(key: string) {
     return key === "s" || key === "S" || key === "ㄴ";
   }
-  public reloadKey(key: string) {
+  private reloadKey(key: string) {
     return key === "r" || key === "R" || key === "ㄱ";
   }
 
-  public xDirectionHandler(body: HitBox, direction: 1 | -1) {
+  private xDirectionHandler(body: HitBox, direction: 1 | -1) {
     this.xMove(body, direction);
     body.inputCoolDownSwitch(body);
   }

@@ -1,9 +1,8 @@
-import { Bodies, Body, Composite, Detector, Vector } from "matter-js";
+import { Bodies, Body, Detector, Vector } from "matter-js";
 import BodyKeyMaps from "../inputs/BodyKeyMaps";
 import { randomColor } from "../utilz/helper";
-import PhysicEnv from "../env/PhysicEnv";
 import Character from "./Character";
-import { base } from "../utilz/matterComponents";
+import { getWorldEelement } from "../utilz/matterComponents";
 
 export class HitBox {
   public body: Body;
@@ -29,14 +28,13 @@ export class HitBox {
   public static withKeyBoardInput() {
     const hitBox = new HitBox();
     BodyKeyMaps.bodyHandler(hitBox);
-    Body.setVelocity(hitBox.body, Vector.create(5, 0));
     return hitBox;
   }
 
   public static withCharacter(character: Character) {
     const hitBox = HitBox.withKeyBoardInput();
     let pos = hitBox.body.position;
-    character.updates(pos);
+    character.updatePos(pos);
     return hitBox;
   }
 
@@ -55,30 +53,24 @@ export class HitBox {
     }
   }
 
-  public getBody() {
-    return this.body;
-  }
-
-  public initBody() {
-    const box = Bodies.circle(10, 10, 25, {
+  private initBody() {
+    const box = Bodies.rectangle(300, 386, 45, 45, {
       render: {
         fillStyle: randomColor(),
         opacity: 0.5,
       },
-      friction: 1,
+      friction: 0.5,
       label: "hitBox",
     });
-    Body.setSpeed(box, 10);
+    Body.setInertia(box, Infinity);
+    Body.setSpeed(box, 1);
     return box;
   }
 
   // detect if the body is on the floor
   public onFloor() {
-    const ground = Composite.allBodies(PhysicEnv.World).find(
-      (body) => body.label === "ground",
-    )!;
     const detector = Detector.create({
-      bodies: [this.body, ground, base],
+      bodies: [this.body, ...getWorldEelement()],
     });
 
     const bodies = Detector.collisions(detector);
@@ -87,7 +79,7 @@ export class HitBox {
   }
 
   public moveXDirection(newV: Vector, direction: number) {
-    const downV = Vector.create(3 * direction, 0);
+    const downV = Vector.create(2 * direction, 0);
     newV = Vector.add(newV, downV);
     return newV;
   }
@@ -99,7 +91,7 @@ export class HitBox {
   }
 
   public moveUp(newV: Vector) {
-    const upV = Vector.create(0, -11);
+    const upV = Vector.create(0, -7);
     newV = Vector.add(newV, upV);
     return newV;
   }

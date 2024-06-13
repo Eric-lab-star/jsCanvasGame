@@ -5,7 +5,7 @@ export default class CanvasEnv {
   public constructor(width: number, height: number) {
     this.canvas = document.createElement("canvas");
     this.setCanvasSize(width, height);
-    this.setCanvasStyle();
+    this.setCanvasStyle(width, height);
     document.body.appendChild(this.canvas);
   }
 
@@ -14,11 +14,20 @@ export default class CanvasEnv {
     this.canvas.height = height;
   }
 
-  private setCanvasStyle() {
+  private setCanvasStyle(width: number, height: number) {
+    const left = (window.innerWidth - width) / 2;
+    const top = height / 2;
     this.canvas.style.position = "absolute";
-    this.canvas.style.left = "0";
-    this.canvas.style.top = "0";
+    this.canvas.style.left = left + "px";
+    this.canvas.style.top = height + "px";
     this.canvas.style.zIndex = CanvasEnv.zindex.toString();
     CanvasEnv.zindex++;
+  }
+  public getCtx() {
+    let ctx = this.canvas.getContext("2d");
+    if (ctx == null) {
+      throw new Error("Canvas context is null");
+    }
+    return ctx;
   }
 }

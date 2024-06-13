@@ -1,5 +1,8 @@
 import CharacterConsumer from "./characterConsumer";
 
+/**
+ * function to pass the data from the main thread to the worker
+ * */
 self.onmessage = async ({
   data: {
     spriteImage,
@@ -18,8 +21,13 @@ self.onmessage = async ({
     spriteImage,
     posPort,
   );
-  await characterConsumer.setAnimation();
-  characterConsumer.render();
+
+  if (characterConsumer.animation) {
+    characterConsumer.render();
+  } else {
+    await characterConsumer.setAnimation();
+    characterConsumer.render();
+  }
 };
 
 interface MessageDataType {

@@ -1,6 +1,7 @@
 import Animation from "../animation/animation";
+import { AnimationMapManager } from "../animation/animationManager/AnimationManager";
 import GameEnv from "../env/GameEnv";
-import { getModulofromAnimation } from "../utilz/helper";
+import { getModulofromAnimation, moduloGenerator } from "../utilz/helper";
 
 /**
  * @class CharacterConsumer
@@ -11,7 +12,7 @@ export default class CharacterConsumer {
   private animationFrames: number[];
   private imgWidth: number;
   private imgHeight: number;
-  private animationState: number;
+  private animationState: string;
   private offscreen: OffscreenCanvas;
   private spriteImage: ImageBitmap;
   private ctx: OffscreenCanvasRenderingContext2D;
@@ -32,7 +33,7 @@ export default class CharacterConsumer {
   ) {
     this.animationFrames = animationFrames;
     this.animation = null;
-    this.animationState = 0;
+    this.animationState = "idleS";
     this.imgWidth = imgWidth;
     this.imgHeight = imgHeight;
     this.offscreen = offscreen;
@@ -56,26 +57,26 @@ export default class CharacterConsumer {
 
   private setAnimationState(pos: { x: number; y: number }): void {
     if (pos.x > this.bodyPosition.x + 1) {
-      this.animationState = 1;
+      this.animationState = "run";
       this.shouldFlip = false;
       this.counter = 0;
       return;
     }
     if (pos.x < this.bodyPosition.x - 1) {
-      this.animationState = 1;
+      this.animationState = "run";
       this.shouldFlip = true;
       this.counter = 0;
       return;
     }
 
     if (pos.y < this.bodyPosition.y - 2) {
-      this.animationState = 2;
+      this.animationState = "jump";
       this.counter = 0;
       return;
     }
 
     if (pos.y > this.bodyPosition.y + 2) {
-      this.animationState = 3;
+      this.animationState = "fall";
       this.counter = 0;
       return;
     }
@@ -86,7 +87,7 @@ export default class CharacterConsumer {
     ) {
       this.counter++;
       if (this.counter > 4) {
-        this.animationState = 0;
+        this.animationState = "idleS";
       }
     }
   }
@@ -98,16 +99,18 @@ export default class CharacterConsumer {
    * */
   public render(): void {
     this.ctx.reset();
-    const modulo = getModulofromAnimation(
+
+    const modulo = moduloGenerator(
       GameEnv.runAnimationTick(),
-      this.animation!,
-      this.animationState,
+      AnimationMapManager.states.get(this.animationState)!,
     );
+
+    const images = AnimationMapManager.animations.get(this.animationState)!;
 
     if (this.shouldFlip) {
       this.ctx.scale(-1, 1);
       this.ctx.drawImage(
-        this.animation![this.animationState][modulo],
+        images[modulo],
         -(this.bodyPosition.x + this.imgWidth / 2),
         this.bodyPosition.y - this.imgHeight / 2,
         this.imgWidth,
@@ -115,7 +118,7 @@ export default class CharacterConsumer {
       );
     } else {
       this.ctx.drawImage(
-        this.animation![this.animationState][modulo],
+        images[modulo],
         this.bodyPosition.x - this.imgWidth / 2,
         this.bodyPosition.y - this.imgHeight / 2,
         this.imgWidth,
@@ -132,8 +135,9 @@ export default class CharacterConsumer {
       this.imgWidth,
       this.imgHeight,
     );
-
     const animationSets = await Promise.all(animation.loadAnimationSets());
+    const animationMapManager = new AnimationMapManager(animationSets);
+    animationMapManager.setMap();
     this.animation = animationSets;
   }
 }

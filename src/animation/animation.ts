@@ -1,3 +1,5 @@
+import { AnimationMapManager } from "./animationManager/AnimationManager";
+
 /**
  * creates animation from sprite image
  * */

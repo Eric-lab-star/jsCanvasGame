@@ -19,7 +19,7 @@ export default class MatterTest {
     Composite.add(PhysicEnv.World, hitBox.body);
     Composite.add(PhysicEnv.World, [...getWorldEelement()]);
     physic.run();
-    // captain.renderOffscreen();
+    captain.renderOffscreen();
   }
 
   public run() {

@@ -20,3 +20,7 @@ export function modulo(animationTick: number, max: number) {
   const modulo = animationTick - max * intValue;
   return modulo;
 }
+
+export function randomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}

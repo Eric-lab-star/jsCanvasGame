@@ -5,7 +5,7 @@ export default class CanvasEnv {
   public constructor(width: number, height: number) {
     this.canvas = document.createElement("canvas");
     this.setCanvasSize(width, height);
-    this.setCanvasStyle(width, height);
+    this.setCanvasStyle(width, 0);
     document.body.appendChild(this.canvas);
   }
 
@@ -16,7 +16,6 @@ export default class CanvasEnv {
 
   private setCanvasStyle(width: number, height: number) {
     const left = (window.innerWidth - width) / 2;
-    const top = height / 2;
     this.canvas.style.position = "absolute";
     this.canvas.style.left = left + "px";
     this.canvas.style.top = height + "px";

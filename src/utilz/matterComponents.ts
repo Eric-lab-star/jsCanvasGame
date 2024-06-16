@@ -65,7 +65,7 @@ export const foundationPillar = Bodies.rectangle(
 
 const ceilingPillar = Bodies.rectangle(897 + 124 / 2, 64 + 189 / 2, 124, 189, {
   isStatic: true,
-  label: "ceilonPillar",
+  label: "ceilingPillar",
   render: {
     fillStyle: randomColor(),
     opacity: 1,
@@ -81,14 +81,14 @@ const leftCorner = Bodies.rectangle(61 + 61 / 2, 63 + 63 / 2, 61, 63, {
   },
 });
 
-export const floatingPlatfrom = Bodies.rectangle(
+export const floatingPlatform = Bodies.rectangle(
   133 + 60 / 2,
   387 + 60 / 2,
   60,
   60,
   {
     isStatic: true,
-    label: "leftCorner",
+    label: "floatingPlatform",
     render: {
       fillStyle: randomColor(),
       opacity: 1,
@@ -96,14 +96,14 @@ export const floatingPlatfrom = Bodies.rectangle(
   },
 );
 
-export const floatingPlatfrom2 = Bodies.rectangle(
+export const floatingPlatform2 = Bodies.rectangle(
   640 + 256 / 2,
   449 + 63 / 2,
   256,
   63,
   {
     isStatic: true,
-    label: "leftCorner",
+    label: "floatingPlatform2",
     render: {
       fillStyle: randomColor(),
       opacity: 1,
@@ -111,14 +111,14 @@ export const floatingPlatfrom2 = Bodies.rectangle(
   },
 );
 
-export const floatingPlatfrom3 = Bodies.rectangle(
+export const floatingPlatform3 = Bodies.rectangle(
   1090 + 62 / 2,
   513 + 63 / 2,
   62,
   63,
   {
     isStatic: true,
-    label: "leftCorner",
+    label: "floatingPlatform3",
     render: {
       fillStyle: randomColor(),
       opacity: 1,
@@ -135,8 +135,8 @@ export const getWorldEelement = () => {
     ceilling,
     leftCorner,
     ceilingPillar,
-    floatingPlatfrom,
-    floatingPlatfrom2,
-    floatingPlatfrom3,
+    floatingPlatform,
+    floatingPlatform2,
+    floatingPlatform3,
   ];
 };

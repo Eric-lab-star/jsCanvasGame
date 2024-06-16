@@ -1,8 +1,9 @@
-import { Bodies, Body, Detector, Vector } from "matter-js";
+import { Bodies, Body, Composite, Detector, Vector } from "matter-js";
 import BodyKeyMaps from "../inputs/BodyKeyMaps";
-import { randomColor } from "../utilz/helper";
+import { randomColor, randomInt } from "../utilz/helper";
 import Character from "./Character";
-import { getWorldEelement } from "../utilz/matterComponents";
+import { floatingPlatform3, getWorldEelement } from "../utilz/matterComponents";
+import PhysicEnv from "../env/PhysicEnv";
 
 export class HitBox {
   public body: Body;
@@ -13,6 +14,9 @@ export class HitBox {
   public didRight: boolean;
   public didLeft: boolean;
   public didUp: boolean;
+  private platform3Detector: Detector;
+  private onFloorDetector: Detector;
+  private hitCoinDetector: Detector;
 
   constructor() {
     this.body = this.initBody();
@@ -23,38 +27,18 @@ export class HitBox {
     this.didRight = false;
     this.didLeft = false;
     this.didUp = false;
+    this.platform3Detector = Detector.create({
+      bodies: [this.body, floatingPlatform3],
+    });
+    this.onFloorDetector = Detector.create({
+      bodies: [this.body, ...getWorldEelement()],
+    });
+    this.hitCoinDetector = Detector.create({
+      bodies: [this.body],
+    });
   }
-
-  public static withKeyBoardInput() {
-    const hitBox = new HitBox();
-    BodyKeyMaps.bodyHandler(hitBox);
-    return hitBox;
-  }
-
-  public static withCharacter(character: Character) {
-    const hitBox = HitBox.withKeyBoardInput();
-    let pos = hitBox.body.position;
-    character.updatePos(pos);
-    return hitBox;
-  }
-
-  public inputCoolDownSwitch(body: HitBox) {
-    const id = window.setTimeout(() => {
-      this.didRight = !body.didRight;
-      this.didLeft = !body.didLeft;
-      this.didUp = !body.didUp;
-    }, 10000);
-
-    if (this.onFloor()) {
-      clearTimeout(id);
-      this.didRight = false;
-      this.didLeft = false;
-      this.didUp = false;
-    }
-  }
-
   private initBody() {
-    const box = Bodies.rectangle(300, 386, 45, 45, {
+    const box = Bodies.rectangle(1000, 513, 45, 45, {
       render: {
         fillStyle: randomColor(),
         opacity: 0.5,
@@ -67,15 +51,73 @@ export class HitBox {
     return box;
   }
 
+  public static withKeyBoardInput() {
+    const hitBox = new HitBox();
+    BodyKeyMaps.bodyHandler(hitBox);
+    return hitBox;
+  }
+
+  public static withCharacter(character: Character) {
+    const hitBox = HitBox.withKeyBoardInput();
+    hitBox.platform3Hit();
+    let pos = hitBox.body.position;
+    character.updatePos(pos);
+    return hitBox;
+  }
+
+  public inputCoolDownSwitch() {
+    const id = window.setTimeout(() => {
+      this.didRight = !this.didRight;
+      this.didLeft = !this.didLeft;
+      this.didUp = !this.didUp;
+    }, 10000);
+
+    if (this.onFloor()) {
+      clearTimeout(id);
+      this.didRight = false;
+      this.didLeft = false;
+      this.didUp = false;
+    }
+  }
+
+  public platform3Hit() {
+    const collision = Detector.collisions(this.platform3Detector);
+    const allBodies = Composite.allBodies(PhysicEnv.World);
+    const coins = allBodies.filter((body) => body.label === "coin");
+    if (collision.length > 0 && coins.length < 5) {
+      const coin = Bodies.rectangle(1090 + 62 / 2, 513 + 63 / 2 - 40, 20, 20, {
+        render: {
+          fillStyle: randomColor(),
+          opacity: 0.5,
+        },
+
+        label: "coin",
+      });
+      Detector.setBodies(this.hitCoinDetector, [this.body, ...coins, coin]);
+      const rand = randomInt(5, -5);
+      Body.setVelocity(coin, { x: rand, y: -5 });
+      Body.setMass(coin, 1);
+      Composite.add(PhysicEnv.World, coin);
+    }
+
+    requestAnimationFrame(() => this.platform3Hit());
+  }
+
+  public onAir() {}
+
+  public hitCoin() {
+    const collisions = Detector.collisions(this.hitCoinDetector);
+    collisions.forEach((col) => {
+      if (col.bodyA.label === "hitBox" && col.bodyB.label === "coin") {
+        Composite.remove(PhysicEnv.World, col.bodyB);
+      }
+    });
+  }
+
   // detect if the body is on the floor
   public onFloor() {
-    const detector = Detector.create({
-      bodies: [this.body, ...getWorldEelement()],
-    });
-
-    const bodies = Detector.collisions(detector);
-
-    return bodies.length > 0 ? true : false;
+    const collisions = Detector.collisions(this.onFloorDetector);
+    return collisions.length > 0 ? true : false;
   }
 
   public moveXDirection(newV: Vector, direction: number) {

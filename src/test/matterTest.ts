@@ -4,18 +4,22 @@ import PhysicEnv from "../env/PhysicEnv";
 import { HitBox } from "../character/HitBox";
 import { getWorldEelement } from "../utilz/matterComponents";
 import Captain from "../character/Capatain";
+import World from "../levels/world";
 
 export default class MatterTest {
   public constructor() {}
 
-  public gen() {
+  public async gen() {
+    const world = new World();
+    await World.assetPreloader();
+    world.render();
     const captain = new Captain();
     const physic = new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     const hitBox = HitBox.withCharacter(captain);
     Composite.add(PhysicEnv.World, hitBox.body);
     Composite.add(PhysicEnv.World, [...getWorldEelement()]);
     physic.run();
-    captain.renderOffscreen();
+    // captain.renderOffscreen();
   }
 
   public run() {

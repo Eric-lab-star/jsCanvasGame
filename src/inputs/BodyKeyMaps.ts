@@ -27,6 +27,7 @@ export default class BodyKeyMaps {
       hitBox.didLeft = false;
       hitBox.didUp = false;
     }
+    hitBox.hitCoin();
 
     switch (true) {
       case this.rightKey(key):
@@ -105,7 +106,7 @@ export default class BodyKeyMaps {
 
   private xDirectionHandler(body: HitBox, direction: 1 | -1) {
     this.xMove(body, direction);
-    body.inputCoolDownSwitch(body);
+    body.inputCoolDownSwitch();
   }
 
   private xMove(hitBox: HitBox, direction: 1 | -1) {

@@ -1,7 +1,7 @@
 import Animation from "../animation/animation";
 import { AnimationMapManager } from "../animation/animationManager/AnimationManager";
 import GameEnv from "../env/GameEnv";
-import { getModulofromAnimation, moduloGenerator } from "../utilz/helper";
+import { moduloGenerator } from "../utilz/helper";
 
 /**
  * @class CharacterConsumer
@@ -16,7 +16,7 @@ export default class CharacterConsumer {
   private offscreen: OffscreenCanvas;
   private spriteImage: ImageBitmap;
   private ctx: OffscreenCanvasRenderingContext2D;
-  private posPort: MessagePort;
+  private animationPort: MessagePort;
   private bodyPosition: { x: number; y: number } = {
     x: GameEnv.GAME_WIDTH / 2,
     y: GameEnv.GAME_HEIGHT / 2,
@@ -38,9 +38,9 @@ export default class CharacterConsumer {
     this.imgHeight = imgHeight;
     this.offscreen = offscreen;
     this.spriteImage = spriteImage;
-    this.posPort = posPort;
+    this.animationPort = posPort;
     this.ctx = this.offscreen.getContext("2d")!;
-    this.updatePos();
+    this.updateAnimation();
   }
   private counter: number = 0;
 
@@ -48,35 +48,45 @@ export default class CharacterConsumer {
    * @method updatePos
    * @description This method listens to the position of the character and updates the position of the character on the screen.
    * */
-  private updatePos(): void {
-    this.posPort.onmessage = (e) => {
-      this.setAnimationState(e.data.pos);
+  private updateAnimation(): void {
+    this.animationPort.onmessage = (
+      e: MessageEvent<{ pos: { x: number; y: number }; attack: boolean }>,
+    ) => {
+      console.log(e.data.attack);
+      this.setAnimationState(e.data.pos, e.data.attack);
       this.bodyPosition = e.data.pos;
     };
   }
 
-  private setAnimationState(pos: { x: number; y: number }): void {
+  private setAnimationState(
+    pos: { x: number; y: number },
+    attack: boolean,
+  ): void {
+    if (attack) {
+      this.animationState = "attack1S";
+      return;
+    }
     if (pos.x > this.bodyPosition.x + 1) {
-      this.animationState = "run";
+      this.animationState = "runS";
       this.shouldFlip = false;
       this.counter = 0;
       return;
     }
     if (pos.x < this.bodyPosition.x - 1) {
-      this.animationState = "run";
+      this.animationState = "runS";
       this.shouldFlip = true;
       this.counter = 0;
       return;
     }
 
     if (pos.y < this.bodyPosition.y - 2) {
-      this.animationState = "jump";
+      this.animationState = "jumpS";
       this.counter = 0;
       return;
     }
 
     if (pos.y > this.bodyPosition.y + 2) {
-      this.animationState = "fall";
+      this.animationState = "fallS";
       this.counter = 0;
       return;
     }

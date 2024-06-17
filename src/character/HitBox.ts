@@ -17,6 +17,7 @@ export class HitBox {
   private platform3Detector: Detector;
   private onFloorDetector: Detector;
   private hitCoinDetector: Detector;
+  public attackSignal: MessageChannel;
 
   constructor() {
     this.body = this.initBody();
@@ -27,6 +28,7 @@ export class HitBox {
     this.didRight = false;
     this.didLeft = false;
     this.didUp = false;
+    this.attackSignal = new MessageChannel();
     this.platform3Detector = Detector.create({
       bodies: [this.body, floatingPlatform3],
     });
@@ -60,8 +62,8 @@ export class HitBox {
   public static withCharacter(character: Character) {
     const hitBox = HitBox.withKeyBoardInput();
     hitBox.platform3Hit();
-    let pos = hitBox.body.position;
-    character.updatePos(pos);
+    const pos = hitBox.body.position;
+    character.updateAnimation(pos, hitBox.attackSignal.port2);
     return hitBox;
   }
 
@@ -80,7 +82,7 @@ export class HitBox {
     }
   }
 
-  public platform3Hit() {
+  private platform3Hit() {
     const collision = Detector.collisions(this.platform3Detector);
     const allBodies = Composite.allBodies(PhysicEnv.World);
     const coins = allBodies.filter((body) => body.label === "coin");
@@ -99,11 +101,8 @@ export class HitBox {
       Body.setMass(coin, 1);
       Composite.add(PhysicEnv.World, coin);
     }
-
     requestAnimationFrame(() => this.platform3Hit());
   }
-
-  public onAir() {}
 
   public hitCoin() {
     const collisions = Detector.collisions(this.hitCoinDetector);
@@ -149,5 +148,9 @@ export class HitBox {
   }
   public setDown(value: boolean) {
     this.down = value;
+  }
+
+  public setAttack(value: boolean) {
+    this.attackSignal.port1.postMessage({ attack: value });
   }
 }

@@ -10,7 +10,6 @@ export default class Character {
   protected animationFrames: number[];
   protected imgWidth: number;
   protected imgHeight: number;
-
   private messageChannel: MessageChannel;
 
   constructor(
@@ -26,9 +25,20 @@ export default class Character {
     this.imgHeight = imgHeight;
   }
 
-  public updatePos(pos: { x: number; y: number }) {
-    this.messageChannel.port1.postMessage({ pos });
-    requestAnimationFrame(() => this.updatePos(pos));
+  private attack: boolean = false;
+
+  public updateAnimation(
+    pos: { x: number; y: number },
+    attackSignalReceiver: MessagePort,
+  ) {
+    attackSignalReceiver.onmessage = (e: MessageEvent<{ attack: boolean }>) => {
+      this.attack = e.data.attack;
+    };
+
+    this.messageChannel.port1.postMessage({ pos, attack: this.attack });
+    requestAnimationFrame(() =>
+      this.updateAnimation(pos, attackSignalReceiver),
+    );
   }
 
   /**
@@ -58,7 +68,7 @@ export default class Character {
           imgWidth: this.imgWidth,
           imgHeight: this.imgHeight,
           animationFrames: this.animationFrames,
-          posPort: this.messageChannel.port2,
+          animationPort: this.messageChannel.port2,
         },
         [offscreen, spriteImage, this.messageChannel.port2],
       );

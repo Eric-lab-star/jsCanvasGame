@@ -10,7 +10,7 @@ self.onmessage = async ({
     animationFrames,
     imgWidth,
     imgHeight,
-    posPort,
+    animationPort: posPort,
   },
 }: MessageEvent<MessageDataType>) => {
   const characterConsumer = new CharacterConsumer(
@@ -37,5 +37,5 @@ interface MessageDataType {
   animationFrames: [];
   imgWidth: number;
   imgHeight: number;
-  posPort: MessagePort;
+  animationPort: MessagePort;
 }

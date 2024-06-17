@@ -25,13 +25,13 @@ export default class Character {
     this.imgHeight = imgHeight;
   }
 
-  private attack: boolean = false;
+  private attack: string = "";
 
   public updateAnimation(
     pos: { x: number; y: number },
     attackSignalReceiver: MessagePort,
   ) {
-    attackSignalReceiver.onmessage = (e: MessageEvent<{ attack: boolean }>) => {
+    attackSignalReceiver.onmessage = (e: MessageEvent<{ attack: string }>) => {
       this.attack = e.data.attack;
     };
 

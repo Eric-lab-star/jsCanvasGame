@@ -150,7 +150,7 @@ export class HitBox {
     this.down = value;
   }
 
-  public setAttack(value: boolean) {
+  public setAttack(value: string) {
     this.attackSignal.port1.postMessage({ attack: value });
   }
 }

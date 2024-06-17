@@ -30,8 +30,11 @@ export default class BodyKeyMaps {
     hitBox.hitCoin();
 
     switch (true) {
+      case this.attackKey2(key):
+        hitBox.setAttack("attack2S");
+        break;
       case this.attackKey(key):
-        hitBox.setAttack(true);
+        hitBox.setAttack("attack1S");
         break;
       case this.rightKey(key):
         if (!hitBox.didRight) {
@@ -73,7 +76,8 @@ export default class BodyKeyMaps {
   private keyUp(body: HitBox, key: string) {
     switch (true) {
       case this.attackKey(key):
-        body.setAttack(false);
+      case this.attackKey2(key):
+        body.setAttack("");
         break;
       case this.rightKey(key):
         body.setRight(false);
@@ -92,6 +96,9 @@ export default class BodyKeyMaps {
     }
   }
 
+  private attackKey2(key: string) {
+    return key === "l" || key === "L" || key === "ㅣ";
+  }
   private attackKey(key: string) {
     return key === "k" || key === "K" || key === "ㅏ";
   }

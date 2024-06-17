@@ -50,9 +50,8 @@ export default class CharacterConsumer {
    * */
   private updateAnimation(): void {
     this.animationPort.onmessage = (
-      e: MessageEvent<{ pos: { x: number; y: number }; attack: boolean }>,
+      e: MessageEvent<{ pos: { x: number; y: number }; attack: string }>,
     ) => {
-      console.log(e.data.attack);
       this.setAnimationState(e.data.pos, e.data.attack);
       this.bodyPosition = e.data.pos;
     };
@@ -60,10 +59,10 @@ export default class CharacterConsumer {
 
   private setAnimationState(
     pos: { x: number; y: number },
-    attack: boolean,
+    attack: string,
   ): void {
-    if (attack) {
-      this.animationState = "attack1S";
+    if (attack !== "") {
+      this.animationState = attack;
       return;
     }
     if (pos.x > this.bodyPosition.x + 1) {

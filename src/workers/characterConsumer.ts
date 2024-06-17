@@ -1,5 +1,5 @@
 import Animation from "../animation/animation";
-import { AnimationMapManager } from "../animation/animationManager/AnimationManager";
+import { CaptainAnimationManager } from "../animation/animationManager/AnimationManager";
 import GameEnv from "../env/GameEnv";
 import { moduloGenerator } from "../utilz/helper";
 
@@ -111,10 +111,10 @@ export default class CharacterConsumer {
 
     const modulo = moduloGenerator(
       GameEnv.runAnimationTick(),
-      AnimationMapManager.states.get(this.animationState)!,
+      CaptainAnimationManager.states.get(this.animationState)!,
     );
 
-    const images = AnimationMapManager.animations.get(this.animationState)!;
+    const images = CaptainAnimationManager.animations.get(this.animationState)!;
 
     if (this.shouldFlip) {
       this.ctx.scale(-1, 1);
@@ -145,7 +145,7 @@ export default class CharacterConsumer {
       this.imgHeight,
     );
     const animationSets = await Promise.all(animation.loadAnimationSets());
-    const animationMapManager = new AnimationMapManager(animationSets);
+    const animationMapManager = new CaptainAnimationManager(animationSets);
     animationMapManager.setMap();
     this.animation = animationSets;
   }

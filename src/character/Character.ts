@@ -11,7 +11,6 @@ export default class Character {
   protected imgWidth: number;
   protected imgHeight: number;
   private messageChannel: MessageChannel;
-
   constructor(
     imgWidth: number,
     imgHeight: number,

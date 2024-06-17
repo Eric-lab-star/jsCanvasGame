@@ -18,8 +18,8 @@ export default class World {
     BigCloud,
     BackTree,
     FrontTree,
-    Terrain,
     GameObjects,
+    Terrain,
   ];
 
   public static async assetPreloader() {

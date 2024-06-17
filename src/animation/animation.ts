@@ -23,7 +23,7 @@ export default class Animation {
    * loadAnimationStates is used to load group of multiple animations
    *
    */
-  public loadAnimationSets() {
+  public loadAnimationSets(): Promise<ImageBitmap[]>[] {
     const animationSets = this.frames.map(
       async (x, y) => await this.mapHandler(x, y),
     );

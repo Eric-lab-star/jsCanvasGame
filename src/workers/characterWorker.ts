@@ -22,12 +22,8 @@ self.onmessage = async ({
     posPort,
   );
 
-  if (characterConsumer.animation) {
-    characterConsumer.render();
-  } else {
-    await characterConsumer.setAnimation();
-    characterConsumer.render();
-  }
+  await characterConsumer.setAnimation();
+  characterConsumer.render();
 };
 
 interface MessageDataType {

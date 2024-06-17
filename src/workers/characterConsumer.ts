@@ -8,7 +8,6 @@ import { moduloGenerator } from "../utilz/helper";
  * @description This class is responsible for consuming the character's position and rendering the character on the screen. This class is used by the character class
  * */
 export default class CharacterConsumer {
-  public animation: ImageBitmap[][] | null;
   private animationFrames: number[];
   private imgWidth: number;
   private imgHeight: number;
@@ -32,7 +31,6 @@ export default class CharacterConsumer {
     posPort: MessagePort,
   ) {
     this.animationFrames = animationFrames;
-    this.animation = null;
     this.animationState = "idleS";
     this.imgWidth = imgWidth;
     this.imgHeight = imgHeight;
@@ -147,6 +145,5 @@ export default class CharacterConsumer {
     const animationSets = await Promise.all(animation.loadAnimationSets());
     const animationMapManager = new CaptainAnimationManager(animationSets);
     animationMapManager.setMap();
-    this.animation = animationSets;
   }
 }

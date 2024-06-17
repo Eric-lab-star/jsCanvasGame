@@ -1,9 +1,11 @@
 export default class CanvasEnv {
   public canvas: HTMLCanvasElement;
   private static zindex: number = 0;
+  private customZindex?: number;
 
-  public constructor(width: number, height: number) {
+  public constructor(width: number, height: number, zindex?: number) {
     this.canvas = document.createElement("canvas");
+    this.customZindex = zindex;
     this.setCanvasSize(width, height);
     this.setCanvasStyle(width, 0);
     document.body.appendChild(this.canvas);
@@ -19,7 +21,10 @@ export default class CanvasEnv {
     this.canvas.style.position = "absolute";
     this.canvas.style.left = left + "px";
     this.canvas.style.top = height + "px";
-    this.canvas.style.zIndex = CanvasEnv.zindex.toString();
+    this.canvas.style.zIndex =
+      this.customZindex === undefined
+        ? CanvasEnv.zindex.toString()
+        : this.customZindex.toString();
     CanvasEnv.zindex++;
   }
   public getCtx() {

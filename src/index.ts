@@ -1,5 +1,5 @@
 import { matterTestRunner, renderTestRunner, runner } from "./main/runner";
-runner();
+// runner();
 
-// renderTestRunner();
+renderTestRunner();
 // matterTestRunner();

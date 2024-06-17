@@ -2,8 +2,15 @@ import { Bodies, Body, Composite, Detector, Vector } from "matter-js";
 import BodyKeyMaps from "../inputs/BodyKeyMaps";
 import { randomColor, randomInt } from "../utilz/helper";
 import Character from "./Character";
+
 import { floatingPlatform3, getWorldEelement } from "../utilz/matterComponents";
 import PhysicEnv from "../env/PhysicEnv";
+import TextureBodyRect from "../utilz/TextureBody";
+
+///images
+import BlueDiamond1 from "../res/world/64px/Blue Diamond/01.png";
+import BlueDiamond2 from "../res/world/64px/Blue Diamond/02.png";
+import BlueDiamond3 from "../res/world/64px/Blue Diamond/03.png";
 
 export class HitBox {
   public body: Body;
@@ -16,7 +23,7 @@ export class HitBox {
   public didUp: boolean;
   private platform3Detector: Detector;
   private onFloorDetector: Detector;
-  private hitCoinDetector: Detector;
+  private hitDiamondDetector: Detector;
   public attackSignal: MessageChannel;
 
   constructor() {
@@ -35,7 +42,7 @@ export class HitBox {
     this.onFloorDetector = Detector.create({
       bodies: [this.body, ...getWorldEelement()],
     });
-    this.hitCoinDetector = Detector.create({
+    this.hitDiamondDetector = Detector.create({
       bodies: [this.body],
     });
   }
@@ -63,6 +70,7 @@ export class HitBox {
     const hitBox = HitBox.withKeyBoardInput();
     hitBox.platform3Hit();
     const pos = hitBox.body.position;
+    hitBox.swordBox(pos.x, pos.y);
     character.updateAnimation(pos, hitBox.attackSignal.port2);
     return hitBox;
   }
@@ -84,30 +92,38 @@ export class HitBox {
 
   private platform3Hit() {
     const collision = Detector.collisions(this.platform3Detector);
-    const allBodies = Composite.allBodies(PhysicEnv.World);
-    const coins = allBodies.filter((body) => body.label === "coin");
-    if (collision.length > 0 && coins.length < 5) {
-      const coin = Bodies.rectangle(1090 + 62 / 2, 513 + 63 / 2 - 40, 20, 20, {
-        render: {
-          fillStyle: randomColor(),
-          opacity: 0.5,
-        },
-
-        label: "coin",
-      });
-      Detector.setBodies(this.hitCoinDetector, [this.body, ...coins, coin]);
-      const rand = randomInt(5, -5);
-      Body.setVelocity(coin, { x: rand, y: -5 });
-      Body.setMass(coin, 1);
-      Composite.add(PhysicEnv.World, coin);
+    if (collision.length > 0) {
+      const allBodies = Composite.allBodies(PhysicEnv.World);
+      const blueDiamonds = allBodies.filter(
+        (body) => body.label === "blueDiamond",
+      );
+      if (blueDiamonds.length < 6) {
+        const blueDiamond = new TextureBodyRect(
+          "blueDiamond",
+          [BlueDiamond1, BlueDiamond2, BlueDiamond3],
+          1090,
+          460,
+          20,
+          20,
+        );
+        Detector.setBodies(this.hitDiamondDetector, [
+          this.body,
+          ...blueDiamonds,
+          blueDiamond.body,
+        ]);
+        const rand = randomInt(3, -3);
+        Body.setVelocity(blueDiamond.body, { x: rand, y: -5 });
+        Body.setMass(blueDiamond.body, 1);
+        Composite.add(PhysicEnv.World, blueDiamond.body);
+      }
     }
     requestAnimationFrame(() => this.platform3Hit());
   }
 
-  public hitCoin() {
-    const collisions = Detector.collisions(this.hitCoinDetector);
+  public hitDiamond() {
+    const collisions = Detector.collisions(this.hitDiamondDetector);
     collisions.forEach((col) => {
-      if (col.bodyA.label === "hitBox" && col.bodyB.label === "coin") {
+      if (col.bodyA.label === "hitBox" && col.bodyB.label === "blueDiamond") {
         Composite.remove(PhysicEnv.World, col.bodyB);
       }
     });
@@ -152,5 +168,18 @@ export class HitBox {
 
   public setAttack(value: string) {
     this.attackSignal.port1.postMessage({ attack: value });
+  }
+
+  private swordBox(x: number, y: number) {
+    const sword = Bodies.rectangle(x, y, 20, 10, {
+      render: {
+        fillStyle: randomColor(),
+        opacity: 0.5,
+      },
+      label: "swordBox",
+    });
+    Body.setInertia(sword, Infinity);
+    Body.setSpeed(sword, 1);
+    return sword;
   }
 }

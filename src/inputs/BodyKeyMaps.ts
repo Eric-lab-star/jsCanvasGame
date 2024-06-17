@@ -27,7 +27,7 @@ export default class BodyKeyMaps {
       hitBox.didLeft = false;
       hitBox.didUp = false;
     }
-    hitBox.hitCoin();
+    hitBox.hitDiamond();
 
     switch (true) {
       case this.attackKey2(key):

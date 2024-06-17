@@ -3,7 +3,7 @@ import GameEnv from "../env/GameEnv";
 import PhysicEnv from "../env/PhysicEnv";
 import { HitBox } from "../character/HitBox";
 import { Composite } from "matter-js";
-import { getWorldEelement } from "../utilz/matterComponents";
+import { FlagPlatForm, getWorldEelement } from "../utilz/matterComponents";
 import World from "../levels/world";
 
 export default class Game {
@@ -24,10 +24,13 @@ export default class Game {
   }
 
   private run() {
+    const flagPlatform = new FlagPlatForm();
     Composite.add(PhysicEnv.World, [
       this.catptainHitBox.body,
       ...getWorldEelement(),
+      flagPlatform.body,
     ]);
+
     this.physicEnv.run();
   }
 

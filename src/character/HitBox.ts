@@ -11,6 +11,7 @@ import TextureBodyRect from "../utilz/TextureBody";
 import BlueDiamond1 from "../res/world/64px/Blue Diamond/01.png";
 import BlueDiamond2 from "../res/world/64px/Blue Diamond/02.png";
 import BlueDiamond3 from "../res/world/64px/Blue Diamond/03.png";
+import Sword from "../sword/sword";
 
 export class HitBox {
   public body: Body;
@@ -25,6 +26,7 @@ export class HitBox {
   private onFloorDetector: Detector;
   private hitDiamondDetector: Detector;
   public attackSignal: MessageChannel;
+  public sword: Sword | undefined;
 
   constructor() {
     this.body = this.initBody();
@@ -68,13 +70,22 @@ export class HitBox {
 
   public static withCharacter(character: Character) {
     const hitBox = HitBox.withKeyBoardInput();
+    const group = Body.nextGroup(true);
     hitBox.platform3Hit();
+    hitBox.initSword(hitBox, group);
     const pos = hitBox.body.position;
-    hitBox.swordBox(pos.x, pos.y);
+    hitBox.body.collisionFilter.group = group;
+    Composite.add(PhysicEnv.World, [hitBox.body]);
     character.updateAnimation(pos, hitBox.attackSignal.port2);
     return hitBox;
   }
 
+  public initSword(hitBox: HitBox, group: number) {
+    const pos = this.body.position;
+    this.body.collisionFilter.group = group;
+    const sword = new Sword(hitBox, group, pos);
+    this.sword = sword;
+  }
   public inputCoolDownSwitch() {
     const id = window.setTimeout(() => {
       this.didRight = !this.didRight;
@@ -168,18 +179,5 @@ export class HitBox {
 
   public setAttack(value: string) {
     this.attackSignal.port1.postMessage({ attack: value });
-  }
-
-  private swordBox(x: number, y: number) {
-    const sword = Bodies.rectangle(x, y, 20, 10, {
-      render: {
-        fillStyle: randomColor(),
-        opacity: 0.5,
-      },
-      label: "swordBox",
-    });
-    Body.setInertia(sword, Infinity);
-    Body.setSpeed(sword, 1);
-    return sword;
   }
 }

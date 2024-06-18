@@ -49,7 +49,7 @@ export const foundation = Bodies.rectangle(
     label: "foundation",
   },
 );
-const leftWall = Bodies.rectangle(67 / 2, 648 / 2, 67, 648, {
+export const leftWall = Bodies.rectangle(67 / 2, 648 / 2, 67, 648, {
   label: "leftWall",
   isStatic: true,
   render: {
@@ -57,7 +57,7 @@ const leftWall = Bodies.rectangle(67 / 2, 648 / 2, 67, 648, {
     opacity: 1,
   },
 });
-const rightWall = Bodies.rectangle(
+export const rightWall = Bodies.rectangle(
   GameEnv.GAME_WIDTH - 70 / 2,
   647 / 2,
   70,
@@ -214,6 +214,10 @@ export const treasureBox = new TextureSensorBody(
   137,
   53,
 );
+
+export const enemy = Bodies.rectangle(800, 513, 45, 45, {
+  label: "enemy",
+});
 
 export const getWorldEelement = () => {
   const flagPlatForm = new FlagPlatForm();

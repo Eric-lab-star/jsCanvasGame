@@ -3,6 +3,7 @@ import GameEnv from "../env/GameEnv";
 import PhysicEnv from "../env/PhysicEnv";
 import { HitBox } from "../character/HitBox";
 import {
+  enemy,
   flag,
   getWorldEelement,
   shipHelm,
@@ -20,17 +21,17 @@ export default class MatterTest {
     world.render();
     const captain = new Captain();
     const physic = new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
-    const hitBox = HitBox.withCharacter(captain);
+    HitBox.withCharacter(captain);
+
     Composite.add(PhysicEnv.World, [
-      hitBox.body,
       flag.body,
       shipHelm.body,
       treasureBox.body,
-
+      enemy,
       ...getWorldEelement(),
     ]);
     physic.run();
-    // captain.renderOffscreen();
+    captain.renderOffscreen();
   }
 
   public run() {

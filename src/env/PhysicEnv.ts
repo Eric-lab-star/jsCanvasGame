@@ -21,9 +21,8 @@ export default class PhysicEnv {
         height: this.canvasEnv.canvas.height,
         width: this.canvasEnv.canvas.width,
         wireframes: true,
-        showIds: false,
-        showPositions: true,
-        pixelRatio: 1,
+        showIds: true,
+        showAngleIndicator: true,
       },
     });
   }

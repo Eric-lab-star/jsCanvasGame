@@ -20,6 +20,7 @@ export default class BodyKeyMaps {
   }
 
   private static newV = Vector.create(0, 0);
+  private lookAt = "right";
 
   private keyDown(hitBox: HitBox, key: string) {
     if (hitBox.onFloor()) {
@@ -30,19 +31,19 @@ export default class BodyKeyMaps {
     hitBox.hitDiamond();
 
     switch (true) {
-      case this.attackKey2(key):
+      case this.swingSword(key):
         hitBox.setAttack("attack2S");
-        break;
-      case this.attackKey(key):
-        hitBox.setAttack("attack1S");
+        hitBox.sword!.swing(this.lookAt === "right" ? 1 : -1);
         break;
       case this.rightKey(key):
+        this.lookAt = "right";
         if (!hitBox.didRight) {
           hitBox.didRight = true;
           this.xDirectionHandler(hitBox, 1);
         }
         break;
       case this.leftKey(key):
+        this.lookAt = "left";
         if (!hitBox.didLeft) {
           hitBox.didLeft = true;
           this.xDirectionHandler(hitBox, -1);
@@ -75,8 +76,8 @@ export default class BodyKeyMaps {
 
   private keyUp(body: HitBox, key: string) {
     switch (true) {
-      case this.attackKey(key):
-      case this.attackKey2(key):
+      case this.swingSword(key):
+        body.sword!.resetSwing();
         body.setAttack("");
         break;
       case this.rightKey(key):
@@ -96,13 +97,9 @@ export default class BodyKeyMaps {
     }
   }
 
-  private attackKey2(key: string) {
+  private swingSword(key: string) {
     return key === "l" || key === "L" || key === "ㅣ";
   }
-  private attackKey(key: string) {
-    return key === "k" || key === "K" || key === "ㅏ";
-  }
-
   private rightKey(key: string) {
     return key === "D" || key === "ㅇ" || key === "d";
   }

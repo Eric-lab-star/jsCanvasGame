@@ -1,16 +1,16 @@
-import { Bodies, Body, Composite, Detector, Vector } from "matter-js";
+import { Body, Composite, Detector, Vector } from "matter-js";
 import BodyKeyMaps from "../inputs/BodyKeyMaps";
-import { randomColor, randomInt } from "../utilz/helper";
+import { randomInt } from "../utilz/helper";
 import Character from "./Character";
 
-import { floatingPlatform3, getWorldEelement } from "../utilz/matterComponents";
+import {
+  floatingPlatform3,
+  getBlueDiamond,
+  getWorldEelement,
+  playerHitBox,
+} from "../utilz/matterComponents";
 import PhysicEnv from "../env/PhysicEnv";
-import TextureBodyRect from "../utilz/TextureBody";
 
-///images
-import BlueDiamond1 from "../res/world/64px/Blue Diamond/01.png";
-import BlueDiamond2 from "../res/world/64px/Blue Diamond/02.png";
-import BlueDiamond3 from "../res/world/64px/Blue Diamond/03.png";
 import Sword from "../sword/sword";
 
 export class HitBox {
@@ -49,17 +49,10 @@ export class HitBox {
     });
   }
   private initBody() {
-    const box = Bodies.rectangle(1000, 513, 45, 45, {
-      render: {
-        fillStyle: randomColor(),
-        opacity: 0.5,
-      },
-      friction: 0.5,
-      label: "hitBox",
-    });
-    Body.setInertia(box, Infinity);
-    Body.setSpeed(box, 1);
-    return box;
+    const hitxBox = playerHitBox;
+    Body.setInertia(hitxBox, Infinity);
+    Body.setSpeed(hitxBox, 1);
+    return hitxBox;
   }
 
   public static withKeyBoardInput() {
@@ -109,14 +102,7 @@ export class HitBox {
         (body) => body.label === "blueDiamond",
       );
       if (blueDiamonds.length < 6) {
-        const blueDiamond = new TextureBodyRect(
-          "blueDiamond",
-          [BlueDiamond1, BlueDiamond2, BlueDiamond3],
-          1090,
-          460,
-          20,
-          20,
-        );
+        const blueDiamond = getBlueDiamond();
         Detector.setBodies(this.hitDiamondDetector, [
           this.body,
           ...blueDiamonds,
@@ -141,6 +127,7 @@ export class HitBox {
   }
 
   // detect if the body is on the floor
+  // TODO:
   public onFloor() {
     const collisions = Detector.collisions(this.onFloorDetector);
     return collisions.length > 0 ? true : false;

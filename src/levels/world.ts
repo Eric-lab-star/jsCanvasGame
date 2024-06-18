@@ -66,7 +66,6 @@ export default class World {
   }
 
   public render() {
-    // this.bigCloudLoader();
     for (const image of World.HTMLImageElements.values()) {
       const canvas = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
       const ctx = canvas.getCtx();

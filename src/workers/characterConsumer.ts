@@ -31,7 +31,7 @@ export default class CharacterConsumer {
     posPort: MessagePort,
   ) {
     this.animationFrames = animationFrames;
-    this.animationState = "idleS";
+    this.animationState = "idle";
     this.imgWidth = imgWidth;
     this.imgHeight = imgHeight;
     this.offscreen = offscreen;

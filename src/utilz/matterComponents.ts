@@ -2,6 +2,11 @@ import { Bodies } from "matter-js";
 import GameEnv from "../env/GameEnv";
 import { randomColor } from "./helper";
 import TextureSensorBody from "./TextureSensorBody";
+
+///
+import BlueDiamond1 from "../res/world/64px/Blue Diamond/01.png";
+import BlueDiamond2 from "../res/world/64px/Blue Diamond/02.png";
+import BlueDiamond3 from "../res/world/64px/Blue Diamond/03.png";
 //
 ///
 import ShipHelm1 from "../res/world/64px/ShipHelm/Ship Helm Idle 01.png";
@@ -33,6 +38,7 @@ import Chest7 from "../res/world/64px/Chest/Chest Open 07.png";
 import Chest8 from "../res/world/64px/Chest/Chest Open 08.png";
 import Chest9 from "../res/world/64px/Chest/Chest Open 09.png";
 import Chest10 from "../res/world/64px/Chest/Chest Open 10.png";
+import TextureBodyRect from "./TextureBody";
 ///
 
 export const foundation = Bodies.rectangle(
@@ -44,7 +50,7 @@ export const foundation = Bodies.rectangle(
     isStatic: true,
     render: {
       fillStyle: randomColor(),
-      opacity: 1,
+      opacity: 0,
     },
     label: "foundation",
   },
@@ -54,7 +60,7 @@ export const leftWall = Bodies.rectangle(67 / 2, 648 / 2, 67, 648, {
   isStatic: true,
   render: {
     fillStyle: randomColor(),
-    opacity: 1,
+    opacity: 0,
   },
 });
 export const rightWall = Bodies.rectangle(
@@ -67,7 +73,7 @@ export const rightWall = Bodies.rectangle(
     isStatic: true,
     render: {
       fillStyle: randomColor(),
-      opacity: 1,
+      opacity: 0,
     },
   },
 );
@@ -77,7 +83,7 @@ const ceilling = Bodies.rectangle(1280 / 2, 69 / 2, 1280, 69, {
   label: "ceilling",
   render: {
     fillStyle: randomColor(),
-    opacity: 1,
+    opacity: 0,
   },
 });
 
@@ -91,7 +97,7 @@ export const foundationPillar = Bodies.rectangle(
     label: "foundationPillar",
     render: {
       fillStyle: randomColor(),
-      opacity: 1,
+      opacity: 0,
     },
   },
 );
@@ -101,7 +107,7 @@ const ceilingPillar = Bodies.rectangle(897 + 124 / 2, 64 + 189 / 2, 124, 189, {
   label: "ceilingPillar",
   render: {
     fillStyle: randomColor(),
-    opacity: 1,
+    opacity: 0,
   },
 });
 
@@ -110,7 +116,7 @@ const leftCorner = Bodies.rectangle(61 + 61 / 2, 63 + 63 / 2, 61, 63, {
   label: "leftCorner",
   render: {
     fillStyle: randomColor(),
-    opacity: 1,
+    opacity: 0,
   },
 });
 
@@ -124,7 +130,7 @@ export const floatingPlatform = Bodies.rectangle(
     label: "floatingPlatform",
     render: {
       fillStyle: randomColor(),
-      opacity: 1,
+      opacity: 0,
     },
   },
 );
@@ -139,7 +145,7 @@ export const floatingPlatform2 = Bodies.rectangle(
     label: "floatingPlatform2",
     render: {
       fillStyle: randomColor(),
-      opacity: 1,
+      opacity: 0,
     },
   },
 );
@@ -154,7 +160,7 @@ export const floatingPlatform3 = Bodies.rectangle(
     label: "floatingPlatform3",
     render: {
       fillStyle: randomColor(),
-      opacity: 1,
+      opacity: 0,
     },
   },
 );
@@ -215,10 +221,47 @@ export const treasureBox = new TextureSensorBody(
   53,
 );
 
+export function swingSword(
+  pos: { x: number; y: number },
+  collisionGroup: number,
+  width: number,
+) {
+  return Bodies.rectangle(pos.x + width / 2, pos.y, 60, 10, {
+    render: {
+      fillStyle: randomColor(),
+      opacity: 0,
+    },
+    isSensor: true,
+    label: "swingSword",
+    collisionFilter: {
+      group: collisionGroup,
+    },
+    chamfer: { radius: 5 },
+  });
+}
+
+export const playerHitBox = Bodies.rectangle(1000, 513, 40, 45, {
+  render: {
+    fillStyle: randomColor(),
+    opacity: 0,
+  },
+  friction: 0.3,
+  label: "hitBox",
+});
+
 export const enemy = Bodies.rectangle(800, 513, 45, 45, {
   label: "enemy",
 });
-
+export function getBlueDiamond() {
+  return new TextureBodyRect(
+    "blueDiamond",
+    [BlueDiamond1, BlueDiamond2, BlueDiamond3],
+    1090,
+    460,
+    20,
+    20,
+  );
+}
 export const getWorldEelement = () => {
   const flagPlatForm = new FlagPlatForm();
   return [

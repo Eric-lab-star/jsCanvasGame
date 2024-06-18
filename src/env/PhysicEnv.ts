@@ -20,9 +20,9 @@ export default class PhysicEnv {
         background: "transparent",
         height: this.canvasEnv.canvas.height,
         width: this.canvasEnv.canvas.width,
-        wireframes: true,
-        showIds: true,
-        showAngleIndicator: true,
+        wireframes: false,
+        showIds: false,
+        showAngleIndicator: false,
       },
     });
   }

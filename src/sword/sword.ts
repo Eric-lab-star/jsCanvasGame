@@ -1,15 +1,7 @@
-import {
-  Bodies,
-  Body,
-  Composite,
-  Constraint,
-  Detector,
-  Events,
-} from "matter-js";
-import { randomColor } from "../utilz/helper";
+import { Body, Composite, Constraint, Detector, Events } from "matter-js";
 import PhysicEnv from "../env/PhysicEnv";
 import { HitBox } from "../character/HitBox";
-import { enemy } from "../utilz/matterComponents";
+import { enemy, swingSword } from "../utilz/matterComponents";
 
 export default class Sword {
   public swingBody: Body;
@@ -30,17 +22,7 @@ export default class Sword {
     pos: { x: number; y: number },
     hitBox: HitBox,
   ) {
-    const swingBody = Bodies.rectangle(pos.x + this.width / 2, pos.y, 60, 10, {
-      render: {
-        fillStyle: randomColor(),
-      },
-      isSensor: true,
-      label: "swingSword",
-      collisionFilter: {
-        group: collisionGroup,
-      },
-      chamfer: { radius: 5 },
-    });
+    const swingBody = swingSword(pos, collisionGroup, this.width);
 
     const constraint = Constraint.create({
       bodyA: swingBody,

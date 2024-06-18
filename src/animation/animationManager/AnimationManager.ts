@@ -38,3 +38,59 @@ export class CaptainAnimationManager {
     });
   }
 }
+
+export class SharkAnimationManager {
+  protected images: ImageBitmap[][];
+  constructor(images: ImageBitmap[][]) {
+    this.images = images;
+  }
+
+  public static states = new Map([
+    ["idle", 8],
+    ["run", 6],
+    ["jump", 3],
+    ["fall", 1],
+    ["ground", 2],
+    ["anticipation", 3],
+    ["attack", 5],
+    ["hit", 4],
+    ["deadHit", 4],
+    ["deadGround", 4],
+  ]);
+
+  public static animations: Map<string, ImageBitmap[]> = new Map();
+  public setMap() {
+    const names = Array.from(SharkAnimationManager.states.keys());
+    names.forEach((name, index) => {
+      SharkAnimationManager.animations.set(name, this.images[index]);
+    });
+  }
+}
+
+export class CrabyAnimationManager {
+  protected images: ImageBitmap[][];
+  constructor(images: ImageBitmap[][]) {
+    this.images = images;
+  }
+
+  public static states = new Map([
+    ["idle", 9],
+    ["run", 6],
+    ["jump", 3],
+    ["fall", 1],
+    ["ground", 2],
+    ["anticipation", 3],
+    ["attack", 4],
+    ["hit", 4],
+    ["deadHit", 4],
+    ["deadGround", 4],
+  ]);
+
+  public static animations: Map<string, ImageBitmap[]> = new Map();
+  public setMap() {
+    const names = Array.from(SharkAnimationManager.states.keys());
+    names.forEach((name, index) => {
+      SharkAnimationManager.animations.set(name, this.images[index]);
+    });
+  }
+}

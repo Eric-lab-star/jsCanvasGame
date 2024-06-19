@@ -9,6 +9,7 @@ export default class Shark extends Character {
       192,
       Array.from(SharkAnimationManager.states.values()),
       sharkImage,
+      "shark",
     );
   }
 }

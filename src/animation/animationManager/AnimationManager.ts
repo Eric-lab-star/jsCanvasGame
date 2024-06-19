@@ -1,8 +1,3 @@
-/**
- * animation manager is used to manage animation
- * information. animation informations are number of
- * frames used in animation and animation name.
- */
 export class CaptainAnimationManager {
   protected images: ImageBitmap[][];
   constructor(images: ImageBitmap[][]) {

@@ -6,15 +6,15 @@ import { enemy, swingSword } from "../utilz/matterComponents";
 export default class Sword {
   public swingBody: Body;
   private width: number = 50;
-  private swingHit: boolean = false;
-
   constructor(
     hitBox: HitBox,
     collisionGroup: number,
     pos: { x: number; y: number },
   ) {
     this.swingBody = this.initSwingBody(collisionGroup, pos, hitBox);
-    this.didHit();
+    Detector.create({
+      bodies: [this.swingBody, enemy],
+    });
   }
 
   private initSwingBody(
@@ -35,11 +35,7 @@ export default class Sword {
     return swingBody;
   }
 
-  private didHit() {
-    Detector.create({
-      bodies: [this.swingBody, enemy],
-    });
-
+  public swing(swingDirection: number = 1) {
     Events.on(PhysicEnv.Engine, "collisionStart", (event) => {
       const pairs = event.pairs;
       for (const pair of pairs) {
@@ -47,21 +43,11 @@ export default class Sword {
           (pair.bodyA === this.swingBody || pair.bodyB === this.swingBody) &&
           (pair.bodyA === enemy || pair.bodyB === enemy)
         ) {
-          this.swingHit = true;
-          window.setTimeout(() => {
-            this.swingHit = false;
-          }, 100);
-          console.log(pair);
+          Body.setVelocity(enemy, { x: 2 * swingDirection, y: -4 });
         }
       }
     });
-  }
 
-  public swing(swingDirection: number = 1) {
-    if (this.swingHit) {
-      Body.setVelocity(enemy, { x: 4 * swingDirection, y: -4 });
-      this.swingHit = false;
-    }
     Body.setAngularVelocity(
       this.swingBody,
       (Math.PI / 180) * 10 * swingDirection,

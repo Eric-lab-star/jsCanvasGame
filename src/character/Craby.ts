@@ -9,6 +9,7 @@ export default class Craby extends Character {
       192,
       Array.from(CaptainAnimationManager.states.values()),
       crabyImage,
+      "craby",
     );
   }
 }

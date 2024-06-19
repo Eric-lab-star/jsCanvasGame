@@ -61,6 +61,13 @@ export class HitBox {
     return hitBox;
   }
 
+  public static withNPC(character: Character) {
+    const hitBox = new HitBox();
+    const pos = hitBox.body.position;
+    Composite.add(PhysicEnv.World, [hitBox.body]);
+    character.updateAnimation(pos, hitBox.attackSignal.port2);
+  }
+
   public static withCharacter(character: Character) {
     const hitBox = HitBox.withKeyBoardInput();
     const group = Body.nextGroup(true);

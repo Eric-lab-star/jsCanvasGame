@@ -11,17 +11,21 @@ export default class Character {
   protected imgWidth: number;
   protected imgHeight: number;
   private messageChannel: MessageChannel;
+  protected label: string;
+
   constructor(
     imgWidth: number,
     imgHeight: number,
     animationFrames: number[],
     imgsrc: string,
+    label: string,
   ) {
     this.messageChannel = new MessageChannel();
     this.animationFrames = animationFrames;
     this.spriteImageSrc = imgsrc;
     this.imgWidth = imgWidth;
     this.imgHeight = imgHeight;
+    this.label = label;
   }
 
   private attack: string = "";
@@ -51,17 +55,21 @@ export default class Character {
         type: "module",
       },
     );
+
     const characterCanvas = new CanvasEnv(
       GameEnv.GAME_WIDTH,
       GameEnv.GAME_HEIGHT,
     );
+
     const offscreen = characterCanvas.canvas.transferControlToOffscreen();
     const img = new Image();
     img.src = this.spriteImageSrc;
+
     img.addEventListener("load", async () => {
       const spriteImage = await createImageBitmap(img);
       worker.postMessage(
         {
+          label: this.label,
           offscreen: offscreen,
           spriteImage: spriteImage,
           imgWidth: this.imgWidth,

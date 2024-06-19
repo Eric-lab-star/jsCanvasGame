@@ -11,6 +11,7 @@ import {
 } from "../utilz/matterComponents";
 import Captain from "../character/Capatain";
 import World from "../levels/world";
+import Shark from "../character/Shark";
 
 export default class MatterTest {
   public constructor() {}
@@ -19,9 +20,7 @@ export default class MatterTest {
     const world = new World();
     await World.assetPreloader();
     world.render();
-    const captain = new Captain();
     const physic = new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
-    HitBox.withCharacter(captain);
 
     Composite.add(PhysicEnv.World, [
       flag.body,
@@ -31,7 +30,17 @@ export default class MatterTest {
       ...getWorldEelement(),
     ]);
     physic.run();
-    captain.renderOffscreen();
+    this.spawnCharacter();
+  }
+
+  private spawnCharacter() {
+    // const captain = new Captain();
+    // HitBox.withCharacter(captain);
+    // captain.renderOffscreen();
+
+    const shark = new Shark();
+    HitBox.withCharacter(shark);
+    shark.renderOffscreen();
   }
 
   public run() {

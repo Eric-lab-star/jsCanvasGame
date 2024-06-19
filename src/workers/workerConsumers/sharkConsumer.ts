@@ -26,7 +26,6 @@ export default class SharkConsumer extends CharacterConsumer {
       posPort,
     );
   }
-  private counter: number = 0;
 
   protected setAnimationState(
     pos: { x: number; y: number },
@@ -40,36 +39,29 @@ export default class SharkConsumer extends CharacterConsumer {
     if (pos.x > this.bodyPosition.x + 1) {
       this.animationState = "run";
       this.shouldFlip = false;
-      this.counter = 0;
       return;
     }
     if (pos.x < this.bodyPosition.x - 1) {
       this.animationState = "run";
       this.shouldFlip = true;
-      this.counter = 0;
       return;
     }
 
     if (pos.y < this.bodyPosition.y - 2) {
       this.animationState = "jump";
-      this.counter = 0;
       return;
     }
 
     if (pos.y > this.bodyPosition.y + 2) {
       this.animationState = "fall";
-      this.counter = 0;
       return;
     }
 
     if (
-      Math.abs(pos.x - this.bodyPosition.x) <= 0.0 &&
-      Math.abs(pos.y - this.bodyPosition.y) <= 0.0
+      Math.abs(pos.x - this.bodyPosition.x) <= 0.001 &&
+      Math.abs(pos.y - this.bodyPosition.y) <= 0.001
     ) {
-      this.counter++;
-      if (this.counter > 3) {
-        this.animationState = "idle";
-      }
+      this.animationState = "idle";
     }
   }
 

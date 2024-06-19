@@ -41,7 +41,7 @@ export class SharkAnimationManager {
   }
 
   public static states = new Map([
-    ["idle", 8],
+    ["idle", 7],
     ["run", 6],
     ["jump", 3],
     ["fall", 1],

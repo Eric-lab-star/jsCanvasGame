@@ -1,4 +1,3 @@
-import Captain from "../character/Capatain";
 import GameEnv from "../env/GameEnv";
 import PhysicEnv from "../env/PhysicEnv";
 import { HitBox } from "../character/HitBox";
@@ -13,13 +12,11 @@ import {
 import World from "../levels/world";
 
 export default class Game {
-  private captain: Captain;
   private physic?: PhysicEnv;
   private gameWorld: World;
 
   public constructor() {
     this.gameWorld = new World();
-    this.captain = new Captain();
   }
 
   private async preload() {
@@ -27,7 +24,6 @@ export default class Game {
   }
 
   private run() {
-    HitBox.withCharacter(this.captain);
     Composite.add(PhysicEnv.World, [
       flag.body,
       shipHelm.body,
@@ -41,7 +37,6 @@ export default class Game {
     this.gameWorld.render();
     this.physic = new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.physic.run();
-    this.captain.renderOffscreen();
   }
 
   public async start() {

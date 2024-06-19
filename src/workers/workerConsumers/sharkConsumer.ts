@@ -10,21 +10,11 @@ export default class SharkConsumer extends CharacterConsumer {
    */
 
   constructor(
-    imgWidth: number,
-    imgHeight: number,
-    animationFrames: number[],
     offscreen: OffscreenCanvas,
     spriteImage: ImageBitmap,
     posPort: MessagePort,
   ) {
-    super(
-      imgWidth,
-      imgHeight,
-      animationFrames,
-      offscreen,
-      spriteImage,
-      posPort,
-    );
+    super(offscreen, spriteImage, posPort);
   }
 
   protected setAnimationState(
@@ -32,18 +22,18 @@ export default class SharkConsumer extends CharacterConsumer {
     attack: string,
   ): void {
     if (attack !== "") {
-      this.animationState = attack;
+      this.animationState = "attack";
       return;
     }
 
     if (pos.x > this.bodyPosition.x + 1) {
       this.animationState = "run";
-      this.shouldFlip = false;
+      this.shouldFlip = true;
       return;
     }
     if (pos.x < this.bodyPosition.x - 1) {
       this.animationState = "run";
-      this.shouldFlip = true;
+      this.shouldFlip = false;
       return;
     }
 
@@ -78,18 +68,18 @@ export default class SharkConsumer extends CharacterConsumer {
       this.ctx.scale(-1, 1);
       this.ctx.drawImage(
         images[modulo],
-        -(this.bodyPosition.x + this.imgWidth / 2),
-        this.bodyPosition.y - this.imgHeight / 2,
-        this.imgWidth,
-        this.imgHeight,
+        -(this.bodyPosition.x + SharkAnimationManager.imgWidth / 2),
+        this.bodyPosition.y - SharkAnimationManager.imgHeight / 2 - 10,
+        SharkAnimationManager.imgWidth,
+        SharkAnimationManager.imgHeight,
       );
     } else {
       this.ctx.drawImage(
         images[modulo],
-        this.bodyPosition.x - this.imgWidth / 2,
-        this.bodyPosition.y - this.imgHeight / 2,
-        this.imgWidth,
-        this.imgHeight,
+        this.bodyPosition.x - SharkAnimationManager.imgWidth / 2,
+        this.bodyPosition.y - SharkAnimationManager.imgHeight / 2,
+        SharkAnimationManager.imgWidth,
+        SharkAnimationManager.imgHeight,
       );
     }
     requestAnimationFrame(() => this.render());
@@ -98,9 +88,9 @@ export default class SharkConsumer extends CharacterConsumer {
   public async setAnimation(): Promise<void> {
     const animation = new Animation(
       this.spriteImage,
-      this.animationFrames,
-      this.imgWidth,
-      this.imgHeight,
+      SharkAnimationManager.frames,
+      SharkAnimationManager.imgWidth,
+      SharkAnimationManager.imgHeight,
     );
     const animationSets = await Promise.all(animation.loadAnimationSets());
     const animationMapManager = new SharkAnimationManager(animationSets);

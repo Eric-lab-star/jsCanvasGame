@@ -49,7 +49,7 @@ export class HitBox {
     });
   }
   private initBody() {
-    const hitxBox = playerHitBox;
+    const hitxBox = playerHitBox();
     Body.setInertia(hitxBox, Infinity);
     Body.setSpeed(hitxBox, 1);
     return hitxBox;

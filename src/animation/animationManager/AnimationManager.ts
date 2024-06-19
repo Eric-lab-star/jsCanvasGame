@@ -4,6 +4,9 @@ export class CaptainAnimationManager {
     this.images = images;
   }
 
+  public static imgWidth = 192;
+  public static imgHeight = 192;
+
   public static states = new Map([
     ["idle", 5],
     ["run", 6],
@@ -25,6 +28,7 @@ export class CaptainAnimationManager {
     ["attack3S", 3],
   ]);
 
+  public static frames = Array.from(CaptainAnimationManager.states.values());
   public static animations: Map<string, ImageBitmap[]> = new Map();
   public setMap() {
     const names = Array.from(CaptainAnimationManager.states.keys());
@@ -40,6 +44,9 @@ export class SharkAnimationManager {
     this.images = images;
   }
 
+  public static imgWidth = 192;
+  public static imgHeight = 192;
+
   public static states = new Map([
     ["idle", 7],
     ["run", 6],
@@ -47,12 +54,13 @@ export class SharkAnimationManager {
     ["fall", 1],
     ["ground", 2],
     ["anticipation", 3],
-    ["attack", 5],
+    ["attack", 3],
     ["hit", 4],
     ["deadHit", 4],
     ["deadGround", 4],
   ]);
 
+  public static frames = Array.from(SharkAnimationManager.states.values());
   public static animations: Map<string, ImageBitmap[]> = new Map();
   public setMap() {
     const names = Array.from(SharkAnimationManager.states.keys());
@@ -62,12 +70,14 @@ export class SharkAnimationManager {
   }
 }
 
+import crabyImage from "../../res/world/64px/Crabby.png";
 export class CrabyAnimationManager {
   protected images: ImageBitmap[][];
   constructor(images: ImageBitmap[][]) {
     this.images = images;
   }
-
+  public static imgWidth = 320;
+  public static imgHeight = 192;
   public static states = new Map([
     ["idle", 9],
     ["run", 6],
@@ -80,12 +90,14 @@ export class CrabyAnimationManager {
     ["deadHit", 4],
     ["deadGround", 4],
   ]);
-
+  public static imgSrc = crabyImage;
+  public static frames = Array.from(CrabyAnimationManager.states.values());
   public static animations: Map<string, ImageBitmap[]> = new Map();
+
   public setMap() {
-    const names = Array.from(SharkAnimationManager.states.keys());
+    const names = Array.from(CrabyAnimationManager.states.keys());
     names.forEach((name, index) => {
-      SharkAnimationManager.animations.set(name, this.images[index]);
+      CrabyAnimationManager.animations.set(name, this.images[index]);
     });
   }
 }

@@ -6,21 +6,11 @@ import CharacterConsumer from "./characterConsumer";
 
 export default class CaptainConsumer extends CharacterConsumer {
   constructor(
-    imgWidth: number,
-    imgHeight: number,
-    animationFrames: number[],
     offscreen: OffscreenCanvas,
     spriteImage: ImageBitmap,
     posPort: MessagePort,
   ) {
-    super(
-      imgWidth,
-      imgHeight,
-      animationFrames,
-      offscreen,
-      spriteImage,
-      posPort,
-    );
+    super(offscreen, spriteImage, posPort);
   }
 
   protected setAnimationState(
@@ -28,7 +18,7 @@ export default class CaptainConsumer extends CharacterConsumer {
     attack: string,
   ): void {
     if (attack !== "") {
-      this.animationState = attack;
+      this.animationState = "attack2S";
       return;
     }
 
@@ -74,18 +64,18 @@ export default class CaptainConsumer extends CharacterConsumer {
       this.ctx.scale(-1, 1);
       this.ctx.drawImage(
         images[modulo],
-        -(this.bodyPosition.x + this.imgWidth / 2),
-        this.bodyPosition.y - this.imgHeight / 2,
-        this.imgWidth,
-        this.imgHeight,
+        -(this.bodyPosition.x + CaptainAnimationManager.imgWidth / 2),
+        this.bodyPosition.y - CaptainAnimationManager.imgHeight / 2,
+        CaptainAnimationManager.imgWidth,
+        CaptainAnimationManager.imgHeight,
       );
     } else {
       this.ctx.drawImage(
         images[modulo],
-        this.bodyPosition.x - this.imgWidth / 2,
-        this.bodyPosition.y - this.imgHeight / 2,
-        this.imgWidth,
-        this.imgHeight,
+        this.bodyPosition.x - CaptainAnimationManager.imgWidth / 2,
+        this.bodyPosition.y - CaptainAnimationManager.imgHeight / 2,
+        CaptainAnimationManager.imgWidth,
+        CaptainAnimationManager.imgHeight,
       );
     }
     requestAnimationFrame(() => this.render());
@@ -94,9 +84,9 @@ export default class CaptainConsumer extends CharacterConsumer {
   public async setAnimation(): Promise<void> {
     const animation = new Animation(
       this.spriteImage,
-      this.animationFrames,
-      this.imgWidth,
-      this.imgHeight,
+      CaptainAnimationManager.frames,
+      CaptainAnimationManager.imgWidth,
+      CaptainAnimationManager.imgHeight,
     );
     const animationSets = await Promise.all(animation.loadAnimationSets());
     const animationMapManager = new CaptainAnimationManager(animationSets);

@@ -4,10 +4,8 @@ import GameEnv from "../../env/GameEnv";
  * @class CharacterConsumer
  * @description This class is responsible for consuming the character's position and rendering the character on the screen. This class is used by the character class
  * */
+
 export default abstract class CharacterConsumer {
-  protected animationFrames: number[];
-  protected imgWidth: number;
-  protected imgHeight: number;
   protected animationState: string;
   protected offscreen: OffscreenCanvas;
   protected spriteImage: ImageBitmap;
@@ -20,17 +18,11 @@ export default abstract class CharacterConsumer {
   protected shouldFlip: boolean = false;
 
   constructor(
-    imgWidth: number,
-    imgHeight: number,
-    animationFrames: number[],
     offscreen: OffscreenCanvas,
     spriteImage: ImageBitmap,
     posPort: MessagePort,
   ) {
-    this.animationFrames = animationFrames;
     this.animationState = "idle";
-    this.imgWidth = imgWidth;
-    this.imgHeight = imgHeight;
     this.offscreen = offscreen;
     this.spriteImage = spriteImage;
     this.animationPort = posPort;

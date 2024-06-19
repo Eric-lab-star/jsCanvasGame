@@ -32,7 +32,7 @@ export default class BodyKeyMaps {
 
     switch (true) {
       case this.swingSword(key):
-        hitBox.setAttack("attack2S");
+        hitBox.setAttack("attack");
         hitBox.sword!.swing(this.lookAt === "right" ? 1 : -1);
         break;
       case this.rightKey(key):

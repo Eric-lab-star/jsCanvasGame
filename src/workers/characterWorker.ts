@@ -24,9 +24,6 @@ self.onmessage = async ({ data }: MessageEvent<MessageDataType>) => {
 
 async function crabyConsumer(data: MessageDataType) {
   const characterConsumer = new CrabyConsumer(
-    data.imgWidth,
-    data.imgHeight,
-    data.animationFrames,
     data.offscreen,
     data.spriteImage,
     data.animationPort,
@@ -35,11 +32,9 @@ async function crabyConsumer(data: MessageDataType) {
   await characterConsumer.setAnimation();
   characterConsumer.render();
 }
+
 async function sharkConsumer(data: MessageDataType) {
   const characterConsumer = new SharkConsumer(
-    data.imgWidth,
-    data.imgHeight,
-    data.animationFrames,
     data.offscreen,
     data.spriteImage,
     data.animationPort,
@@ -51,9 +46,6 @@ async function sharkConsumer(data: MessageDataType) {
 
 async function captainConsumer(data: MessageDataType) {
   const characterConsumer = new CaptainConsumer(
-    data.imgWidth,
-    data.imgHeight,
-    data.animationFrames,
     data.offscreen,
     data.spriteImage,
     data.animationPort,
@@ -68,8 +60,5 @@ interface MessageDataType {
   hitBox: Matter.Body;
   spriteImage: ImageBitmap;
   offscreen: OffscreenCanvas;
-  animationFrames: [];
-  imgWidth: number;
-  imgHeight: number;
   animationPort: MessagePort;
 }

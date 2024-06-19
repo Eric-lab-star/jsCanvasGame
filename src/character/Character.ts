@@ -7,24 +7,12 @@ import CanvasEnv from "../env/CanvasEnv";
  * */
 export default class Character {
   protected spriteImageSrc: string;
-  protected animationFrames: number[];
-  protected imgWidth: number;
-  protected imgHeight: number;
   private messageChannel: MessageChannel;
   protected label: string;
 
-  constructor(
-    imgWidth: number,
-    imgHeight: number,
-    animationFrames: number[],
-    imgsrc: string,
-    label: string,
-  ) {
+  constructor(imgsrc: string, label: string) {
     this.messageChannel = new MessageChannel();
-    this.animationFrames = animationFrames;
     this.spriteImageSrc = imgsrc;
-    this.imgWidth = imgWidth;
-    this.imgHeight = imgHeight;
     this.label = label;
   }
 
@@ -72,9 +60,6 @@ export default class Character {
           label: this.label,
           offscreen: offscreen,
           spriteImage: spriteImage,
-          imgWidth: this.imgWidth,
-          imgHeight: this.imgHeight,
-          animationFrames: this.animationFrames,
           animationPort: this.messageChannel.port2,
         },
         [offscreen, spriteImage, this.messageChannel.port2],

@@ -1,6 +1,6 @@
 import { Bodies } from "matter-js";
 import GameEnv from "../env/GameEnv";
-import { randomColor } from "./helper";
+import { randomColor, randomInt } from "./helper";
 import TextureSensorBody from "./TextureSensorBody";
 
 ///
@@ -240,18 +240,21 @@ export function swingSword(
   });
 }
 
-export const playerHitBox = Bodies.rectangle(1000, 513, 40, 45, {
-  render: {
-    fillStyle: randomColor(),
-    opacity: 0,
-  },
-  friction: 0.3,
-  label: "hitBox",
-});
+export const playerHitBox = function () {
+  return Bodies.rectangle(1000, 413, 40, 45, {
+    render: {
+      fillStyle: randomColor(),
+      opacity: 1,
+    },
+    friction: 0.3,
+    label: "hitBox",
+  });
+};
 
 export const enemy = Bodies.rectangle(800, 513, 45, 45, {
   label: "enemy",
 });
+
 export function getBlueDiamond() {
   return new TextureBodyRect(
     "blueDiamond",

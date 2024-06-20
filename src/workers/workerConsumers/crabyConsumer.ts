@@ -66,7 +66,7 @@ export default class CrabyConsumer extends CharacterConsumer {
       this.ctx.drawImage(
         images[modulo],
         -(this.bodyPosition.x + CrabyAnimationManager.imgWidth / 2),
-        this.bodyPosition.y - CrabyAnimationManager.imgHeight / 2,
+        this.bodyPosition.y - CrabyAnimationManager.imgHeight / 2 - 8,
         CrabyAnimationManager.imgWidth,
         CrabyAnimationManager.imgHeight,
       );
@@ -74,7 +74,7 @@ export default class CrabyConsumer extends CharacterConsumer {
       this.ctx.drawImage(
         images[modulo],
         this.bodyPosition.x - CrabyAnimationManager.imgWidth / 2,
-        this.bodyPosition.y - CrabyAnimationManager.imgHeight / 2,
+        this.bodyPosition.y - CrabyAnimationManager.imgHeight / 2 - 8,
         CrabyAnimationManager.imgWidth,
         CrabyAnimationManager.imgHeight,
       );

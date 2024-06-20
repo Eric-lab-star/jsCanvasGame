@@ -1,13 +1,12 @@
 import { Body, Composite, Constraint, Detector, Events } from "matter-js";
 import PhysicEnv from "../env/PhysicEnv";
-import { HitBox } from "../character/HitBox";
 import { enemy, swingSword } from "../utilz/matterComponents";
 
 export default class Sword {
   public swingBody: Body;
   private width: number = 50;
   constructor(
-    hitBox: HitBox,
+    hitBox: Body,
     collisionGroup: number,
     pos: { x: number; y: number },
   ) {
@@ -20,13 +19,13 @@ export default class Sword {
   private initSwingBody(
     collisionGroup: number,
     pos: { x: number; y: number },
-    hitBox: HitBox,
+    hitBox: Body,
   ) {
     const swingBody = swingSword(pos, collisionGroup, this.width);
 
     const constraint = Constraint.create({
       bodyA: swingBody,
-      bodyB: hitBox.body,
+      bodyB: hitBox,
       length: 0,
     });
     Composite.add(PhysicEnv.World, [swingBody, constraint]);

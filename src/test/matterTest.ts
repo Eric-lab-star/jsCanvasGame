@@ -1,6 +1,7 @@
 /// img
 import crabImg from "../res/world/64px/Crabby.png";
 import captainImg from "../res/world/64px/captain.png";
+import sharkImg from "../res/world/64px/shark.png";
 ///
 import { Composite } from "matter-js";
 import GameEnv from "../env/GameEnv";
@@ -15,6 +16,8 @@ import {
 } from "../utilz/matterComponents";
 import World from "../levels/world";
 import Character from "../character/Character";
+import { PlayableHitBox } from "../character/PlayableHitBox";
+import { EnemyHitBox } from "../character/EnemyHitBox";
 
 export default class MatterTest {
   public constructor() {}
@@ -36,18 +39,28 @@ export default class MatterTest {
     this.spawnCharacter();
   }
 
-  private spawnCharacter() {
+  private spawnCaptain() {
     const captain = new Character(captainImg, "captain");
-    HitBox.withCharacter(captain);
+    PlayableHitBox.withCharacter(captain);
     captain.renderOffscreen();
+  }
 
+  private spawnCrab() {
     const crab = new Character(crabImg, "craby");
-    HitBox.withNPC(crab);
+    EnemyHitBox.withNPC(crab);
     crab.renderOffscreen();
+  }
 
-    // const shark = new Shark();
-    // HitBox.withNPC(shark);
-    // shark.renderOffscreen();
+  private spawnShark() {
+    const shark = new Character(sharkImg, "shark");
+    EnemyHitBox.withNPC(shark);
+    shark.renderOffscreen();
+  }
+
+  private spawnCharacter() {
+    this.spawnCrab();
+    this.spawnShark();
+    this.spawnCaptain();
   }
 
   public run() {

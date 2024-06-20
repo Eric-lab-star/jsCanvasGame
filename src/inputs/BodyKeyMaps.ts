@@ -1,13 +1,13 @@
 import { Body, Vector } from "matter-js";
-import { HitBox } from "../character/HitBox";
+import { PlayableHitBox } from "../character/PlayableHitBox";
 
 export default class BodyKeyMaps {
-  public hitbox: HitBox;
-  constructor(hitBox: HitBox) {
+  public hitbox: PlayableHitBox;
+  constructor(hitBox: PlayableHitBox) {
     this.hitbox = hitBox;
   }
 
-  public static bodyHandler(hitBox: HitBox) {
+  public static bodyHandler(hitBox: PlayableHitBox) {
     const keymapper = new BodyKeyMaps(hitBox);
     document.addEventListener("keydown", (e) => {
       e.preventDefault();
@@ -22,7 +22,7 @@ export default class BodyKeyMaps {
   private static newV = Vector.create(0, 0);
   private lookAt = "right";
 
-  private keyDown(hitBox: HitBox, key: string) {
+  private keyDown(hitBox: PlayableHitBox, key: string) {
     if (hitBox.onFloor()) {
       hitBox.didRight = false;
       hitBox.didLeft = false;
@@ -74,7 +74,7 @@ export default class BodyKeyMaps {
     }
   }
 
-  private keyUp(body: HitBox, key: string) {
+  private keyUp(body: PlayableHitBox, key: string) {
     switch (true) {
       case this.swingSword(key):
         body.sword!.resetSwing();
@@ -118,12 +118,12 @@ export default class BodyKeyMaps {
     return key === "r" || key === "R" || key === "ㄱ";
   }
 
-  private xDirectionHandler(body: HitBox, direction: 1 | -1) {
+  private xDirectionHandler(body: PlayableHitBox, direction: 1 | -1) {
     this.xMove(body, direction);
     body.inputCoolDownSwitch();
   }
 
-  private xMove(hitBox: HitBox, direction: 1 | -1) {
+  private xMove(hitBox: PlayableHitBox, direction: 1 | -1) {
     BodyKeyMaps.newV = hitBox.onFloor()
       ? Vector.create(0, 0)
       : BodyKeyMaps.newV;

@@ -28,6 +28,7 @@ export class EnemyHitBox extends HitBox {
     const pos = hitBox.body.position;
     Composite.add(PhysicEnv.World, [hitBox.body]);
     character.updateAnimation(pos, hitBox.attackSignal.port2);
+    return hitBox;
   }
 
   // detect if the body is on the floor

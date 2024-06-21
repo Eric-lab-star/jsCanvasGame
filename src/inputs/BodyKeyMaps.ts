@@ -32,8 +32,11 @@ export default class BodyKeyMaps {
 
     switch (true) {
       case this.swingSword(key):
+        if (hitBox.sword === undefined) {
+          return;
+        }
         hitBox.setAttack("attack");
-        hitBox.sword!.swing(this.lookAt === "right" ? 1 : -1);
+        hitBox.sword.swing(this.lookAt === "right" ? 1 : -1);
         break;
       case this.rightKey(key):
         this.lookAt = "right";
@@ -77,7 +80,10 @@ export default class BodyKeyMaps {
   private keyUp(body: PlayableHitBox, key: string) {
     switch (true) {
       case this.swingSword(key):
-        body.sword!.resetSwing();
+        if (body.sword === undefined) {
+          return;
+        }
+        body.sword.resetSwing();
         body.setAttack("");
         break;
       case this.rightKey(key):

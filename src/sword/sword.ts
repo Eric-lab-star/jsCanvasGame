@@ -1,19 +1,35 @@
 import { Body, Composite, Constraint, Detector, Events } from "matter-js";
 import PhysicEnv from "../env/PhysicEnv";
 import { enemy, swingSword } from "../utilz/matterComponents";
+import { PlayableHitBox } from "../character/PlayableHitBox";
 
 export default class Sword {
   public swingBody: Body;
   private width: number = 50;
+  private detector: Detector;
   constructor(
     hitBox: Body,
     collisionGroup: number,
     pos: { x: number; y: number },
   ) {
     this.swingBody = this.initSwingBody(collisionGroup, pos, hitBox);
-    Detector.create({
-      bodies: [this.swingBody, enemy],
+    this.detector = Detector.create({
+      bodies: [this.swingBody],
     });
+    this.collisionDetecor();
+  }
+
+  public static init(hitBox: PlayableHitBox) {
+    const group = Body.nextGroup(true);
+    const pos = hitBox.body.position;
+    hitBox.body.collisionFilter.group = group;
+    const sword = new Sword(hitBox.body, group, pos);
+    hitBox.sword = sword;
+    return sword;
+  }
+
+  public addEnemy(enemy: Body) {
+    this.detector.bodies.push(enemy);
   }
 
   private initSwingBody(
@@ -34,23 +50,29 @@ export default class Sword {
     return swingBody;
   }
 
-  public swing(swingDirection: number = 1) {
-    Events.on(PhysicEnv.Engine, "collisionStart", (event) => {
-      const pairs = event.pairs;
-      for (const pair of pairs) {
-        if (
-          (pair.bodyA === this.swingBody || pair.bodyB === this.swingBody) &&
-          (pair.bodyA === enemy || pair.bodyB === enemy)
-        ) {
-          Body.setVelocity(enemy, { x: 2 * swingDirection, y: -4 });
-        }
+  private collisionDetecor() {
+    const collisions = Detector.collisions(this.detector);
+    collisions.forEach((collision) => {
+      if (
+        collision.bodyA.label === "swingSword" ||
+        collision.bodyB.label === "swingSword"
+      ) {
+        const enemy =
+          collision.bodyA.label === "swingSword"
+            ? collision.bodyB
+            : collision.bodyA;
+        console.log(enemy);
       }
     });
+    requestAnimationFrame(() => this.collisionDetecor());
+  }
 
+  public swing(swingDirection: number = 1) {
     Body.setAngularVelocity(
       this.swingBody,
       (Math.PI / 180) * 10 * swingDirection,
     );
+
     if (swingDirection === 1) {
       if (this.swingBody.angle > Math.PI / 8) {
         Body.setAngle(this.swingBody, -Math.PI / 2);

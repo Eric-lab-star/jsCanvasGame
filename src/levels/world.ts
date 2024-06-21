@@ -65,7 +65,7 @@ export default class World {
     requestAnimationFrame(() => this.bigCloudAnimationRender(ctx));
   }
 
-  public render() {
+  public renderImages() {
     for (const image of World.HTMLImageElements.values()) {
       const canvas = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
       const ctx = canvas.getCtx();

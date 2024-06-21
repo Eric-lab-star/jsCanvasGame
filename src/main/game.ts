@@ -1,6 +1,5 @@
 import GameEnv from "../env/GameEnv";
 import PhysicEnv from "../env/PhysicEnv";
-import { HitBox } from "../character/HitBox";
 import { Composite } from "matter-js";
 import {
   enemy,
@@ -34,7 +33,7 @@ export default class Game {
   }
 
   private render() {
-    this.gameWorld.render();
+    this.gameWorld.renderImages();
     this.physic = new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.physic.run();
   }

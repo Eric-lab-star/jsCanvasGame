@@ -10,9 +10,8 @@ import {
   playerHitBox,
 } from "../utilz/matterComponents";
 import PhysicEnv from "../env/PhysicEnv";
-
-import Sword from "../sword/sword";
 import HitBox from "./HitBox";
+import Sword from "../sword/sword";
 
 export class PlayableHitBox extends HitBox {
   private platform3Detector: Detector;
@@ -50,22 +49,11 @@ export class PlayableHitBox extends HitBox {
 
   public static withCharacter(character: Character) {
     const hitBox = PlayableHitBox.withKeyBoardInput();
-    const group = Body.nextGroup(true);
     hitBox.platform3Hit();
-    //TODO: sword ?
-    hitBox.initSword(hitBox, group);
     const pos = hitBox.body.position;
-    hitBox.body.collisionFilter.group = group;
     Composite.add(PhysicEnv.World, [hitBox.body]);
     character.updateAnimation(pos, hitBox.attackSignal.port2);
     return hitBox;
-  }
-
-  public initSword(hitBox: PlayableHitBox, group: number) {
-    const pos = this.body.position;
-    this.body.collisionFilter.group = group;
-    const sword = new Sword(hitBox.body, group, pos);
-    this.sword = sword;
   }
 
   public inputCoolDownSwitch() {
@@ -90,6 +78,7 @@ export class PlayableHitBox extends HitBox {
       const blueDiamonds = allBodies.filter(
         (body) => body.label === "blueDiamond",
       );
+
       if (blueDiamonds.length < 6) {
         const blueDiamond = getBlueDiamond();
         Detector.setBodies(this.hitDiamondDetector, [

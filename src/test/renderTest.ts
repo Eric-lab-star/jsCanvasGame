@@ -16,7 +16,6 @@ export default class RenderTest {
       }
     });
     await World.assetPreloader();
-
-    this.world.render();
+    this.world.renderImages();
   }
 }

@@ -7,6 +7,7 @@ import TextureSensorBody from "./TextureSensorBody";
 import BlueDiamond1 from "../res/world/64px/Blue Diamond/01.png";
 import BlueDiamond2 from "../res/world/64px/Blue Diamond/02.png";
 import BlueDiamond3 from "../res/world/64px/Blue Diamond/03.png";
+import BlueDiamond4 from "../res/world/64px/Blue Diamond/04.png";
 //
 ///
 import ShipHelm1 from "../res/world/64px/ShipHelm/Ship Helm Idle 01.png";
@@ -258,11 +259,11 @@ export const enemy = Bodies.rectangle(800, 513, 45, 45, {
 export function getBlueDiamond() {
   return new TextureBodyRect(
     "blueDiamond",
-    [BlueDiamond1, BlueDiamond2, BlueDiamond3],
+    [BlueDiamond1, BlueDiamond2, BlueDiamond3, BlueDiamond4],
     1090,
     460,
-    20,
-    20,
+    24,
+    24,
   );
 }
 export const getWorldEelement = () => {

@@ -25,9 +25,10 @@ export default class PhysicEnv {
         showAngleIndicator: false,
       },
     });
+    this.run();
   }
 
-  public run() {
+  private run() {
     Matter.Render.run(this.Render);
     const runner = Runner.create();
     Matter.Runner.run(runner, PhysicEnv.Engine);

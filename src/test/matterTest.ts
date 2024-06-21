@@ -11,7 +11,7 @@ import BlueDiamond4 from "../res/world/64px/Blue Diamond/04.png";
 import { Composite } from "matter-js";
 import GameEnv from "../env/GameEnv";
 import PhysicEnv from "../env/PhysicEnv";
-import { getWorldEelement } from "../utilz/matterComponents";
+import { getBlueDiamond, getWorldEelement } from "../utilz/matterComponents";
 import World from "../levels/world";
 import Character from "../character/Character";
 import { PlayableHitBox } from "../character/PlayableHitBox";
@@ -56,22 +56,10 @@ export default class MatterTest {
   }
 
   public async run() {
-    new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     await this.preload();
     this.gen();
     this.render();
     this.hitBox();
-    const staticHitBox = new StaticHitBox("staticEntity", 20, 20, {
-      x: 900,
-      y: 500,
-    });
-    const entity = new StaticEntity([
-      BlueDiamond1,
-      BlueDiamond2,
-      BlueDiamond3,
-      BlueDiamond4,
-    ]);
-    staticHitBox.withEntity(entity);
-    entity.create();
+    new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
   }
 }

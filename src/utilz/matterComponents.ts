@@ -40,6 +40,8 @@ import Chest8 from "../res/world/64px/Chest/Chest Open 08.png";
 import Chest9 from "../res/world/64px/Chest/Chest Open 09.png";
 import Chest10 from "../res/world/64px/Chest/Chest Open 10.png";
 import TextureBodyRect from "./TextureBody";
+import StaticHitBox from "../character/StaticHitBox";
+import StaticEntity from "../staticEntity/staticEntity";
 ///
 
 export const foundation = Bodies.rectangle(
@@ -256,16 +258,28 @@ export const enemy = Bodies.rectangle(800, 513, 45, 45, {
   label: "enemy",
 });
 
-export function getBlueDiamond() {
-  return new TextureBodyRect(
-    "blueDiamond",
-    [BlueDiamond1, BlueDiamond2, BlueDiamond3, BlueDiamond4],
-    1090,
-    460,
-    24,
-    24,
-  );
+export async function getBlueDiamond(
+  pos: { x: number; y: number },
+  xOffset: number = 0,
+  yOffset: number = 0,
+) {
+  const blueDiamond = new StaticHitBox("blueDiamond", 10, 10, {
+    x: pos.x - xOffset,
+    y: pos.y - yOffset,
+  });
+
+  const entity = new StaticEntity([
+    BlueDiamond1,
+    BlueDiamond2,
+    BlueDiamond3,
+    BlueDiamond4,
+  ]);
+
+  blueDiamond.updateEntityPos(entity);
+  await entity.create();
+  return blueDiamond;
 }
+
 export const getWorldEelement = () => {
   const flagPlatForm = new FlagPlatForm();
   return [

@@ -10,13 +10,23 @@ export default class StaticEntity {
   private width: number;
   private height: number;
   public channel: MessageChannel;
-  constructor(imagesUrls: string[]) {
+  private animationTick: number;
+  private animationSpeed: number;
+  public renderId: number | undefined;
+  constructor(
+    imagesUrls: string[],
+    width: number = 24,
+    height: number = 24,
+    speed: number = 5,
+  ) {
     this.pos = { x: 400, y: 400 };
-    this.width = 24;
-    this.height = 24;
+    this.width = width;
+    this.height = height;
     this.canvasEnv = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.imageUrls = imagesUrls;
     this.channel = new MessageChannel();
+    this.animationTick = 0;
+    this.animationSpeed = speed;
   }
 
   public async create() {
@@ -33,7 +43,11 @@ export default class StaticEntity {
 
   public render() {
     this.canvasEnv.getCtx().reset();
-    const modulo = moduloGenerator(GameEnv.runAnimationTick(), 4);
+    const modulo = moduloGenerator(
+      Math.floor(this.animationTick / this.animationSpeed),
+      4,
+    );
+    this.animationTick++;
     this.canvasEnv
       .getCtx()
       .drawImage(
@@ -43,7 +57,14 @@ export default class StaticEntity {
         this.width,
         this.height,
       );
-    requestAnimationFrame(() => this.render());
+    this.renderId = requestAnimationFrame(() => this.render());
+  }
+
+  public stopRender() {
+    if (this.renderId) {
+      cancelAnimationFrame(this.renderId);
+      this.canvasEnv.getCtx().reset();
+    }
   }
 
   public async preloadImages() {

@@ -8,6 +8,8 @@ export default class StaticHitBox {
   private pos: { x: number; y: number };
   public body: Body;
   public label: string;
+  private updateId: number | undefined;
+  private entity: StaticEntity | undefined;
 
   constructor(
     label: string,
@@ -36,12 +38,16 @@ export default class StaticHitBox {
     return body;
   }
 
-  public withEntity(entity: StaticEntity) {
-    this.positionUpdate(entity);
+  public updateEntityPos(entity: StaticEntity) {
+    entity.channel.port1.postMessage(this.body.position);
+    this.entity = entity;
+    this.updateId = requestAnimationFrame(() => this.updateEntityPos(entity));
   }
 
-  public positionUpdate(entity: StaticEntity) {
-    entity.channel.port1.postMessage(this.body.position);
-    requestAnimationFrame(() => this.positionUpdate(entity));
+  public stopUpdatePosition() {
+    if (this.updateId) {
+      cancelAnimationFrame(this.updateId);
+      this.entity?.stopRender();
+    }
   }
 }

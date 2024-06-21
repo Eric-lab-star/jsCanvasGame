@@ -1,4 +1,4 @@
-import { Body, Composite, Detector, Vector } from "matter-js";
+import { Body, Composite, Detector, Events, Vector } from "matter-js";
 import BodyKeyMaps from "../inputs/BodyKeyMaps";
 import { randomInt } from "../utilz/helper";
 import Character from "./Character";
@@ -12,6 +12,7 @@ import {
 import PhysicEnv from "../env/PhysicEnv";
 import HitBox from "./HitBox";
 import Sword from "../sword/sword";
+import StaticHitBox from "./StaticHitBox";
 
 export class PlayableHitBox extends HitBox {
   private platform3Detector: Detector;
@@ -19,6 +20,7 @@ export class PlayableHitBox extends HitBox {
   private hitDiamondDetector: Detector;
   public attackSignal: MessageChannel;
   public sword: Sword | undefined;
+  private blueDiamonds: StaticHitBox[] = [];
 
   constructor() {
     super();
@@ -50,6 +52,7 @@ export class PlayableHitBox extends HitBox {
   public static withCharacter(character: Character) {
     const hitBox = PlayableHitBox.withKeyBoardInput();
     hitBox.platform3Hit();
+    hitBox.hitDiamond();
     const pos = hitBox.body.position;
     Composite.add(PhysicEnv.World, [hitBox.body]);
     character.updateAnimation(pos, hitBox.attackSignal.port2);
@@ -71,36 +74,36 @@ export class PlayableHitBox extends HitBox {
     }
   }
 
-  private platform3Hit() {
-    const collision = Detector.collisions(this.platform3Detector);
-    if (collision.length > 0) {
-      const allBodies = Composite.allBodies(PhysicEnv.World);
-      const blueDiamonds = allBodies.filter(
-        (body) => body.label === "blueDiamond",
-      );
-
-      if (blueDiamonds.length < 6) {
-        const blueDiamond = getBlueDiamond();
-        Detector.setBodies(this.hitDiamondDetector, [
-          this.body,
-          ...blueDiamonds,
-          blueDiamond.body,
-        ]);
-        const rand = randomInt(3, -3);
-        Body.setVelocity(blueDiamond.body, { x: rand, y: -5 });
-        Body.setMass(blueDiamond.body, 1);
-        Composite.add(PhysicEnv.World, blueDiamond.body);
+  public platform3Hit() {
+    Events.on(PhysicEnv.Engine, "collisionStart", async (e) => {
+      const collision = Detector.collisions(this.platform3Detector);
+      if (collision.length > 0) {
+        const pos = floatingPlatform3.position;
+        if (this.blueDiamonds.length < 6) {
+          const blueDiamond = await getBlueDiamond(pos, 0, 40);
+          this.blueDiamonds.push(blueDiamond);
+          const bodies = this.blueDiamonds.map((diamond) => diamond.body);
+          Detector.setBodies(this.hitDiamondDetector, [this.body, ...bodies]);
+          const rand = randomInt(5, -5);
+          Body.setVelocity(blueDiamond.body, { x: rand, y: -5 });
+        }
       }
-    }
-    requestAnimationFrame(() => this.platform3Hit());
+    });
   }
 
   public hitDiamond() {
-    const collisions = Detector.collisions(this.hitDiamondDetector);
-    collisions.forEach((col) => {
-      if (col.bodyA.label === "hitBox" && col.bodyB.label === "blueDiamond") {
-        Composite.remove(PhysicEnv.World, col.bodyB);
-      }
+    Events.on(PhysicEnv.Engine, "collisionStart", (e) => {
+      const collisions = Detector.collisions(this.hitDiamondDetector);
+      collisions.forEach((col) => {
+        if (col.bodyA.label === "hitBox" && col.bodyB.label === "blueDiamond") {
+          this.blueDiamonds.forEach((diamond) => {
+            if (diamond.body === col.bodyB) {
+              diamond.stopUpdatePosition();
+            }
+          });
+          Composite.remove(PhysicEnv.World, col.bodyB);
+        }
+      });
     });
   }
 

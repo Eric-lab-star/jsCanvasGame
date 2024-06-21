@@ -28,7 +28,6 @@ export default class BodyKeyMaps {
       hitBox.didLeft = false;
       hitBox.didUp = false;
     }
-    hitBox.hitDiamond();
 
     switch (true) {
       case this.swingSword(key):

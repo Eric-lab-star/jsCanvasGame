@@ -79,6 +79,7 @@ export default class StaticEntityWorker {
     if (this.renderId) {
       cancelAnimationFrame(this.renderId);
       this.ctx.reset();
+      self.postMessage({ type: "terminate" });
     }
   }
 }

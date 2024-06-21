@@ -20,6 +20,7 @@ export class PlayableHitBox extends HitBox {
   private hitDiamondDetector: Detector;
   public attackSignal: MessageChannel;
   public sword: Sword | undefined;
+  public collectedDiamonds: number = 0;
   private blueDiamonds: StaticHitBox[] = [];
 
   constructor() {
@@ -99,8 +100,13 @@ export class PlayableHitBox extends HitBox {
           this.blueDiamonds.forEach((diamond) => {
             if (diamond.body === col.bodyB) {
               diamond.stopUpdatePosition();
+              this.collectedDiamonds++;
+              console.log(this.collectedDiamonds);
             }
           });
+          this.blueDiamonds = this.blueDiamonds.filter(
+            (diamond) => diamond.body !== col.bodyB,
+          );
           Composite.remove(PhysicEnv.World, col.bodyB);
         }
       });
@@ -135,9 +141,11 @@ export class PlayableHitBox extends HitBox {
   public setRight(value: boolean) {
     this.right = value;
   }
+
   public setLeft(value: boolean) {
     this.left = value;
   }
+
   public setUp(value: boolean) {
     this.up = value;
   }

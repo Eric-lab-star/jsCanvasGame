@@ -3,22 +3,15 @@ import crabImg from "../res/world/64px/Crabby.png";
 import captainImg from "../res/world/64px/captain.png";
 import sharkImg from "../res/world/64px/shark.png";
 
-import BlueDiamond1 from "../res/world/64px/Blue Diamond/01.png";
-import BlueDiamond2 from "../res/world/64px/Blue Diamond/02.png";
-import BlueDiamond3 from "../res/world/64px/Blue Diamond/03.png";
-import BlueDiamond4 from "../res/world/64px/Blue Diamond/04.png";
 ///
 import { Composite } from "matter-js";
 import GameEnv from "../env/GameEnv";
 import PhysicEnv from "../env/PhysicEnv";
-import { getBlueDiamond, getWorldEelement } from "../utilz/matterComponents";
+import { getWorldEelement } from "../utilz/matterComponents";
 import World from "../levels/world";
 import Character from "../character/Character";
 import { PlayableHitBox } from "../character/PlayableHitBox";
-import { EnemyHitBox } from "../character/EnemyHitBox";
 import Sword from "../sword/sword";
-import StaticHitBox from "../character/StaticHitBox";
-import StaticEntity from "../staticEntity/staticEntity";
 
 export default class MatterTest {
   private captain: Character;
@@ -57,9 +50,9 @@ export default class MatterTest {
 
   public async run() {
     await this.preload();
+    new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.gen();
     this.render();
     this.hitBox();
-    new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
   }
 }

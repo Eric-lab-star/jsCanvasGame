@@ -71,5 +71,12 @@ export default class StaticEntity {
 
   public stopRender() {
     this.worker.postMessage({ type: "stop" });
+    this.worker.onmessage = (e) => {
+      if (e.data.type === "terminate") {
+        setTimeout(() => {
+          this.worker.terminate();
+        }, 1000);
+      }
+    };
   }
 }

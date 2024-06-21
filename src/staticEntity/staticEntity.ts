@@ -1,70 +1,55 @@
 import CanvasEnv from "../env/CanvasEnv";
 import GameEnv from "../env/GameEnv";
-import { moduloGenerator } from "../utilz/helper";
 
 export default class StaticEntity {
   private bitMapImages: ImageBitmap[] = [];
   private imageUrls: string[];
   private canvasEnv: CanvasEnv;
-  private pos: { x: number; y: number };
   private width: number;
   private height: number;
   public channel: MessageChannel;
-  private animationTick: number;
   private animationSpeed: number;
-  public renderId: number | undefined;
+  private worker: Worker;
   constructor(
     imagesUrls: string[],
     width: number = 24,
     height: number = 24,
     speed: number = 5,
   ) {
-    this.pos = { x: 400, y: 400 };
     this.width = width;
     this.height = height;
     this.canvasEnv = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.imageUrls = imagesUrls;
     this.channel = new MessageChannel();
-    this.animationTick = 0;
     this.animationSpeed = speed;
+    this.worker = new Worker(
+      new URL("../workers/staticEntityWorker", import.meta.url),
+      {
+        type: "module",
+      },
+    );
   }
 
   public async create() {
     await this.preloadImages();
-    this.updatePos();
     this.render();
   }
 
-  public updatePos() {
-    this.channel.port2.onmessage = (event: MessageEvent) => {
-      this.pos = event.data;
-    };
-  }
-
   public render() {
-    this.canvasEnv.getCtx().reset();
-    const modulo = moduloGenerator(
-      Math.floor(this.animationTick / this.animationSpeed),
-      4,
-    );
-    this.animationTick++;
-    this.canvasEnv
-      .getCtx()
-      .drawImage(
-        this.bitMapImages[modulo],
-        this.pos.x - this.width / 2,
-        this.pos.y - this.height / 2,
-        this.width,
-        this.height,
-      );
-    this.renderId = requestAnimationFrame(() => this.render());
-  }
+    const offscreenCanvas = this.canvasEnv.canvas.transferControlToOffscreen();
 
-  public stopRender() {
-    if (this.renderId) {
-      cancelAnimationFrame(this.renderId);
-      this.canvasEnv.getCtx().reset();
-    }
+    this.worker.postMessage(
+      {
+        type: "create",
+        canvas: offscreenCanvas,
+        bitMapImages: this.bitMapImages,
+        port: this.channel.port2,
+        width: this.width,
+        height: this.height,
+        speed: this.animationSpeed,
+      },
+      [offscreenCanvas, this.channel.port2],
+    );
   }
 
   public async preloadImages() {
@@ -82,5 +67,9 @@ export default class StaticEntity {
       promises.push(promise);
     });
     await Promise.all(promises);
+  }
+
+  public stopRender() {
+    this.worker.postMessage({ type: "stop" });
   }
 }

@@ -3,6 +3,7 @@ import GameEnv from "../env/GameEnv";
 import BlueDiamond from "../gems/BlueDiamond";
 
 import letters from "../res/world/64px/Big Text/superBigAlphabets.png";
+import GreenBoard from "../res/world/64px/UI/GreeBoard.png";
 
 enum Letter {
   A = 0,
@@ -45,16 +46,13 @@ enum Letter {
 }
 
 export class UI {
-  private canvasEnv: CanvasEnv;
-  private ctx: CanvasRenderingContext2D;
   private letterSpriteWitdh: number = 32;
   private letterSpriteHeight: number = 32;
   private images: ImageBitmap[] = [];
   private canvasEnvs: CanvasEnv[] = [];
+  private zIndex: number = 100;
 
   constructor() {
-    this.canvasEnv = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
-    this.ctx = this.canvasEnv.getCtx();
     this.collectDiamondEvent();
     this.keyDownEvent();
   }
@@ -70,26 +68,54 @@ export class UI {
   }
 
   private collectDiamondEvent() {
+    let prevCanvas: CanvasEnv;
+    prevCanvas = new CanvasEnv(
+      GameEnv.GAME_WIDTH,
+      GameEnv.GAME_HEIGHT,
+      this.zIndex,
+    );
+    this.canvasEnvs.push(prevCanvas);
     addEventListener("collectDiamond", () => {
-      this.showCollectedDiamonds();
+      this.showCollectedDiamonds(
+        prevCanvas.getCtx(),
+        { x: 40, y: 50 },
+        "diamonds",
+      );
     });
   }
 
-  public async drawMessage(message: string, pos: { x: number; y: number }) {
+  public async drawGreenBoard() {
     const canvasEnv = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.canvasEnvs.push(canvasEnv);
     const ctx = canvasEnv.getCtx();
-    const images = await this.parseImageAtlas();
+    const image = new Image();
+    image.src = GreenBoard;
+    image.onload = () => {
+      ctx.drawImage(image, 0, 0);
+    };
+  }
+
+  public async drawMessage(message: string, pos: { x: number; y: number }) {
+    const canvasEnv = new CanvasEnv(
+      GameEnv.GAME_WIDTH,
+      GameEnv.GAME_HEIGHT,
+      this.zIndex,
+    );
+    this.canvasEnvs.push(canvasEnv);
+    const ctx = canvasEnv.getCtx();
+    if (this.images.length === 0) {
+      this.images = await this.parseImageAtlas();
+    }
     for (let i = 0; i < message.length; i++) {
       ctx.drawImage(
-        images[Letter[message[i].toUpperCase() as keyof typeof Letter]],
+        this.images[Letter[message[i].toUpperCase() as keyof typeof Letter]],
         pos.x + this.letterSpriteWitdh * i,
         pos.y,
       );
     }
   }
 
-  public parseImageAtlas() {
+  private parseImageAtlas() {
     const promise = new Promise<ImageBitmap[]>((resolve) => {
       const imageBitMaps: ImageBitmap[] = [];
       const image = new Image();
@@ -112,14 +138,17 @@ export class UI {
   }
 
   public async showCollectedDiamonds(
-    msg: string = "diamonds",
-    pos: { x: number; y: number } = { x: 10, y: 50 },
+    ctx: CanvasRenderingContext2D,
+    pos: { x: number; y: number },
+    msg: string,
   ) {
-    this.images = await this.parseImageAtlas();
-    this.ctx.reset();
+    if (this.images.length === 0) {
+      this.images = await this.parseImageAtlas();
+    }
+    ctx.reset();
     const count = BlueDiamond.collectedDiamonds;
     if (count <= 9) {
-      this.ctx.drawImage(
+      ctx.drawImage(
         this.images[count + 26],
         pos.x + this.letterSpriteWitdh * msg.length + 10,
         pos.y,
@@ -129,12 +158,12 @@ export class UI {
     if (count > 9 && count <= 99) {
       const firstDigit = Math.floor(count / 10);
       const secondDigit = count % 10;
-      this.ctx.drawImage(
+      ctx.drawImage(
         this.images[firstDigit + 26],
         pos.x + this.letterSpriteWitdh * msg.length + 10,
         pos.y,
       );
-      this.ctx.drawImage(
+      ctx.drawImage(
         this.images[secondDigit + 26],
         pos.x +
           this.letterSpriteWitdh * msg.length +
@@ -146,10 +175,8 @@ export class UI {
     }
   }
   public toggleUI() {
-    this.canvasEnv.toggleCanvas();
     for (const canvasEnv of this.canvasEnvs) {
       canvasEnv.toggleCanvas();
     }
-    console.log("UI is hidden");
   }
 }

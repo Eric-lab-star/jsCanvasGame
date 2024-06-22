@@ -13,6 +13,7 @@ import Character from "../character/Character";
 import { PlayableHitBox } from "../character/PlayableHitBox";
 import Sword from "../sword/sword";
 import { UI } from "../UI/ui";
+import { EnemyHitBox } from "../character/EnemyHitBox";
 
 export default class MatterTest {
   private captain: Character;
@@ -37,15 +38,15 @@ export default class MatterTest {
 
   private hitBox() {
     const captainHitBox = PlayableHitBox.withCharacter(this.captain);
-    // EnemyHitBox.withNPC(this.crab);
-    // EnemyHitBox.withNPC(this.shark);
+    EnemyHitBox.withNPC(this.crab);
+    EnemyHitBox.withNPC(this.shark);
     Sword.init(captainHitBox);
   }
 
   private render() {
     this.world.renderImages();
-    // this.crab.renderOffscreen();
-    // this.shark.renderOffscreen();
+    this.crab.renderOffscreen();
+    this.shark.renderOffscreen();
     this.captain.renderOffscreen();
   }
 
@@ -57,8 +58,8 @@ export default class MatterTest {
     this.hitBox();
     const ui = new UI();
 
-    const msg = "diamonds";
-    await ui.drawMessage(msg, { x: 10, y: 50 });
-    await ui.showCollectedDiamonds(msg, { x: 10, y: 50 });
+    await ui.drawGreenBoard();
+    await ui.drawMessage("diamonds", { x: 40, y: 50 });
+    await ui.drawMessage("kill", { x: 40, y: 100 });
   }
 }

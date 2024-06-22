@@ -2,8 +2,15 @@ export default class CanvasEnv {
   public canvas: HTMLCanvasElement;
   private static zindex: number = 0;
   private customZindex?: number;
+  public id: string;
 
-  public constructor(width: number, height: number, zindex?: number) {
+  public constructor(
+    width: number,
+    height: number,
+    zindex?: number,
+    id: string = "canvas",
+  ) {
+    this.id = id;
     this.canvas = document.createElement("canvas");
     this.customZindex = zindex;
     this.setCanvasSize(width, height);

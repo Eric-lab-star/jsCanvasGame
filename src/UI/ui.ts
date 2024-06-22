@@ -50,14 +50,26 @@ export class UI {
   private letterSpriteWitdh: number = 32;
   private letterSpriteHeight: number = 32;
   private images: ImageBitmap[] = [];
+  private canvasEnvs: CanvasEnv[] = [];
 
   constructor() {
     this.canvasEnv = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.ctx = this.canvasEnv.getCtx();
-    this.eventListener();
+    this.collectDiamondEvent();
+    this.keyDownEvent();
   }
 
-  public eventListener() {
+  private keyDownEvent() {
+    addEventListener("keydown", (e) => {
+      switch (e.key) {
+        case "Tab":
+          this.toggleUI();
+          break;
+      }
+    });
+  }
+
+  private collectDiamondEvent() {
     addEventListener("collectDiamond", () => {
       this.showCollectedDiamonds();
     });
@@ -65,6 +77,7 @@ export class UI {
 
   public async drawMessage(message: string, pos: { x: number; y: number }) {
     const canvasEnv = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
+    this.canvasEnvs.push(canvasEnv);
     const ctx = canvasEnv.getCtx();
     const images = await this.parseImageAtlas();
     for (let i = 0; i < message.length; i++) {
@@ -131,5 +144,12 @@ export class UI {
       );
       return;
     }
+  }
+  public toggleUI() {
+    this.canvasEnv.toggleCanvas();
+    for (const canvasEnv of this.canvasEnvs) {
+      canvasEnv.toggleCanvas();
+    }
+    console.log("UI is hidden");
   }
 }

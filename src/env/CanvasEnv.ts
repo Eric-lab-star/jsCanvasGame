@@ -37,4 +37,8 @@ export default class CanvasEnv {
   public removeCanvas() {
     this.canvas.remove();
   }
+  public toggleCanvas() {
+    this.canvas.style.display =
+      this.canvas.style.display === "none" ? "block" : "none";
+  }
 }

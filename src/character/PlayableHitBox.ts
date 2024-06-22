@@ -5,14 +5,13 @@ import Character from "./Character";
 
 import {
   floatingPlatform3,
-  getBlueDiamond,
   getWorldEelement,
   playerHitBox,
 } from "../utilz/matterComponents";
 import PhysicEnv from "../env/PhysicEnv";
 import HitBox from "./HitBox";
 import Sword from "../sword/sword";
-import StaticHitBox from "./StaticHitBox";
+import BlueDiamond from "../gems/BlueDiamond";
 
 export class PlayableHitBox extends HitBox {
   private platform3Detector: Detector;
@@ -20,8 +19,6 @@ export class PlayableHitBox extends HitBox {
   private hitDiamondDetector: Detector;
   public attackSignal: MessageChannel;
   public sword: Sword | undefined;
-  public collectedDiamonds: number = 0;
-  private blueDiamonds: StaticHitBox[] = [];
 
   constructor() {
     super();
@@ -80,13 +77,16 @@ export class PlayableHitBox extends HitBox {
       const collision = Detector.collisions(this.platform3Detector);
       if (collision.length > 0) {
         const pos = floatingPlatform3.position;
-        if (this.blueDiamonds.length < 6) {
-          const blueDiamond = await getBlueDiamond(pos, 0, 40);
-          this.blueDiamonds.push(blueDiamond);
-          const bodies = this.blueDiamonds.map((diamond) => diamond.body);
+        if (BlueDiamond.onScreenDiamonds.length < 6) {
+          const blueDiamond = new BlueDiamond(pos, 0, 40);
+          blueDiamond.spawn();
+          BlueDiamond.onScreenDiamonds.push(blueDiamond);
+          const bodies = BlueDiamond.onScreenDiamonds.map(
+            (diamond) => diamond.hitBox.body,
+          );
           Detector.setBodies(this.hitDiamondDetector, [this.body, ...bodies]);
           const rand = randomInt(5, -5);
-          Body.setVelocity(blueDiamond.body, { x: rand, y: -5 });
+          Body.setVelocity(blueDiamond.hitBox.body, { x: rand, y: -5 });
         }
       }
     });
@@ -97,15 +97,15 @@ export class PlayableHitBox extends HitBox {
       const collisions = Detector.collisions(this.hitDiamondDetector);
       collisions.forEach((col) => {
         if (col.bodyA.label === "hitBox" && col.bodyB.label === "blueDiamond") {
-          this.blueDiamonds.forEach((diamond) => {
-            if (diamond.body === col.bodyB) {
-              diamond.stopUpdatePosition();
-              this.collectedDiamonds++;
-              console.log(this.collectedDiamonds);
+          BlueDiamond.onScreenDiamonds.forEach((diamond) => {
+            if (diamond.hitBox.body === col.bodyB) {
+              diamond.hitBox.stopUpdatePosition();
+              BlueDiamond.collectedDiamonds++;
+              diamond.emitEvent();
             }
           });
-          this.blueDiamonds = this.blueDiamonds.filter(
-            (diamond) => diamond.body !== col.bodyB,
+          BlueDiamond.onScreenDiamonds = BlueDiamond.onScreenDiamonds.filter(
+            (diamond) => diamond.hitBox.body !== col.bodyB,
           );
           Composite.remove(PhysicEnv.World, col.bodyB);
         }

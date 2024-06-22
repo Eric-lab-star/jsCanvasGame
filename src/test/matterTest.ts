@@ -12,6 +12,7 @@ import World from "../levels/world";
 import Character from "../character/Character";
 import { PlayableHitBox } from "../character/PlayableHitBox";
 import Sword from "../sword/sword";
+import { UI } from "../UI/ui";
 
 export default class MatterTest {
   private captain: Character;
@@ -54,5 +55,10 @@ export default class MatterTest {
     this.gen();
     this.render();
     this.hitBox();
+    const ui = new UI();
+
+    const msg = "diamonds";
+    await ui.drawMessage(msg, { x: 10, y: 50 });
+    await ui.showCollectedDiamonds(msg, { x: 10, y: 50 });
   }
 }

@@ -34,4 +34,7 @@ export default class CanvasEnv {
     }
     return ctx;
   }
+  public removeCanvas() {
+    this.canvas.remove();
+  }
 }

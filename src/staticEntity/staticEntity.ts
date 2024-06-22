@@ -2,7 +2,7 @@ import CanvasEnv from "../env/CanvasEnv";
 import GameEnv from "../env/GameEnv";
 
 export default class StaticEntity {
-  private bitMapImages: ImageBitmap[] = [];
+  public static bitMapImages: ImageBitmap[] = [];
   private imageUrls: string[];
   private canvasEnv: CanvasEnv;
   private width: number;
@@ -30,19 +30,13 @@ export default class StaticEntity {
     );
   }
 
-  public async create() {
-    await this.preloadImages();
-    this.render();
-  }
-
   public render() {
     const offscreenCanvas = this.canvasEnv.canvas.transferControlToOffscreen();
-
     this.worker.postMessage(
       {
         type: "create",
         canvas: offscreenCanvas,
-        bitMapImages: this.bitMapImages,
+        bitMapImages: StaticEntity.bitMapImages,
         port: this.channel.port2,
         width: this.width,
         height: this.height,
@@ -60,7 +54,7 @@ export default class StaticEntity {
         image.src = img;
         image.onload = async () => {
           const bitMapImage = await createImageBitmap(image);
-          this.bitMapImages.push(bitMapImage);
+          StaticEntity.bitMapImages.push(bitMapImage);
           resolve(true);
         };
       });
@@ -78,5 +72,6 @@ export default class StaticEntity {
         }, 1000);
       }
     };
+    this.canvasEnv.removeCanvas();
   }
 }

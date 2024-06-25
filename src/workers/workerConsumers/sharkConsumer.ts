@@ -77,7 +77,7 @@ export default class SharkConsumer extends CharacterConsumer {
       this.ctx.drawImage(
         images[modulo],
         this.bodyPosition.x - SharkAnimationManager.imgWidth / 2,
-        this.bodyPosition.y - SharkAnimationManager.imgHeight / 2,
+        this.bodyPosition.y - SharkAnimationManager.imgHeight / 2 - 10,
         SharkAnimationManager.imgWidth,
         SharkAnimationManager.imgHeight,
       );

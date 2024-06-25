@@ -1,12 +1,14 @@
 import { Body, Composite, Constraint, Detector, Events } from "matter-js";
 import PhysicEnv from "../env/PhysicEnv";
-import { enemy, swingSword } from "../utilz/matterComponents";
+import { swingSword } from "../utilz/matterComponents";
 import { PlayableHitBox } from "../character/PlayableHitBox";
+import { EnemyHitBox } from "../character/EnemyHitBox";
 
 export default class Sword {
   public swingBody: Body;
   private width: number = 50;
   private detector: Detector;
+  private enmeies: EnemyHitBox[] = [];
   constructor(
     hitBox: Body,
     collisionGroup: number,
@@ -28,8 +30,10 @@ export default class Sword {
     return sword;
   }
 
-  public addEnemy(enemy: Body) {
-    this.detector.bodies.push(enemy);
+  public addEnemy(...enemy: EnemyHitBox[]) {
+    const enemyBodies = enemy.map((e) => e.body);
+    this.enmeies.push(...enemy);
+    this.detector.bodies.push(...enemyBodies);
   }
 
   private initSwingBody(
@@ -51,20 +55,21 @@ export default class Sword {
   }
 
   private collisionDetecor() {
-    const collisions = Detector.collisions(this.detector);
-    collisions.forEach((collision) => {
-      if (
-        collision.bodyA.label === "swingSword" ||
-        collision.bodyB.label === "swingSword"
-      ) {
-        const enemy =
-          collision.bodyA.label === "swingSword"
-            ? collision.bodyB
-            : collision.bodyA;
-        console.log(enemy);
-      }
+    Events.on(PhysicEnv.Engine, "collisionStart", (event) => {
+      // const collisions = Detector.collisions(this.detector);
+      // collisions.forEach((collision) => {
+      //   if (
+      //     collision.bodyA.label === "swingSword" ||
+      //     collision.bodyB.label === "swingSword"
+      //   ) {
+      //     const enemy =
+      //       collision.bodyA.label === "swingSword"
+      //         ? collision.bodyB
+      //         : collision.bodyA;
+      //     Body.setVelocity(enemy, { x: 0, y: -3 });
+      //   }
+      // });
     });
-    requestAnimationFrame(() => this.collisionDetecor());
   }
 
   public swing(swingDirection: number = 1) {

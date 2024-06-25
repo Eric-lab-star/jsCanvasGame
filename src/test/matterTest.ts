@@ -38,9 +38,10 @@ export default class MatterTest {
 
   private hitBox() {
     const captainHitBox = PlayableHitBox.withCharacter(this.captain);
-    EnemyHitBox.withNPC(this.crab);
-    EnemyHitBox.withNPC(this.shark);
-    Sword.init(captainHitBox);
+    const crab = EnemyHitBox.withNPC(this.crab, { x: 889, y: 561 });
+    const shark = EnemyHitBox.withNPC(this.shark, { x: 300, y: 300 });
+    const sword = Sword.init(captainHitBox);
+    sword.addEnemy(crab.body, shark.body);
   }
 
   private render() {
@@ -52,6 +53,7 @@ export default class MatterTest {
 
   public async run() {
     await this.preload();
+
     new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.gen();
     this.render();

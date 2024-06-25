@@ -1,30 +1,46 @@
-import { Body, Composite, Detector, Vector } from "matter-js";
+import { Bodies, Body, Composite, Detector, Vector } from "matter-js";
 import Character from "./Character";
 
-import { getWorldEelement, playerHitBox } from "../utilz/matterComponents";
+import { getWorldEelement } from "../utilz/matterComponents";
 import PhysicEnv from "../env/PhysicEnv";
 import HitBox from "./HitBox";
+import { randomColor } from "../utilz/helper";
 
 export class EnemyHitBox extends HitBox {
   private onFloorDetector: Detector;
+  public body: Body;
   public attackSignal: MessageChannel;
-  constructor() {
+  private pos: { x: number; y: number };
+
+  constructor(pos: { x: number; y: number }) {
     super();
+    this.pos = pos;
+    this.body = this.initBody();
     this.onFloorDetector = Detector.create({
       bodies: [this.body, ...getWorldEelement()],
     });
     this.attackSignal = new MessageChannel();
   }
 
-  protected initBody() {
-    const hitxBox = playerHitBox();
+  private initBody() {
+    const hitxBox = Bodies.rectangle(this.pos.x, this.pos.y, 40, 45, {
+      render: {
+        fillStyle: randomColor(),
+        opacity: 1,
+      },
+      friction: 0.3,
+      label: "hitBox",
+    });
     Body.setInertia(hitxBox, Infinity);
     Body.setSpeed(hitxBox, 1);
     return hitxBox;
   }
 
-  public static withNPC(character: Character) {
-    const hitBox = new EnemyHitBox();
+  public static withNPC(
+    character: Character,
+    initpos: { x: number; y: number },
+  ) {
+    const hitBox = new EnemyHitBox(initpos);
     const pos = hitBox.body.position;
     Composite.add(PhysicEnv.World, [hitBox.body]);
     character.updateAnimation(pos, hitBox.attackSignal.port2);
@@ -70,5 +86,8 @@ export class EnemyHitBox extends HitBox {
 
   public setAttack(value: string) {
     this.attackSignal.port1.postMessage({ attack: value });
+  }
+  public setHurt(value: string) {
+    this.attackSignal.port1.postMessage({ hurt: value });
   }
 }

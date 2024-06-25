@@ -1,7 +1,6 @@
-import { Body, Vector } from "matter-js";
+import { Vector } from "matter-js";
 
 export default abstract class HitBox {
-  public body: Body;
   public right: boolean;
   public left: boolean;
   public up: boolean;
@@ -11,7 +10,6 @@ export default abstract class HitBox {
   public didUp: boolean;
 
   constructor() {
-    this.body = this.initBody();
     this.right = false;
     this.left = false;
     this.up = false;
@@ -20,8 +18,6 @@ export default abstract class HitBox {
     this.didLeft = false;
     this.didUp = false;
   }
-
-  protected abstract initBody(): Body;
 
   // detect if the body is on the floor
   public abstract onFloor(): boolean;

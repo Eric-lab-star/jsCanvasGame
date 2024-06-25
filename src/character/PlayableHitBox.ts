@@ -19,9 +19,11 @@ export class PlayableHitBox extends HitBox {
   private hitDiamondDetector: Detector;
   public attackSignal: MessageChannel;
   public sword: Sword | undefined;
+  public body: Body;
 
   constructor() {
     super();
+    this.body = this.initBody();
     this.attackSignal = new MessageChannel();
     this.platform3Detector = Detector.create({
       bodies: [this.body, floatingPlatform3],

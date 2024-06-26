@@ -15,9 +15,17 @@ export default class CrabyConsumer extends CharacterConsumer {
 
   protected setAnimationState(
     pos: { x: number; y: number },
-    attack: string,
+    signalType: string,
   ): void {
-    if (attack !== "") {
+    if (signalType === "stop") {
+      this.animationState = "idle";
+      return;
+    }
+    if (signalType === "hit") {
+      this.animationState = "hit";
+      return;
+    }
+    if (signalType === "attack") {
       this.animationState = "attack";
       return;
     }

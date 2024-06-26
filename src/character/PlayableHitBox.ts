@@ -17,14 +17,14 @@ export class PlayableHitBox extends HitBox {
   private platform3Detector: Detector;
   private onFloorDetector: Detector;
   private hitDiamondDetector: Detector;
-  public attackSignal: MessageChannel;
+  public singnal: MessageChannel;
   public sword: Sword | undefined;
   public body: Body;
 
   constructor() {
     super();
     this.body = this.initBody();
-    this.attackSignal = new MessageChannel();
+    this.singnal = new MessageChannel();
     this.platform3Detector = Detector.create({
       bodies: [this.body, floatingPlatform3],
     });
@@ -55,7 +55,7 @@ export class PlayableHitBox extends HitBox {
     hitBox.hitDiamond();
     const pos = hitBox.body.position;
     Composite.add(PhysicEnv.World, [hitBox.body]);
-    character.updateAnimation(pos, hitBox.attackSignal.port2);
+    character.updateAnimation(pos, hitBox.singnal.port2);
     return hitBox;
   }
 
@@ -155,7 +155,10 @@ export class PlayableHitBox extends HitBox {
     this.down = value;
   }
 
-  public setAttack(value: string) {
-    this.attackSignal.port1.postMessage({ attack: value });
+  public setAttack() {
+    this.singnal.port1.postMessage({ type: "attack" });
+  }
+  public stop() {
+    this.singnal.port1.postMessage({ type: "stop" });
   }
 }

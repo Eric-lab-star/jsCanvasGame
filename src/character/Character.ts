@@ -16,20 +16,18 @@ export default class Character {
     this.label = label;
   }
 
-  private attack: string = "";
+  private signalType: string = "";
 
   public updateAnimation(
     pos: { x: number; y: number },
-    attackSignalReceiver: MessagePort,
+    singnalReceiver: MessagePort,
   ) {
-    attackSignalReceiver.onmessage = (e: MessageEvent<{ attack: string }>) => {
-      this.attack = e.data.attack;
+    singnalReceiver.onmessage = (e: MessageEvent<{ type: string }>) => {
+      this.signalType = e.data.type;
     };
 
-    this.messageChannel.port1.postMessage({ pos, attack: this.attack });
-    requestAnimationFrame(() =>
-      this.updateAnimation(pos, attackSignalReceiver),
-    );
+    this.messageChannel.port1.postMessage({ pos, type: this.signalType });
+    requestAnimationFrame(() => this.updateAnimation(pos, singnalReceiver));
   }
 
   /**

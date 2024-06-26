@@ -16,24 +16,31 @@ export default class SharkConsumer extends CharacterConsumer {
   ) {
     super(offscreen, spriteImage, posPort);
   }
-
   protected setAnimationState(
     pos: { x: number; y: number },
-    attack: string,
+    signalType: string,
   ): void {
-    if (attack !== "") {
+    if (signalType === "stop") {
+      this.animationState = "idle";
+      return;
+    }
+    if (signalType === "hit") {
+      this.animationState = "hit";
+      return;
+    }
+    if (signalType === "attack") {
       this.animationState = "attack";
       return;
     }
 
     if (pos.x > this.bodyPosition.x + 1) {
       this.animationState = "run";
-      this.shouldFlip = true;
+      this.shouldFlip = false;
       return;
     }
     if (pos.x < this.bodyPosition.x - 1) {
       this.animationState = "run";
-      this.shouldFlip = false;
+      this.shouldFlip = true;
       return;
     }
 

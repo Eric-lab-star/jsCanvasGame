@@ -9,6 +9,7 @@ export default class Sword {
   private width: number = 50;
   private detector: Detector;
   private enmeies: EnemyHitBox[] = [];
+  private swingDirection: number = 1;
   constructor(
     hitBox: Body,
     collisionGroup: number,
@@ -55,24 +56,42 @@ export default class Sword {
   }
 
   private collisionDetecor() {
+    let id: number;
+    let hitCounter: number;
     Events.on(PhysicEnv.Engine, "collisionStart", (event) => {
-      // const collisions = Detector.collisions(this.detector);
-      // collisions.forEach((collision) => {
-      //   if (
-      //     collision.bodyA.label === "swingSword" ||
-      //     collision.bodyB.label === "swingSword"
-      //   ) {
-      //     const enemy =
-      //       collision.bodyA.label === "swingSword"
-      //         ? collision.bodyB
-      //         : collision.bodyA;
-      //     Body.setVelocity(enemy, { x: 0, y: -3 });
-      //   }
-      // });
+      const collisions = Detector.collisions(this.detector);
+      collisions.forEach((collision) => {
+        if (
+          collision.bodyA.label === "swingSword" ||
+          collision.bodyB.label === "swingSword"
+        ) {
+          const enemyBody =
+            collision.bodyA.label === "swingSword"
+              ? collision.bodyB
+              : collision.bodyA;
+          if (hitCounter >= 5) {
+            Body.setVelocity(enemyBody, { x: 0, y: 0 });
+          }
+          Body.setVelocity(enemyBody, { x: 1 * this.swingDirection, y: -3 });
+          hitCounter++;
+          if (id) {
+            clearTimeout(id);
+          }
+          this.enmeies.forEach((e) => {
+            if (e.body === enemyBody) {
+              e.setHit();
+              id = window.setTimeout(() => {
+                e.stop();
+              }, 500);
+            }
+          });
+        }
+      });
     });
   }
 
   public swing(swingDirection: number = 1) {
+    this.swingDirection = swingDirection;
     Body.setAngularVelocity(
       this.swingBody,
       (Math.PI / 180) * 10 * swingDirection,

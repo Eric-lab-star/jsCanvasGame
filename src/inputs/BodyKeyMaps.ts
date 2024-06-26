@@ -34,7 +34,7 @@ export default class BodyKeyMaps {
         if (hitBox.sword === undefined) {
           return;
         }
-        hitBox.setAttack("attack");
+        hitBox.setAttack();
         hitBox.sword.swing(this.lookAt === "right" ? 1 : -1);
         break;
       case this.rightKey(key):
@@ -83,7 +83,7 @@ export default class BodyKeyMaps {
           return;
         }
         body.sword.resetSwing();
-        body.setAttack("");
+        body.stop();
         break;
       case this.rightKey(key):
         body.setRight(false);

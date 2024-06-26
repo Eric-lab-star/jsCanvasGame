@@ -1,13 +1,8 @@
 import { Bodies } from "matter-js";
 import GameEnv from "../env/GameEnv";
-import { randomColor, randomInt } from "./helper";
+import { randomColor } from "./helper";
 import TextureSensorBody from "./TextureSensorBody";
 
-///
-import BlueDiamond1 from "../res/world/64px/Blue Diamond/01.png";
-import BlueDiamond2 from "../res/world/64px/Blue Diamond/02.png";
-import BlueDiamond3 from "../res/world/64px/Blue Diamond/03.png";
-import BlueDiamond4 from "../res/world/64px/Blue Diamond/04.png";
 //
 ///
 import ShipHelm1 from "../res/world/64px/ShipHelm/Ship Helm Idle 01.png";
@@ -39,9 +34,6 @@ import Chest7 from "../res/world/64px/Chest/Chest Open 07.png";
 import Chest8 from "../res/world/64px/Chest/Chest Open 08.png";
 import Chest9 from "../res/world/64px/Chest/Chest Open 09.png";
 import Chest10 from "../res/world/64px/Chest/Chest Open 10.png";
-import TextureBodyRect from "./TextureBody";
-import StaticHitBox from "../character/StaticHitBox";
-import StaticEntity from "../staticEntity/staticEntity";
 ///
 
 export const foundation = Bodies.rectangle(
@@ -257,28 +249,6 @@ export const playerHitBox = function () {
 export const enemy = Bodies.rectangle(800, 513, 45, 45, {
   label: "enemy",
 });
-
-export async function getBlueDiamond(
-  pos: { x: number; y: number },
-  xOffset: number = 0,
-  yOffset: number = 0,
-) {
-  const blueDiamond = new StaticHitBox("blueDiamond", 10, 10, {
-    x: pos.x - xOffset,
-    y: pos.y - yOffset,
-  });
-
-  const entity = new StaticEntity([
-    BlueDiamond1,
-    BlueDiamond2,
-    BlueDiamond3,
-    BlueDiamond4,
-  ]);
-
-  blueDiamond.updateEntityPos(entity);
-  await entity.create();
-  return blueDiamond;
-}
 
 export const getWorldEelement = () => {
   const flagPlatForm = new FlagPlatForm();

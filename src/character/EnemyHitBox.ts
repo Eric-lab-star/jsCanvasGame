@@ -9,7 +9,7 @@ import { randomColor } from "../utilz/helper";
 export class EnemyHitBox extends HitBox {
   private onFloorDetector: Detector;
   public body: Body;
-  public attackSignal: MessageChannel;
+  public singnal: MessageChannel;
   private pos: { x: number; y: number };
 
   constructor(pos: { x: number; y: number }) {
@@ -19,7 +19,7 @@ export class EnemyHitBox extends HitBox {
     this.onFloorDetector = Detector.create({
       bodies: [this.body, ...getWorldEelement()],
     });
-    this.attackSignal = new MessageChannel();
+    this.singnal = new MessageChannel();
   }
 
   private initBody() {
@@ -43,7 +43,7 @@ export class EnemyHitBox extends HitBox {
     const hitBox = new EnemyHitBox(initpos);
     const pos = hitBox.body.position;
     Composite.add(PhysicEnv.World, [hitBox.body]);
-    character.updateAnimation(pos, hitBox.attackSignal.port2);
+    character.updateAnimation(pos, hitBox.singnal.port2);
     return hitBox;
   }
 
@@ -84,10 +84,13 @@ export class EnemyHitBox extends HitBox {
     this.down = value;
   }
 
-  public setAttack(value: string) {
-    this.attackSignal.port1.postMessage({ attack: value });
+  public setAttack() {
+    this.singnal.port1.postMessage({ type: "attack" });
   }
-  public setHurt(value: string) {
-    this.attackSignal.port1.postMessage({ hurt: value });
+  public setHit() {
+    this.singnal.port1.postMessage({ type: "hit" });
+  }
+  public stop() {
+    this.singnal.port1.postMessage({ type: "stop" });
   }
 }

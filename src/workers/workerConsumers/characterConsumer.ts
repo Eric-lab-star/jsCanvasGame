@@ -34,11 +34,10 @@ export default abstract class CharacterConsumer {
    * @method updateAnimation
    * @description This method listens to the position of the character and updates the position of the character on the screen.
    * */
+
   protected updateAnimation(): void {
-    this.animationPort.onmessage = (
-      e: MessageEvent<{ pos: { x: number; y: number }; attack: string }>,
-    ) => {
-      this.setAnimationState(e.data.pos, e.data.attack);
+    this.animationPort.onmessage = (e: MessageEvent<updateMsg>) => {
+      this.setAnimationState(e.data.pos, e.data.type);
       this.bodyPosition = e.data.pos;
     };
   }
@@ -51,3 +50,8 @@ export default abstract class CharacterConsumer {
 
   public abstract setAnimation(): Promise<void>;
 }
+
+export type updateMsg = {
+  pos: { x: number; y: number };
+  type: string;
+};

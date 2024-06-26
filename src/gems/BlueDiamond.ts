@@ -6,8 +6,6 @@ import BlueDiamond1 from "../res/world/64px/Blue Diamond/01.png";
 import BlueDiamond2 from "../res/world/64px/Blue Diamond/02.png";
 import BlueDiamond3 from "../res/world/64px/Blue Diamond/03.png";
 import BlueDiamond4 from "../res/world/64px/Blue Diamond/04.png";
-import CanvasEnv from "../env/CanvasEnv";
-import GameEnv from "../env/GameEnv";
 //
 export default class BlueDiamond {
   public counter: number;

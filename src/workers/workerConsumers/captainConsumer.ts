@@ -15,9 +15,9 @@ export default class CaptainConsumer extends CharacterConsumer {
 
   protected setAnimationState(
     pos: { x: number; y: number },
-    attack: string,
+    signalType: string,
   ): void {
-    if (attack !== "") {
+    if (signalType === "attack") {
       this.animationState = "attack2S";
       return;
     }

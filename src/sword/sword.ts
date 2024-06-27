@@ -10,6 +10,8 @@ export default class Sword {
   private detector: Detector;
   private enmeies: EnemyHitBox[] = [];
   private swingDirection: number = 1;
+  public killCount: number = 0;
+  private killEvent: Event;
   constructor(
     hitBox: Body,
     collisionGroup: number,
@@ -20,6 +22,10 @@ export default class Sword {
       bodies: [this.swingBody],
     });
     this.collisionDetecor();
+    this.killEvent = new Event("killCount", {
+      bubbles: true,
+      cancelable: true,
+    });
   }
 
   public static init(hitBox: PlayableHitBox) {
@@ -31,10 +37,20 @@ export default class Sword {
     return sword;
   }
 
+  //TODO: addEnemy should not be a property of sword
   public addEnemy(...enemy: EnemyHitBox[]) {
     const enemyBodies = enemy.map((e) => e.body);
     this.enmeies.push(...enemy);
     this.detector.bodies.push(...enemyBodies);
+  }
+
+  //TODO: removeEnemy should not be a property of sword
+  public removeEnemy(enemy: EnemyHitBox) {
+    const index = this.enmeies.indexOf(enemy);
+    this.enmeies.splice(index, 1);
+    const enemyBody = enemy.body;
+    const enemyIndex = this.detector.bodies.indexOf(enemyBody);
+    this.detector.bodies.splice(enemyIndex, 1);
   }
 
   private initSwingBody(
@@ -58,8 +74,10 @@ export default class Sword {
   private collisionDetecor() {
     let id: number;
     let hitCounter: number;
-    Events.on(PhysicEnv.Engine, "collisionStart", (event) => {
+
+    Events.on(PhysicEnv.Engine, "collisionStart", () => {
       const collisions = Detector.collisions(this.detector);
+
       collisions.forEach((collision) => {
         if (
           collision.bodyA.label === "swingSword" ||
@@ -72,17 +90,25 @@ export default class Sword {
           if (hitCounter >= 5) {
             Body.setVelocity(enemyBody, { x: 0, y: 0 });
           }
+
           Body.setVelocity(enemyBody, { x: 1 * this.swingDirection, y: -3 });
           hitCounter++;
+
           if (id) {
             clearTimeout(id);
           }
-          this.enmeies.forEach((e) => {
-            if (e.body === enemyBody) {
-              e.setHit();
+
+          this.enmeies.forEach((enemy) => {
+            if (enemy.body === enemyBody) {
+              enemy.setHit();
               id = window.setTimeout(() => {
-                e.stop();
+                enemy.stop();
               }, 500);
+              if (enemy.health <= 0) {
+                enemy.setDeaDHit();
+                this.removeEnemy(enemy);
+                dispatchEvent(this.killEvent);
+              }
             }
           });
         }

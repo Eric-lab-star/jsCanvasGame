@@ -22,6 +22,7 @@ export default class MatterTest {
   private world: World;
 
   public constructor() {
+    new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.world = new World();
     this.crab = new Character(crabImg, "craby");
     this.shark = new Character(sharkImg, "shark");
@@ -54,11 +55,11 @@ export default class MatterTest {
   public async run() {
     await this.preload();
 
-    new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.gen();
     this.render();
     this.hitBox();
     const ui = new UI();
+    ui.killCountListener();
 
     await ui.drawGreenBoard();
     await ui.drawMessage("diamonds", { x: 40, y: 50 });

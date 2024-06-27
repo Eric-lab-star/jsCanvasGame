@@ -46,11 +46,12 @@ enum Letter {
 }
 
 export class UI {
-  private letterSpriteWitdh: number = 32;
+  private letterSpriteWidth: number = 32;
   private letterSpriteHeight: number = 32;
   private images: ImageBitmap[] = [];
   private canvasEnvs: CanvasEnv[] = [];
   private zIndex: number = 100;
+  private killCount: number = 0;
 
   constructor() {
     this.collectDiamondEvent();
@@ -68,20 +69,47 @@ export class UI {
   }
 
   private collectDiamondEvent() {
-    let prevCanvas: CanvasEnv;
-    prevCanvas = new CanvasEnv(
+    const canvas = new CanvasEnv(
       GameEnv.GAME_WIDTH,
       GameEnv.GAME_HEIGHT,
       this.zIndex,
     );
-    this.canvasEnvs.push(prevCanvas);
-    addEventListener("collectDiamond", () => {
-      this.showCollectedDiamonds(
-        prevCanvas.getCtx(),
+    this.canvasEnvs.push(canvas);
+    addEventListener("collectDiamond", async () => {
+      await this.showCollectedDiamonds(
+        canvas.getCtx(),
         { x: 40, y: 50 },
         "diamonds",
       );
     });
+  }
+
+  public killCountListener() {
+    const canvas = new CanvasEnv(
+      GameEnv.GAME_WIDTH,
+      GameEnv.GAME_HEIGHT,
+      this.zIndex,
+    );
+    const ctx = canvas.getCtx();
+    this.canvasEnvs.push(canvas);
+    addEventListener("killCount", async () => {
+      this.killCount++;
+      await this.killCounter(ctx, {
+        x: 40,
+        y: 100,
+      });
+    });
+  }
+
+  public async killCounter(
+    ctx: CanvasRenderingContext2D,
+    pos: { x: number; y: number },
+  ) {
+    if (this.images.length <= 0) {
+      this.images = await this.parseImageAtlas();
+    }
+    ctx.reset();
+    this.paintNumber(this.killCount, ctx, pos, "kill");
   }
 
   public async drawGreenBoard() {
@@ -109,7 +137,7 @@ export class UI {
     for (let i = 0; i < message.length; i++) {
       ctx.drawImage(
         this.images[Letter[message[i].toUpperCase() as keyof typeof Letter]],
-        pos.x + this.letterSpriteWitdh * i,
+        pos.x + this.letterSpriteWidth * i,
         pos.y,
       );
     }
@@ -124,9 +152,9 @@ export class UI {
         for (let i = 0; i < 36; i++) {
           const imageBitMap = await createImageBitmap(
             image,
-            this.letterSpriteWitdh * i,
+            this.letterSpriteWidth * i,
             0,
-            this.letterSpriteWitdh,
+            this.letterSpriteWidth,
             this.letterSpriteHeight,
           );
           imageBitMaps.push(imageBitMap);
@@ -147,10 +175,19 @@ export class UI {
     }
     ctx.reset();
     const count = BlueDiamond.collectedDiamonds;
+    this.paintNumber(count, ctx, pos, msg);
+  }
+
+  private paintNumber(
+    count: number,
+    ctx: CanvasRenderingContext2D,
+    pos: { x: number; y: number },
+    msg: string = "",
+  ) {
     if (count <= 9) {
       ctx.drawImage(
         this.images[count + 26],
-        pos.x + this.letterSpriteWitdh * msg.length + 10,
+        pos.x + this.letterSpriteWidth * (msg.length + 1),
         pos.y,
       );
       return;
@@ -160,15 +197,15 @@ export class UI {
       const secondDigit = count % 10;
       ctx.drawImage(
         this.images[firstDigit + 26],
-        pos.x + this.letterSpriteWitdh * msg.length + 10,
+        pos.x + this.letterSpriteWidth * msg.length + 10,
         pos.y,
       );
       ctx.drawImage(
         this.images[secondDigit + 26],
         pos.x +
-          this.letterSpriteWitdh * msg.length +
+          this.letterSpriteWidth * msg.length +
           10 +
-          this.letterSpriteWitdh,
+          this.letterSpriteWidth,
         pos.y,
       );
       return;

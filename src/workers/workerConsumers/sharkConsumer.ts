@@ -5,9 +5,7 @@ import { moduloGenerator } from "../../utilz/helper";
 import CharacterConsumer from "./characterConsumer";
 
 export default class SharkConsumer extends CharacterConsumer {
-  /**
-   *
-   */
+  private renderId = 0;
 
   constructor(
     offscreen: OffscreenCanvas,
@@ -20,6 +18,16 @@ export default class SharkConsumer extends CharacterConsumer {
     pos: { x: number; y: number },
     signalType: string,
   ): void {
+    if (signalType === "deadHit") {
+      this.animationState = "deadHit";
+      setTimeout(() => {
+        this.ctx.reset();
+        cancelAnimationFrame(this.renderId);
+        this.animationPort.postMessage({ type: "deadHit" });
+        this.animationPort.close();
+      }, 400);
+      return;
+    }
     if (signalType === "stop") {
       this.animationState = "idle";
       return;

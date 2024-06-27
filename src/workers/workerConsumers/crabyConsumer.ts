@@ -5,18 +5,30 @@ import { moduloGenerator } from "../../utilz/helper";
 import CharacterConsumer from "./characterConsumer";
 
 export default class CrabyConsumer extends CharacterConsumer {
+  private renderId = 0;
   constructor(
     offscreen: OffscreenCanvas,
     spriteImage: ImageBitmap,
-    posPort: MessagePort,
+    animationPort: MessagePort,
   ) {
-    super(offscreen, spriteImage, posPort);
+    super(offscreen, spriteImage, animationPort);
   }
 
   protected setAnimationState(
     pos: { x: number; y: number },
     signalType: string,
   ): void {
+    if (signalType === "deadHit") {
+      this.animationState = "deadHit";
+      setTimeout(() => {
+        this.ctx.reset();
+        cancelAnimationFrame(this.renderId);
+        this.animationPort.postMessage({ type: "deadHit" });
+        this.animationPort.close();
+      }, 400);
+      return;
+    }
+
     if (signalType === "stop") {
       this.animationState = "idle";
       return;
@@ -87,7 +99,7 @@ export default class CrabyConsumer extends CharacterConsumer {
         CrabyAnimationManager.imgHeight,
       );
     }
-    requestAnimationFrame(() => this.render());
+    this.renderId = requestAnimationFrame(() => this.render());
   }
 
   public async setAnimation(): Promise<void> {

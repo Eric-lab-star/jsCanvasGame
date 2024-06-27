@@ -20,12 +20,12 @@ export default abstract class CharacterConsumer {
   constructor(
     offscreen: OffscreenCanvas,
     spriteImage: ImageBitmap,
-    posPort: MessagePort,
+    animationPort: MessagePort,
   ) {
     this.animationState = "idle";
     this.offscreen = offscreen;
     this.spriteImage = spriteImage;
-    this.animationPort = posPort;
+    this.animationPort = animationPort;
     this.ctx = this.offscreen.getContext("2d")!;
     this.updateAnimation();
   }

@@ -39,7 +39,6 @@ async function sharkConsumer(data: MessageDataType) {
     data.spriteImage,
     data.animationPort,
   );
-
   await characterConsumer.setAnimation();
   characterConsumer.render();
 }

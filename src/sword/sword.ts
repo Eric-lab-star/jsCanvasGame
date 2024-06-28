@@ -11,6 +11,7 @@ export default class Sword {
   public killCount: number = 0;
   private killEvent: Event;
   private playableHitBox: PlayableHitBox;
+
   constructor(
     playableHitBox: PlayableHitBox,
     collisionGroup: number,

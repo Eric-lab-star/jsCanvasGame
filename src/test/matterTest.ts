@@ -13,12 +13,14 @@ import Character from "../character/Character";
 import PlayableHitBox from "../character/PlayableHitBox";
 import { UI } from "../UI/ui";
 import { EnemyHitBox } from "../character/EnemyHitBox";
+import HealthBar from "../UI/healthBar";
 
 export default class MatterTest {
   private captain: Character;
   private crab: Character;
   private shark: Character;
   private world: World;
+  private healthBar: HealthBar;
 
   public constructor() {
     new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
@@ -26,10 +28,12 @@ export default class MatterTest {
     this.crab = new Character(crabImg, "craby");
     this.shark = new Character(sharkImg, "shark");
     this.captain = new Character(captainImg, "captain");
+    this.healthBar = new HealthBar();
   }
 
   private async preload() {
     await World.assetPreloader();
+    await this.healthBar.loadImage();
   }
 
   private gen() {
@@ -49,14 +53,15 @@ export default class MatterTest {
     this.crab.renderOffscreen();
     this.shark.renderOffscreen();
     this.captain.renderOffscreen();
+    this.healthBar.render();
   }
 
   public async run() {
     await this.preload();
 
     this.gen();
-    this.render();
     this.hitBox();
+    this.render();
     const ui = new UI();
     ui.killCountListener();
 

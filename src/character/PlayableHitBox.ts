@@ -13,6 +13,7 @@ import HitBox from "./HitBox";
 import Sword from "../sword/sword";
 import BlueDiamond from "../gems/BlueDiamond";
 import { EnemyHitBox } from "./EnemyHitBox";
+import HealthBar from "../UI/healthBar";
 
 export default class PlayableHitBox extends HitBox {
   private platform3Detector: Detector;
@@ -53,7 +54,6 @@ export default class PlayableHitBox extends HitBox {
 
   public static withKeyBoardInput() {
     const hitBox = new PlayableHitBox();
-
     BodyKeyMaps.bodyHandler(hitBox);
     return hitBox;
   }

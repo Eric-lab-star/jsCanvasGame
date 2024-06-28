@@ -4,11 +4,10 @@ import CanvasEnv from "./CanvasEnv";
 export default class PhysicEnv {
   public static Engine: Engine = Engine.create();
   public static World: World = PhysicEnv.Engine.world;
+  public static Runner: Runner = Runner.create();
   public canvasEnv: CanvasEnv;
   public Render: Render;
-  /**
-   *
-   */
+  /** */
   constructor(width: number, height: number) {
     this.canvasEnv = new CanvasEnv(width, height);
     const ctx = this.canvasEnv.canvas.getContext("2d")!;
@@ -30,7 +29,6 @@ export default class PhysicEnv {
 
   private run() {
     Matter.Render.run(this.Render);
-    const runner = Runner.create();
-    Matter.Runner.run(runner, PhysicEnv.Engine);
+    Matter.Runner.run(PhysicEnv.Runner, PhysicEnv.Engine);
   }
 }

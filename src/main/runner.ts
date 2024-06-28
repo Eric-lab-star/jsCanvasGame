@@ -12,7 +12,7 @@ export function renderTestRunner() {
   renderTest.start();
 }
 
-export function matterTestRunner() {
+export async function matterTestRunner() {
   const matterTest = new MatterTest();
-  matterTest.run();
+  await matterTest.run();
 }

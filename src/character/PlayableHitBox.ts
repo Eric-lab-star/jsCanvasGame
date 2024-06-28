@@ -75,7 +75,7 @@ export class PlayableHitBox extends HitBox {
   }
 
   public platform3Hit() {
-    Events.on(PhysicEnv.Engine, "collisionStart", async (e) => {
+    Events.on(PhysicEnv.Engine, "collisionStart", async () => {
       const collision = Detector.collisions(this.platform3Detector);
       if (collision.length > 0) {
         const pos = floatingPlatform3.position;

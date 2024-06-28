@@ -1,25 +1,29 @@
 import { Body, Composite, Constraint, Detector, Events } from "matter-js";
 import PhysicEnv from "../env/PhysicEnv";
 import { swingSword } from "../utilz/matterComponents";
-import { PlayableHitBox } from "../character/PlayableHitBox";
-import { EnemyHitBox } from "../character/EnemyHitBox";
+import PlayableHitBox from "../character/PlayableHitBox";
 
 export default class Sword {
   public swingBody: Body;
   private width: number = 50;
-  private detector: Detector;
-  private enmeies: EnemyHitBox[] = [];
+  private swordHitDetector: Detector;
   private swingDirection: number = 1;
   public killCount: number = 0;
   private killEvent: Event;
+  private playableHitBox: PlayableHitBox;
   constructor(
-    hitBox: Body,
+    playableHitBox: PlayableHitBox,
     collisionGroup: number,
     pos: { x: number; y: number },
   ) {
-    this.swingBody = this.initSwingBody(collisionGroup, pos, hitBox);
-    this.detector = Detector.create({
-      bodies: [this.swingBody],
+    this.playableHitBox = playableHitBox;
+    this.swingBody = this.initSwingBody(
+      collisionGroup,
+      pos,
+      playableHitBox.body,
+    );
+    this.swordHitDetector = Detector.create({
+      bodies: [this.swingBody, ...playableHitBox.enemyDetector.bodies],
     });
     this.collisionDetecor();
     this.killEvent = new Event("killCount", {
@@ -28,29 +32,12 @@ export default class Sword {
     });
   }
 
-  public static init(hitBox: PlayableHitBox) {
+  public static init(playableHitBox: PlayableHitBox) {
     const group = Body.nextGroup(true);
-    const pos = hitBox.body.position;
-    hitBox.body.collisionFilter.group = group;
-    const sword = new Sword(hitBox.body, group, pos);
-    hitBox.sword = sword;
-    return sword;
-  }
-
-  //TODO: addEnemy should not be a property of sword
-  public addEnemy(...enemy: EnemyHitBox[]) {
-    const enemyBodies = enemy.map((e) => e.body);
-    this.enmeies.push(...enemy);
-    this.detector.bodies.push(...enemyBodies);
-  }
-
-  //TODO: removeEnemy should not be a property of sword
-  public removeEnemy(enemy: EnemyHitBox) {
-    const index = this.enmeies.indexOf(enemy);
-    this.enmeies.splice(index, 1);
-    const enemyBody = enemy.body;
-    const enemyIndex = this.detector.bodies.indexOf(enemyBody);
-    this.detector.bodies.splice(enemyIndex, 1);
+    const pos = playableHitBox.body.position;
+    playableHitBox.body.collisionFilter.group = group;
+    const sword = new Sword(playableHitBox, group, pos);
+    playableHitBox.sword = sword;
   }
 
   private initSwingBody(
@@ -76,17 +63,16 @@ export default class Sword {
     let hitCounter: number;
 
     Events.on(PhysicEnv.Engine, "collisionStart", () => {
-      const collisions = Detector.collisions(this.detector);
+      const collisions = Detector.collisions(this.swordHitDetector);
 
       collisions.forEach((collision) => {
         if (
           collision.bodyA.label === "swingSword" ||
           collision.bodyB.label === "swingSword"
         ) {
-          const enemyBody =
-            collision.bodyA.label === "swingSword"
-              ? collision.bodyB
-              : collision.bodyA;
+          const enemyBody = collision.bodyA.label === "swingSword"
+            ? collision.bodyB
+            : collision.bodyA;
           if (hitCounter >= 5) {
             Body.setVelocity(enemyBody, { x: 0, y: 0 });
           }
@@ -98,7 +84,8 @@ export default class Sword {
             clearTimeout(id);
           }
 
-          this.enmeies.forEach((enemy) => {
+          const enemies = this.playableHitBox.getEnemies();
+          enemies.forEach((enemy) => {
             if (enemy.body === enemyBody) {
               enemy.setHit();
               id = window.setTimeout(() => {
@@ -106,7 +93,11 @@ export default class Sword {
               }, 500);
               if (enemy.health <= 0) {
                 enemy.setDeaDHit();
-                this.removeEnemy(enemy);
+                this.playableHitBox.removeEnemyDetection(enemy);
+                const enemyIndex = this.swordHitDetector.bodies
+                  .indexOf(enemy.body);
+                this.swordHitDetector.bodies.splice(enemyIndex, 1);
+
                 dispatchEvent(this.killEvent);
               }
             }

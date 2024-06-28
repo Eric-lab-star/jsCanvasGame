@@ -12,14 +12,18 @@ import PhysicEnv from "../env/PhysicEnv";
 import HitBox from "./HitBox";
 import Sword from "../sword/sword";
 import BlueDiamond from "../gems/BlueDiamond";
+import { EnemyHitBox } from "./EnemyHitBox";
 
-export class PlayableHitBox extends HitBox {
+export default class PlayableHitBox extends HitBox {
   private platform3Detector: Detector;
   private onFloorDetector: Detector;
+  public enemyDetector: Detector;
   private hitDiamondDetector: Detector;
   public singnal: MessageChannel;
   public sword: Sword | undefined;
   public body: Body;
+  private enemies: EnemyHitBox[] = [];
+  private xDirection: number = 1;
 
   constructor() {
     super();
@@ -34,6 +38,10 @@ export class PlayableHitBox extends HitBox {
     this.hitDiamondDetector = Detector.create({
       bodies: [this.body],
     });
+    this.enemyDetector = Detector.create({
+      bodies: [this.body],
+    });
+    this.hurtOnEnemy();
   }
 
   protected initBody() {
@@ -45,6 +53,7 @@ export class PlayableHitBox extends HitBox {
 
   public static withKeyBoardInput() {
     const hitBox = new PlayableHitBox();
+
     BodyKeyMaps.bodyHandler(hitBox);
     return hitBox;
   }
@@ -95,7 +104,7 @@ export class PlayableHitBox extends HitBox {
   }
 
   public hitDiamond() {
-    Events.on(PhysicEnv.Engine, "collisionStart", (e) => {
+    Events.on(PhysicEnv.Engine, "collisionStart", () => {
       const collisions = Detector.collisions(this.hitDiamondDetector);
       collisions.forEach((col) => {
         if (col.bodyA.label === "hitBox" && col.bodyB.label === "blueDiamond") {
@@ -115,6 +124,46 @@ export class PlayableHitBox extends HitBox {
     });
   }
 
+  public hurtOnEnemy() {
+    Events.on(PhysicEnv.Engine, "collisionStart", () => {
+      const collisions = Detector.collisions(this.enemyDetector);
+      collisions.forEach((col) => {
+        if (
+          (col.bodyA.label === "hitBox" || col.bodyB.label === "hitBox") &&
+          (col.bodyA.label === "enemyHitBox" ||
+            col.bodyB.label === "enemyHitBox")
+        ) {
+          Body.setVelocity(this.body, {
+            x: this.body.speed * this.xDirection * -1,
+            y: -4,
+          });
+        }
+      });
+    });
+  }
+
+  public addEnemy(...enemy: EnemyHitBox[]) {
+    const enemyBodies = enemy.map((e) => e.body);
+    this.enemies.push(...enemy);
+    this.enemyDetector.bodies.push(...enemyBodies);
+  }
+
+  public removeEnemyDetection(enemy: EnemyHitBox) {
+    const index = this.enemies.indexOf(enemy);
+    this.enemies.splice(index, 1);
+    const enemyBody = enemy.body;
+    const enemyIndex = this.enemyDetector.bodies.indexOf(enemyBody);
+    this.enemyDetector.bodies.splice(enemyIndex, 1);
+  }
+
+  public getEnemies() {
+    return this.enemies;
+  }
+
+  public initSword() {
+    Sword.init(this);
+  }
+
   // detect if the body is on the floor
   // TODO:
   public onFloor() {
@@ -123,6 +172,7 @@ export class PlayableHitBox extends HitBox {
   }
 
   public moveXDirection(newV: Vector, direction: number) {
+    this.xDirection = direction;
     const downV = Vector.create(2 * direction, 0);
     newV = Vector.add(newV, downV);
     return newV;

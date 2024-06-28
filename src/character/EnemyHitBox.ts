@@ -31,7 +31,7 @@ export class EnemyHitBox extends HitBox {
         opacity: 1,
       },
       friction: 0.3,
-      label: "hitBox",
+      label: "enemyHitBox",
     });
     Body.setInertia(hitxBox, Infinity);
     Body.setSpeed(hitxBox, 1);

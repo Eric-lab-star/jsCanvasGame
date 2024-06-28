@@ -10,8 +10,7 @@ import PhysicEnv from "../env/PhysicEnv";
 import { getWorldEelement } from "../utilz/matterComponents";
 import World from "../levels/world";
 import Character from "../character/Character";
-import { PlayableHitBox } from "../character/PlayableHitBox";
-import Sword from "../sword/sword";
+import PlayableHitBox from "../character/PlayableHitBox";
 import { UI } from "../UI/ui";
 import { EnemyHitBox } from "../character/EnemyHitBox";
 
@@ -41,8 +40,8 @@ export default class MatterTest {
     const captainHitBox = PlayableHitBox.withCharacter(this.captain);
     const crab = EnemyHitBox.withNPC(this.crab, { x: 889, y: 561 });
     const shark = EnemyHitBox.withNPC(this.shark, { x: 300, y: 300 });
-    const sword = Sword.init(captainHitBox);
-    sword.addEnemy(crab, shark);
+    captainHitBox.addEnemy(crab, shark);
+    captainHitBox.initSword();
   }
 
   private render() {

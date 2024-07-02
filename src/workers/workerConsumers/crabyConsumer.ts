@@ -5,7 +5,6 @@ import { moduloGenerator } from "../../utilz/helper";
 import CharacterConsumer from "./characterConsumer";
 
 export default class CrabyConsumer extends CharacterConsumer {
-  private renderId: number | undefined;
   constructor(
     offscreen: OffscreenCanvas,
     spriteImage: ImageBitmap,
@@ -37,30 +36,33 @@ export default class CrabyConsumer extends CharacterConsumer {
     }
     if (signalType === "hit") {
       this.animationState = "hit";
+      setTimeout(() => {
+        this.animationState = "run";
+      }, 500);
       return;
     }
     if (signalType === "attack") {
       this.animationState = "attack";
       return;
     }
-
-    if (pos.x > this.bodyPosition.x + 1) {
+    if (pos.x > this.bodyPosition.x + 0.1) {
       this.animationState = "run";
       this.shouldFlip = false;
       return;
     }
-    if (pos.x < this.bodyPosition.x - 1) {
+
+    if (pos.x < this.bodyPosition.x - 0.1) {
       this.animationState = "run";
       this.shouldFlip = true;
       return;
     }
 
-    if (pos.y < this.bodyPosition.y - 2) {
+    if (pos.y < this.bodyPosition.y - 1) {
       this.animationState = "jump";
       return;
     }
 
-    if (pos.y > this.bodyPosition.y + 2) {
+    if (pos.y > this.bodyPosition.y + 1) {
       this.animationState = "fall";
       return;
     }

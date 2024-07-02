@@ -19,16 +19,15 @@ export default class PhysicEnv {
         background: "transparent",
         height: this.canvasEnv.canvas.height,
         width: this.canvasEnv.canvas.width,
-        wireframes: true,
+        wireframes: false,
         showIds: false,
         showAngleIndicator: false,
       },
     });
-    this.run();
   }
 
-  private run() {
-    Matter.Render.run(this.Render);
+  public run() {
+    // Matter.Render.run(this.Render);
     Matter.Runner.run(PhysicEnv.Runner, PhysicEnv.Engine);
   }
 }

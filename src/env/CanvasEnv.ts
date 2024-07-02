@@ -8,7 +8,7 @@ export default class CanvasEnv {
     width: number,
     height: number,
     zindex?: number,
-    id: string = "canvas",
+    id: string = "canvas" + Math.random() * 1000,
   ) {
     this.id = id;
     this.canvas = document.createElement("canvas");
@@ -28,10 +28,10 @@ export default class CanvasEnv {
     this.canvas.style.position = "absolute";
     this.canvas.style.left = left + "px";
     this.canvas.style.top = height + "px";
-    this.canvas.style.zIndex =
-      this.customZindex === undefined
-        ? CanvasEnv.zindex.toString()
-        : this.customZindex.toString();
+    this.canvas.id = this.id;
+    this.canvas.style.zIndex = this.customZindex === undefined
+      ? CanvasEnv.zindex.toString()
+      : this.customZindex.toString();
     CanvasEnv.zindex++;
   }
   public getCtx() {
@@ -41,11 +41,13 @@ export default class CanvasEnv {
     }
     return ctx;
   }
-  public removeCanvas() {
-    this.canvas.remove();
-  }
+
   public toggleCanvas() {
-    this.canvas.style.display =
-      this.canvas.style.display === "none" ? "block" : "none";
+    this.canvas.style.display = this.canvas.style.display === "none"
+      ? "block"
+      : "none";
+  }
+  public remove() {
+    document.body.removeChild(this.canvas);
   }
 }

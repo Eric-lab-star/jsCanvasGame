@@ -10,10 +10,14 @@ export default class HealthBar {
   private width: number = 96;
   private maxHealth: number = 78;
   private deadEvent: Event;
-  // private height: number = 17;
 
   constructor() {
-    this.canvasEnv = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT, 14);
+    this.canvasEnv = new CanvasEnv(
+      GameEnv.GAME_WIDTH,
+      GameEnv.GAME_HEIGHT,
+      14,
+      "healthBar",
+    );
     this.hurtEventListener();
     this.deadEvent = new Event("dead");
   }
@@ -60,13 +64,18 @@ export default class HealthBar {
   }
 
   public hurtEventListener() {
-    addEventListener("hurt", () => {
-      this.maxHealth -= 10;
-      if (this.maxHealth <= 0) {
-        this.maxHealth = 0;
-        dispatchEvent(this.deadEvent);
-        document.body.removeChild(this.canvasEnv.canvas);
+    addEventListener("hurt", this.hurtHandler.bind(this));
+  }
+
+  public hurtHandler() {
+    this.maxHealth -= 3;
+    if (this.maxHealth <= 0) {
+      removeEventListener("hurt", this.hurtHandler.bind(this));
+      if (this.canvasEnv.canvas) {
+        this.canvasEnv.toggleCanvas();
       }
-    });
+      this.maxHealth = 0;
+      dispatchEvent(this.deadEvent);
+    }
   }
 }

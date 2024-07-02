@@ -1,15 +1,13 @@
 import Background from "../res/world/64px/Background.png";
-import BigCloud from "../res/world/64px/BigCloud.png";
 import BackTree from "../res/world/64px/BackTree.png";
 import FrontTree from "../res/world/64px/FrontTree.png";
 import SmallCloud from "../res/world/64px/SmallCloud.png";
 import Terrain from "../res/world/64px/Terrain.png";
 import CanvasEnv from "../env/CanvasEnv";
 import GameEnv from "../env/GameEnv";
-import Animation from "../animation/animation";
-import { moduloGenerator } from "../utilz/helper";
 
 export default class World {
+  private canvasList: CanvasEnv[] = [];
   public constructor() {}
   public static imageAssets = [
     Background,
@@ -18,6 +16,7 @@ export default class World {
     FrontTree,
     Terrain,
   ];
+
   public static HTMLImageElements = new Map([
     [Background, new Image()],
     [SmallCloud, new Image()],
@@ -41,35 +40,19 @@ export default class World {
     }
     await Promise.all(promises);
   }
-  private animationSet: ImageBitmap[][] | undefined;
-
-  // TODO: optimize image size
-  private bigCloudLoader() {
-    const img = new Image();
-    img.src = BigCloud;
-    img.onload = async () => {
-      const bitmap = await createImageBitmap(img);
-      const animation = new Animation(bitmap, [42], 1280, 800);
-      const animationSet = await Promise.all(animation.loadAnimationSets());
-      this.animationSet = animationSet;
-      const canvas = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT, 1);
-      const ctx = canvas.getCtx();
-      this.bigCloudAnimationRender(ctx);
-    };
-  }
-
-  private bigCloudAnimationRender(ctx: CanvasRenderingContext2D) {
-    const modulo = moduloGenerator(GameEnv.runAnimationTick(), 42);
-    ctx.reset();
-    ctx.drawImage(this.animationSet![0][modulo], 0, 0);
-    requestAnimationFrame(() => this.bigCloudAnimationRender(ctx));
-  }
 
   public renderImages() {
     for (const image of World.HTMLImageElements.values()) {
       const canvas = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
+      this.canvasList.push(canvas);
       const ctx = canvas.getCtx();
       ctx.drawImage(image, 0, 0);
     }
+  }
+
+  public gameOver() {
+    this.canvasList.forEach((canvas) => {
+      canvas.remove();
+    });
   }
 }

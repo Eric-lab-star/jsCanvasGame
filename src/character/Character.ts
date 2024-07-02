@@ -1,5 +1,8 @@
 import GameEnv from "../env/GameEnv";
 import CanvasEnv from "../env/CanvasEnv";
+import GameOver from "../UI/gameOver";
+import Matter, { Events } from "matter-js";
+import PhysicEnv from "../env/PhysicEnv";
 
 /**
  * @class Character
@@ -10,7 +13,6 @@ export default class Character {
   private messageChannel: MessageChannel;
   protected label: string;
   public worker: Worker;
-  public animationId: number | undefined;
   private canvasEnv: CanvasEnv | undefined;
 
   constructor(imgsrc: string, label: string) {
@@ -23,39 +25,59 @@ export default class Character {
         type: "module",
       },
     );
-    this.deadHit();
+    this.dead();
+    this.gameOver();
   }
 
   private signalType: string = "";
 
   public updateAnimation(
-    pos: { x: number; y: number },
+    body: Matter.Body,
     singnalReceiver: MessagePort,
   ) {
     singnalReceiver.onmessage = (e: MessageEvent<{ type: string }>) => {
       this.signalType = e.data.type;
     };
 
-    this.messageChannel.port1.postMessage({ pos, type: this.signalType });
-    this.animationId = requestAnimationFrame(() =>
-      this.updateAnimation(pos, singnalReceiver)
-    );
+    Events.on(PhysicEnv.Runner, "afterUpdate", () => {
+      let pos = body.position;
+      this.messageChannel.port1.postMessage({ pos, type: this.signalType });
+    });
   }
 
-  private deadHit() {
+  public gameOver() {
+    const gameOver = new GameOver();
     this.messageChannel.port1.onmessage = (e) => {
+      if (e.data.type === "gameOver") {
+        if (this.canvasEnv) {
+          this.stopRender();
+          document.body.removeChild(this.canvasEnv.canvas);
+          gameOver.event();
+        }
+      }
+    };
+  }
+
+  public terminate() {
+    if (this.canvasEnv) {
       this.stopRender();
+      document.body.removeChild(this.canvasEnv.canvas);
+    }
+  }
+
+  private dead() {
+    this.messageChannel.port1.onmessage = (e) => {
       if (e.data.type === "deadHit") {
         if (this.canvasEnv) {
+          this.stopRender();
           document.body.removeChild(this.canvasEnv.canvas);
         }
       }
     };
   }
 
-  public stopRender() {
-    if (this.animationId && this.canvasEnv) {
-      cancelAnimationFrame(this.animationId);
+  private stopRender() {
+    if (this.canvasEnv != undefined) {
       setTimeout(() => {
         this.worker.terminate();
       }, 1000);

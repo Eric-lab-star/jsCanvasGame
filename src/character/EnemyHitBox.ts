@@ -1,10 +1,8 @@
 import { Bodies, Body, Composite, Detector, Vector } from "matter-js";
 import Character from "./Character";
-
 import { getWorldEelement } from "../utilz/matterComponents";
 import PhysicEnv from "../env/PhysicEnv";
 import HitBox from "./HitBox";
-import { randomColor } from "../utilz/helper";
 
 export class EnemyHitBox extends HitBox {
   private onFloorDetector: Detector;
@@ -13,6 +11,7 @@ export class EnemyHitBox extends HitBox {
   private pos: { x: number; y: number };
   public health: number = 100;
   public character: Character | undefined;
+  public movingId: number | undefined;
 
   constructor(pos: { x: number; y: number }) {
     super();
@@ -27,7 +26,7 @@ export class EnemyHitBox extends HitBox {
   private initBody() {
     const hitxBox = Bodies.rectangle(this.pos.x, this.pos.y, 40, 45, {
       render: {
-        fillStyle: randomColor(),
+        fillStyle: "transparent",
         opacity: 1,
       },
       friction: 0.3,
@@ -43,10 +42,9 @@ export class EnemyHitBox extends HitBox {
     initpos: { x: number; y: number },
   ) {
     const hitBox = new EnemyHitBox(initpos);
-    const pos = hitBox.body.position;
     Composite.add(PhysicEnv.World, [hitBox.body]);
     hitBox.character = character;
-    character.updateAnimation(pos, hitBox.singnal.port2);
+    character.updateAnimation(hitBox.body, hitBox.singnal.port2);
     return hitBox;
   }
 
@@ -90,13 +88,18 @@ export class EnemyHitBox extends HitBox {
   public setAttack() {
     this.singnal.port1.postMessage({ type: "attack" });
   }
+
   public setDeaDHit() {
     this.singnal.port1.postMessage({ type: "deadHit" });
+    if (this.movingId) {
+      cancelAnimationFrame(this.movingId);
+    }
     Composite.remove(PhysicEnv.World, this.body);
     return;
   }
+
   public setHit() {
-    this.health -= 100;
+    this.health -= 10;
     this.singnal.port1.postMessage({ type: "hit" });
   }
 

@@ -12,6 +12,9 @@ import HitBox from "./HitBox";
 import Sword from "../sword/sword";
 import BlueDiamond from "../gems/BlueDiamond";
 import { EnemyHitBox } from "./EnemyHitBox";
+//
+//
+//
 export default class PlayableHitBox extends HitBox {
   private platform3Detector: Detector;
   private onFloorDetector: Detector;
@@ -62,9 +65,8 @@ export default class PlayableHitBox extends HitBox {
     const hitBox = PlayableHitBox.withKeyBoardInput();
     hitBox.platform3Hit();
     hitBox.hitDiamond();
-    const pos = hitBox.body.position;
     Composite.add(PhysicEnv.World, [hitBox.body]);
-    character.updateAnimation(pos, hitBox.singnal.port2);
+    character.updateAnimation(hitBox.body, hitBox.singnal.port2);
     hitBox.deadEventListener();
     return hitBox;
   }
@@ -136,14 +138,14 @@ export default class PlayableHitBox extends HitBox {
           col.bodyB.label === "enemyHitBox")
       ) {
         Body.setVelocity(this.body, {
-          x: (this.body.speed + 4) * this.xDirection * -1,
+          x: (this.body.speed + 10) * this.xDirection * -1,
           y: -4,
         });
+
         this.setHurt();
         dispatchEvent(this.hurtEvent);
       }
     });
-
     this.hurtID = requestAnimationFrame(() => this.hurtOnEnemy());
   }
 
@@ -228,9 +230,10 @@ export default class PlayableHitBox extends HitBox {
 
   public deadEventListener() {
     addEventListener("dead", () => {
-      this.singnal.port1.postMessage({ type: "deadHit" });
+      Detector.clear(this.enemyDetector);
       if (this.hurtID) {
-        cancelAnimationFrame(this.hurtID!);
+        cancelAnimationFrame(this.hurtID);
+        this.singnal.port1.postMessage({ type: "deadHit" });
         Composite.remove(PhysicEnv.World, this.body);
       }
     });

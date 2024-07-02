@@ -31,6 +31,9 @@ export default class Sword {
       bubbles: true,
       cancelable: true,
     });
+    addEventListener("gameOver", () => {
+      Composite.remove(PhysicEnv.World, this.swingBody);
+    });
   }
 
   public static init(playableHitBox: PlayableHitBox) {
@@ -89,9 +92,6 @@ export default class Sword {
           enemies.forEach((enemy) => {
             if (enemy.body === enemyBody) {
               enemy.setHit();
-              id = window.setTimeout(() => {
-                enemy.stop();
-              }, 500);
               if (enemy.health <= 0) {
                 enemy.setDeaDHit();
                 this.playableHitBox.removeEnemyDetection(enemy);

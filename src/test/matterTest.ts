@@ -4,7 +4,6 @@ import captainImg from "../res/world/64px/captain.png";
 import sharkImg from "../res/world/64px/shark.png";
 
 ///
-import { Composite } from "matter-js";
 import GameEnv from "../env/GameEnv";
 import PhysicEnv from "../env/PhysicEnv";
 import { getWorldEelement } from "../utilz/matterComponents";
@@ -12,8 +11,10 @@ import World from "../levels/world";
 import Character from "../character/Character";
 import PlayableHitBox from "../character/PlayableHitBox";
 import { UI } from "../UI/ui";
-import { EnemyHitBox } from "../character/EnemyHitBox";
 import HealthBar from "../UI/healthBar";
+import { Composite } from "matter-js";
+import SharkHitBox from "../character/SharkHitBox";
+import CrabyHitBox from "../character/CrabyHitBox";
 
 export default class MatterTest {
   private captain: Character;
@@ -21,8 +22,10 @@ export default class MatterTest {
   private shark: Character;
   private world: World;
   private healthBar: HealthBar;
+  private physic: PhysicEnv;
 
   public constructor() {
+    this.physic = new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.world = new World();
     this.crab = new Character(crabImg, "craby");
     this.shark = new Character(sharkImg, "shark");
@@ -41,14 +44,23 @@ export default class MatterTest {
 
   private hitBox() {
     const captainHitBox = PlayableHitBox.withCharacter(this.captain);
-    const crab = EnemyHitBox.withNPC(this.crab, { x: 889, y: 561 });
-    const shark = EnemyHitBox.withNPC(this.shark, { x: 300, y: 300 });
-    captainHitBox.addEnemy(crab, shark);
+    const crab = new CrabyHitBox(this.crab, {
+      x: 890,
+      y: 561,
+    });
+
+    const shark = new SharkHitBox(this.shark, {
+      x: 300,
+      y: 300,
+    });
+
+    crab.moveCrab();
+    shark.moveShark();
+    captainHitBox.addEnemy(crab.hitBox, shark.hitBox);
     captainHitBox.initSword();
   }
 
   private render() {
-    new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.world.renderImages();
     this.crab.renderOffscreen();
     this.shark.renderOffscreen();
@@ -58,6 +70,7 @@ export default class MatterTest {
 
   public async run() {
     await this.preload();
+    this.physic.run();
     this.hitBox();
     this.render();
     this.gen();

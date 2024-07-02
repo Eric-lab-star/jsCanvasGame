@@ -5,8 +5,6 @@ import { moduloGenerator } from "../../utilz/helper";
 import CharacterConsumer from "./characterConsumer";
 
 export default class SharkConsumer extends CharacterConsumer {
-  private renderId: number | undefined;
-
   constructor(
     offscreen: OffscreenCanvas,
     spriteImage: ImageBitmap,
@@ -30,12 +28,16 @@ export default class SharkConsumer extends CharacterConsumer {
       }, 400);
       return;
     }
+
     if (signalType === "stop") {
       this.animationState = "idle";
       return;
     }
     if (signalType === "hit") {
       this.animationState = "hit";
+      setTimeout(() => {
+        this.animationState = "idle";
+      }, 500);
       return;
     }
     if (signalType === "attack") {

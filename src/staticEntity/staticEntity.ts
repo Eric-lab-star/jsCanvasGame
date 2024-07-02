@@ -72,6 +72,6 @@ export default class StaticEntity {
         }, 1000);
       }
     };
-    this.canvasEnv.removeCanvas();
+    this.canvasEnv.remove();
   }
 }

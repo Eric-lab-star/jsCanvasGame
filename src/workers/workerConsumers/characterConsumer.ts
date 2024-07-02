@@ -3,7 +3,7 @@ import GameEnv from "../../env/GameEnv";
 /**
  * @class CharacterConsumer
  * @description This class is responsible for consuming the character's position and rendering the character on the screen. This class is used by the character class
- * */
+ */
 
 export default abstract class CharacterConsumer {
   protected animationState: string;
@@ -15,6 +15,7 @@ export default abstract class CharacterConsumer {
     x: GameEnv.GAME_WIDTH / 2,
     y: GameEnv.GAME_HEIGHT / 2,
   };
+  protected renderId: number | undefined;
   protected shouldFlip: boolean = false;
 
   constructor(
@@ -26,6 +27,7 @@ export default abstract class CharacterConsumer {
     this.offscreen = offscreen;
     this.spriteImage = spriteImage;
     this.animationPort = animationPort;
+
     this.ctx = this.offscreen.getContext("2d")!;
     this.updateAnimation();
   }
@@ -33,7 +35,7 @@ export default abstract class CharacterConsumer {
   /**
    * @method updateAnimation
    * @description This method listens to the position of the character and updates the position of the character on the screen.
-   * */
+   */
 
   protected updateAnimation(): void {
     this.animationPort.onmessage = (e: MessageEvent<updateMsg>) => {

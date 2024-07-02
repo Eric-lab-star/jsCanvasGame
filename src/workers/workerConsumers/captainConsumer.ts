@@ -5,6 +5,7 @@ import { moduloGenerator } from "../../utilz/helper";
 import CharacterConsumer from "./characterConsumer";
 
 export default class CaptainConsumer extends CharacterConsumer {
+  private renderId: number | undefined;
   constructor(
     offscreen: OffscreenCanvas,
     spriteImage: ImageBitmap,
@@ -17,6 +18,22 @@ export default class CaptainConsumer extends CharacterConsumer {
     pos: { x: number; y: number },
     signalType: string,
   ): void {
+    if (signalType === "deadHit") {
+      this.animationState = "deadHit";
+      setTimeout(() => {
+        this.ctx.reset();
+        if (this.renderId) {
+          cancelAnimationFrame(this.renderId);
+        }
+        this.animationPort.postMessage({ type: "deadHit" });
+        this.animationPort.close();
+      }, 400);
+      return;
+    }
+    if (signalType === "hurt") {
+      this.animationState = "hit";
+      return;
+    }
     if (signalType === "attack") {
       this.animationState = "attack2S";
       return;
@@ -78,7 +95,7 @@ export default class CaptainConsumer extends CharacterConsumer {
         CaptainAnimationManager.imgHeight,
       );
     }
-    requestAnimationFrame(() => this.render());
+    this.renderId = requestAnimationFrame(() => this.render());
   }
 
   public async setAnimation(): Promise<void> {

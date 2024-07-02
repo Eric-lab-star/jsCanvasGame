@@ -1,5 +1,8 @@
 # TODO List
 
-- attack and Hit
 - Player Info
-- kill score
+
+# Problems
+
+2. strong couplings
+3. Healthbar is loading too quickly

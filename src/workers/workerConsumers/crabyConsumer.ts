@@ -5,7 +5,7 @@ import { moduloGenerator } from "../../utilz/helper";
 import CharacterConsumer from "./characterConsumer";
 
 export default class CrabyConsumer extends CharacterConsumer {
-  private renderId = 0;
+  private renderId: number | undefined;
   constructor(
     offscreen: OffscreenCanvas,
     spriteImage: ImageBitmap,
@@ -22,7 +22,9 @@ export default class CrabyConsumer extends CharacterConsumer {
       this.animationState = "deadHit";
       setTimeout(() => {
         this.ctx.reset();
-        cancelAnimationFrame(this.renderId);
+        if (this.renderId) {
+          cancelAnimationFrame(this.renderId);
+        }
         this.animationPort.postMessage({ type: "deadHit" });
         this.animationPort.close();
       }, 400);

@@ -5,7 +5,7 @@ import { moduloGenerator } from "../../utilz/helper";
 import CharacterConsumer from "./characterConsumer";
 
 export default class SharkConsumer extends CharacterConsumer {
-  private renderId = 0;
+  private renderId: number | undefined;
 
   constructor(
     offscreen: OffscreenCanvas,
@@ -22,7 +22,9 @@ export default class SharkConsumer extends CharacterConsumer {
       this.animationState = "deadHit";
       setTimeout(() => {
         this.ctx.reset();
-        cancelAnimationFrame(this.renderId);
+        if (this.renderId) {
+          cancelAnimationFrame(this.renderId);
+        }
         this.animationPort.postMessage({ type: "deadHit" });
         this.animationPort.close();
       }, 400);
@@ -97,7 +99,7 @@ export default class SharkConsumer extends CharacterConsumer {
         SharkAnimationManager.imgHeight,
       );
     }
-    requestAnimationFrame(() => this.render());
+    this.renderId = requestAnimationFrame(() => this.render());
   }
 
   public async setAnimation(): Promise<void> {

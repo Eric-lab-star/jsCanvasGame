@@ -4,7 +4,7 @@ import CanvasEnv from "../env/CanvasEnv";
 /**
  * @class Character
  * @description this class is updating position of ther character and initializing the worker.
- * */
+ */
 export default class Character {
   protected spriteImageSrc: string;
   private messageChannel: MessageChannel;
@@ -38,7 +38,7 @@ export default class Character {
 
     this.messageChannel.port1.postMessage({ pos, type: this.signalType });
     this.animationId = requestAnimationFrame(() =>
-      this.updateAnimation(pos, singnalReceiver),
+      this.updateAnimation(pos, singnalReceiver)
     );
   }
 
@@ -65,7 +65,7 @@ export default class Character {
   /**
    * @method renderOffscreen
    * @description This method sends data to the worker to render the character offscreen.
-   * */
+   */
   public renderOffscreen() {
     this.canvasEnv = new CanvasEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     const offscreen = this.canvasEnv.canvas.transferControlToOffscreen();

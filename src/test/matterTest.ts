@@ -23,7 +23,6 @@ export default class MatterTest {
   private healthBar: HealthBar;
 
   public constructor() {
-    new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.world = new World();
     this.crab = new Character(crabImg, "craby");
     this.shark = new Character(sharkImg, "shark");
@@ -49,6 +48,7 @@ export default class MatterTest {
   }
 
   private render() {
+    new PhysicEnv(GameEnv.GAME_WIDTH, GameEnv.GAME_HEIGHT);
     this.world.renderImages();
     this.crab.renderOffscreen();
     this.shark.renderOffscreen();
@@ -58,10 +58,9 @@ export default class MatterTest {
 
   public async run() {
     await this.preload();
-
-    this.gen();
     this.hitBox();
     this.render();
+    this.gen();
     const ui = new UI();
     ui.killCountListener();
 

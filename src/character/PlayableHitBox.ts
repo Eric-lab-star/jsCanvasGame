@@ -2,7 +2,6 @@ import { Body, Composite, Detector, Events, Vector } from "matter-js";
 import BodyKeyMaps from "../inputs/BodyKeyMaps";
 import { randomInt } from "../utilz/helper";
 import Character from "./Character";
-
 import {
   floatingPlatform3,
   getWorldEelement,
@@ -13,8 +12,6 @@ import HitBox from "./HitBox";
 import Sword from "../sword/sword";
 import BlueDiamond from "../gems/BlueDiamond";
 import { EnemyHitBox } from "./EnemyHitBox";
-import HealthBar from "../UI/healthBar";
-
 export default class PlayableHitBox extends HitBox {
   private platform3Detector: Detector;
   private onFloorDetector: Detector;
@@ -25,7 +22,9 @@ export default class PlayableHitBox extends HitBox {
   public body: Body;
   private enemies: EnemyHitBox[] = [];
   private xDirection: number = 1;
-
+  private hurtEvent: Event;
+  private hurtID: number | undefined;
+  private hurtReset: number | undefined;
   constructor() {
     super();
     this.body = this.initBody();
@@ -43,6 +42,7 @@ export default class PlayableHitBox extends HitBox {
       bodies: [this.body],
     });
     this.hurtOnEnemy();
+    this.hurtEvent = new Event("hurt", { bubbles: true, cancelable: true });
   }
 
   protected initBody() {
@@ -65,6 +65,7 @@ export default class PlayableHitBox extends HitBox {
     const pos = hitBox.body.position;
     Composite.add(PhysicEnv.World, [hitBox.body]);
     character.updateAnimation(pos, hitBox.singnal.port2);
+    hitBox.deadEventListener();
     return hitBox;
   }
 
@@ -104,7 +105,7 @@ export default class PlayableHitBox extends HitBox {
   }
 
   public hitDiamond() {
-    Events.on(PhysicEnv.Engine, "collisionStart", () => {
+    Events.on(PhysicEnv.Engine, "collisionActive", () => {
       const collisions = Detector.collisions(this.hitDiamondDetector);
       collisions.forEach((col) => {
         if (col.bodyA.label === "hitBox" && col.bodyB.label === "blueDiamond") {
@@ -125,21 +126,25 @@ export default class PlayableHitBox extends HitBox {
   }
 
   public hurtOnEnemy() {
-    Events.on(PhysicEnv.Engine, "collisionStart", () => {
-      const collisions = Detector.collisions(this.enemyDetector);
-      collisions.forEach((col) => {
-        if (
-          (col.bodyA.label === "hitBox" || col.bodyB.label === "hitBox") &&
-          (col.bodyA.label === "enemyHitBox" ||
-            col.bodyB.label === "enemyHitBox")
-        ) {
-          Body.setVelocity(this.body, {
-            x: this.body.speed * this.xDirection * -1,
-            y: -4,
-          });
-        }
-      });
+    let didhurt = false;
+    if (didhurt) return;
+    const collisions = Detector.collisions(this.enemyDetector);
+    collisions.forEach((col) => {
+      if (
+        (col.bodyA.label === "hitBox" || col.bodyB.label === "hitBox") &&
+        (col.bodyA.label === "enemyHitBox" ||
+          col.bodyB.label === "enemyHitBox")
+      ) {
+        Body.setVelocity(this.body, {
+          x: (this.body.speed + 4) * this.xDirection * -1,
+          y: -4,
+        });
+        this.setHurt();
+        dispatchEvent(this.hurtEvent);
+      }
     });
+
+    this.hurtID = requestAnimationFrame(() => this.hurtOnEnemy());
   }
 
   public addEnemy(...enemy: EnemyHitBox[]) {
@@ -205,10 +210,29 @@ export default class PlayableHitBox extends HitBox {
     this.down = value;
   }
 
+  public setHurt() {
+    clearTimeout(this.hurtReset);
+    this.singnal.port1.postMessage({ type: "hurt" });
+    this.hurtReset = window.setTimeout(() => {
+      this.singnal.port1.postMessage({ type: "" });
+    }, 400);
+  }
+
   public setAttack() {
     this.singnal.port1.postMessage({ type: "attack" });
   }
+
   public stop() {
     this.singnal.port1.postMessage({ type: "stop" });
+  }
+
+  public deadEventListener() {
+    addEventListener("dead", () => {
+      this.singnal.port1.postMessage({ type: "deadHit" });
+      if (this.hurtID) {
+        cancelAnimationFrame(this.hurtID!);
+        Composite.remove(PhysicEnv.World, this.body);
+      }
+    });
   }
 }

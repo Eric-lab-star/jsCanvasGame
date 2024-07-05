@@ -1,5 +1,3 @@
-import { matterTestRunner, renderTestRunner, runner } from "./main/runner";
-// runner();
+import { matterTestRunner } from "./main/runner";
 
-// renderTestRunner();
 matterTestRunner();

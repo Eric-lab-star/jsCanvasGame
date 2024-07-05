@@ -7,7 +7,7 @@ import HitBox from "./HitBox";
 export class EnemyHitBox extends HitBox {
   private onFloorDetector: Detector;
   public body: Body;
-  public singnal: MessageChannel;
+  public signal: MessageChannel;
   private pos: { x: number; y: number };
   public health: number = 100;
   public character: Character | undefined;
@@ -20,7 +20,7 @@ export class EnemyHitBox extends HitBox {
     this.onFloorDetector = Detector.create({
       bodies: [this.body, ...getWorldEelement()],
     });
-    this.singnal = new MessageChannel();
+    this.signal = new MessageChannel(); //TODO: any better way to do this?
   }
 
   private initBody() {
@@ -44,7 +44,7 @@ export class EnemyHitBox extends HitBox {
     const hitBox = new EnemyHitBox(initpos);
     Composite.add(PhysicEnv.World, [hitBox.body]);
     hitBox.character = character;
-    character.updateAnimation(hitBox.body, hitBox.singnal.port2);
+    character.updateAnimation(hitBox.body, hitBox.signal.port2);
     return hitBox;
   }
 
@@ -86,11 +86,11 @@ export class EnemyHitBox extends HitBox {
   }
 
   public setAttack() {
-    this.singnal.port1.postMessage({ type: "attack" });
+    this.signal.port1.postMessage({ type: "attack" });
   }
 
   public setDeaDHit() {
-    this.singnal.port1.postMessage({ type: "deadHit" });
+    this.signal.port1.postMessage({ type: "deadHit" });
     if (this.movingId) {
       cancelAnimationFrame(this.movingId);
     }
@@ -100,10 +100,10 @@ export class EnemyHitBox extends HitBox {
 
   public setHit() {
     this.health -= 10;
-    this.singnal.port1.postMessage({ type: "hit" });
+    this.signal.port1.postMessage({ type: "hit" });
   }
 
   public stop() {
-    this.singnal.port1.postMessage({ type: "stop" });
+    this.signal.port1.postMessage({ type: "stop" });
   }
 }

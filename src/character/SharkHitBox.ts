@@ -18,7 +18,6 @@ export default class SharkHitBox {
     }
 
     const elapsed = time - this.start;
-    console.log(this.hitBox.body.position.x);
     if (this.hitBox.onFloor()) {
       Body.setVelocity(this.hitBox.body, {
         x: this.movingDirection,

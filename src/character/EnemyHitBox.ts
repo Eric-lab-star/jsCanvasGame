@@ -3,15 +3,16 @@ import Character from "./Character";
 import { getWorldEelement } from "../utilz/matterComponents";
 import PhysicEnv from "../env/PhysicEnv";
 import HitBox from "./HitBox";
+import HitBoxEvent from "../Events/HitBoxEvents";
 
 export class EnemyHitBox extends HitBox {
   private onFloorDetector: Detector;
   public body: Body;
-  public signal: MessageChannel;
   private pos: { x: number; y: number };
   public health: number = 100;
   public character: Character | undefined;
   public movingId: number | undefined;
+  public hitBoxEvent: HitBoxEvent;
 
   constructor(pos: { x: number; y: number }) {
     super();
@@ -20,7 +21,8 @@ export class EnemyHitBox extends HitBox {
     this.onFloorDetector = Detector.create({
       bodies: [this.body, ...getWorldEelement()],
     });
-    this.signal = new MessageChannel(); //TODO: any better way to do this?
+
+    this.hitBoxEvent = new HitBoxEvent("hitBoxEvent");
   }
 
   private initBody() {
@@ -44,7 +46,7 @@ export class EnemyHitBox extends HitBox {
     const hitBox = new EnemyHitBox(initpos);
     Composite.add(PhysicEnv.World, [hitBox.body]);
     hitBox.character = character;
-    character.updateAnimation(hitBox.body, hitBox.signal.port2);
+    character.updateAnimation(hitBox.body);
     return hitBox;
   }
 
@@ -86,11 +88,11 @@ export class EnemyHitBox extends HitBox {
   }
 
   public setAttack() {
-    this.signal.port1.postMessage({ type: "attack" });
+    //TODO: add Event
   }
 
   public setDeaDHit() {
-    this.signal.port1.postMessage({ type: "deadHit" });
+    //TODO: add Event
     if (this.movingId) {
       cancelAnimationFrame(this.movingId);
     }
@@ -100,10 +102,10 @@ export class EnemyHitBox extends HitBox {
 
   public setHit() {
     this.health -= 10;
-    this.signal.port1.postMessage({ type: "hit" });
+    //TODO: add Event
   }
 
   public stop() {
-    this.signal.port1.postMessage({ type: "stop" });
+    //TODO: add Event
   }
 }

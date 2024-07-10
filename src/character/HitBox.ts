@@ -19,9 +19,9 @@ export interface HitBoxInterface {
  * The class contains properties to track the direction of the hitbox and whether it has hit something.
  *
  * The constructor initializes these properties.
- * - 'right': A boolean that indicates if the hitbox is moving right.
+ * - `right`: A boolean that indicates if the hitbox is moving right.
  *   - Default value is `false`.
- * - 'left': A boolean that indicates if the hitbox is moving left.
+ * - `left`: A boolean that indicates if the hitbox is moving left.
  *   - Default value is `false`.
  * - `up`: A boolean that indicates if the hitbox is moving up.
  *   - Default value is `false`.

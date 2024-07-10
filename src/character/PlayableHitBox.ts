@@ -1,7 +1,6 @@
 import { Body, Composite, Detector, Events, Vector } from "matter-js";
 import BodyKeyMaps from "../inputs/BodyKeyMaps";
 import { randomInt } from "../utilz/helper";
-import Character from "./Character";
 import {
   floatingPlatform3,
   getWorldEelement,
@@ -12,7 +11,7 @@ import HitBox from "./HitBox";
 import Sword from "../sword/sword";
 import BlueDiamond from "../gems/BlueDiamond";
 import { EnemyHitBox } from "./EnemyHitBox";
-//
+import HitBoxEvent from "../Events/HitBoxEvents";
 //
 //
 export default class PlayableHitBox extends HitBox {
@@ -28,6 +27,7 @@ export default class PlayableHitBox extends HitBox {
   private hurtEvent: Event;
   private hurtID: number | undefined;
   private hurtReset: number | undefined;
+  private hitBoxEvent: HitBoxEvent = new HitBoxEvent("hitBoxEvent");
   constructor() {
     super();
     this.body = this.initBody();
@@ -61,12 +61,12 @@ export default class PlayableHitBox extends HitBox {
     return hitBox;
   }
 
-  public static withCharacter(character: Character) {
+  public static withCharacter(character: Updatable) {
     const hitBox = PlayableHitBox.withKeyBoardInput();
     hitBox.platform3Hit();
     hitBox.hitDiamond();
     Composite.add(PhysicEnv.World, [hitBox.body]);
-    character.updateAnimation(hitBox.body, hitBox.singnal.port2);
+    character.updateAnimation(hitBox.body);
     hitBox.deadEventListener();
     return hitBox;
   }
@@ -214,18 +214,22 @@ export default class PlayableHitBox extends HitBox {
 
   public setHurt() {
     clearTimeout(this.hurtReset);
-    this.singnal.port1.postMessage({ type: "hurt" });
+    this.hitBoxEvent.message = "hurt";
+    dispatchEvent(this.hitBoxEvent);
     this.hurtReset = window.setTimeout(() => {
-      this.singnal.port1.postMessage({ type: "" });
+      this.hitBoxEvent.message = "";
+      dispatchEvent(this.hitBoxEvent);
     }, 400);
   }
 
   public setAttack() {
-    this.singnal.port1.postMessage({ type: "attack" });
+    this.hitBoxEvent.message = "attack";
+    dispatchEvent(this.hitBoxEvent);
   }
 
   public stop() {
-    this.singnal.port1.postMessage({ type: "stop" });
+    this.hitBoxEvent.message = "stop";
+    dispatchEvent(this.hitBoxEvent);
   }
 
   public deadEventListener() {
@@ -233,7 +237,8 @@ export default class PlayableHitBox extends HitBox {
       Detector.clear(this.enemyDetector);
       if (this.hurtID) {
         cancelAnimationFrame(this.hurtID);
-        this.singnal.port1.postMessage({ type: "deadHit" });
+        this.hitBoxEvent.message = "dead";
+        dispatchEvent(this.hitBoxEvent);
         Composite.remove(PhysicEnv.World, this.body);
       }
     });

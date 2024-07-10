@@ -12,12 +12,12 @@ export default class CaptainConsumer extends CharacterConsumer {
   ) {
     super(offscreen, spriteImage, posPort);
   }
-
+	
   protected setAnimationState(
     pos: { x: number; y: number },
     signalType: string,
   ): void {
-    if (signalType === "deadHit") {
+    if (signalType === "dead") {
       this.animationState = "deadHit";
       setTimeout(() => {
         if (this.renderId) {

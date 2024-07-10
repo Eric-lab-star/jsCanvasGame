@@ -3,16 +3,17 @@ import CanvasEnv from "../env/CanvasEnv";
 import GameOver from "../UI/gameOver";
 import Matter, { Events } from "matter-js";
 import PhysicEnv from "../env/PhysicEnv";
+import HitBoxEvent from "../Events/HitBoxEvents";
 
-export default class Character {
+export default class PlayableCharacter {
   protected spriteImageSrc: string;
-  private messageChannel: MessageChannel;
+  private workerChan: MessageChannel;
   protected label: string;
   public worker: Worker;
   private canvasEnv: CanvasEnv | undefined;
 
   constructor(imgsrc: string, label: string) {
-    this.messageChannel = new MessageChannel();
+    this.workerChan = new MessageChannel();
     this.spriteImageSrc = imgsrc;
     this.label = label;
     this.worker = new Worker(
@@ -29,15 +30,22 @@ export default class Character {
     body: Matter.Body,
   ) {
     let type: string = "";
+
+    addEventListener("hitBoxEvent", (e: HitBoxEvent) => {
+      type = e.message;
+      console.log(e.message);
+    });
+
     Events.on(PhysicEnv.Runner, "afterUpdate", () => {
       let pos = body.position;
-      this.messageChannel.port1.postMessage({ pos, type });
+      this.workerChan.port1.postMessage({ pos, type });
     });
   }
 
   public gameOver() {
     const gameOver = new GameOver();
-    this.messageChannel.port1.onmessage = (e) => {
+
+    this.workerChan.port1.onmessage = (e) => {
       if (e.data.type === "gameOver") {
         if (this.canvasEnv) {
           this.stopRender();
@@ -56,7 +64,7 @@ export default class Character {
   }
 
   private dead() {
-    this.messageChannel.port1.onmessage = (e) => {
+    this.workerChan.port1.onmessage = (e) => {
       if (e.data.type === "deadHit") {
         if (this.canvasEnv) {
           this.stopRender();
@@ -91,9 +99,9 @@ export default class Character {
           label: this.label,
           offscreen: offscreen,
           spriteImage: spriteImage,
-          animationPort: this.messageChannel.port2,
+          animationPort: this.workerChan.port2,
         },
-        [offscreen, spriteImage, this.messageChannel.port2],
+        [offscreen, spriteImage, this.workerChan.port2],
       );
     });
   }

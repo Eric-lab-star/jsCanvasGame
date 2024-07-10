@@ -15,9 +15,10 @@ import HealthBar from "../UI/healthBar";
 import { Composite } from "matter-js";
 import SharkHitBox from "../character/SharkHitBox";
 import CrabyHitBox from "../character/CrabyHitBox";
+import PlayableCharacter from "../character/PlayableCharacter";
 
 export default class MatterTest {
-  private captain: Character;
+  private captain: PlayableCharacter;
   private crab: Character;
   private shark: Character;
   private world: World;
@@ -29,7 +30,7 @@ export default class MatterTest {
     this.world = new World();
     this.crab = new Character(crabImg, "craby");
     this.shark = new Character(sharkImg, "shark");
-    this.captain = new Character(captainImg, "captain");
+    this.captain = new PlayableCharacter(captainImg, "captain");
     this.healthBar = new HealthBar();
   }
 

@@ -1,5 +1,5 @@
 import { Body, Vector } from "matter-js";
-import { PlayableHitBox } from "../character/PlayableHitBox";
+import PlayableHitBox from "../character/PlayableHitBox";
 
 export default class BodyKeyMaps {
   public hitbox: PlayableHitBox;
